@@ -260,11 +260,11 @@
 }
 
 
-- (NSURL*)saveLocalVideoPath{
+- (NSString*)saveLocalVideoPath{
     return self.videoCaptureSource.saveLocalVideoPath;
 }
 
-- (void)setSaveLocalVideoPath:(NSURL*)saveLocalVideoPath{
+- (void)setSaveLocalVideoPath:(NSString*)saveLocalVideoPath{
     [self.videoCaptureSource setSaveLocalVideoPath:saveLocalVideoPath];
 }
 
