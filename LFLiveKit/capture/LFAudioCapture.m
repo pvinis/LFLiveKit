@@ -17,7 +17,6 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
 @property (nonatomic, assign) AudioComponentInstance componetInstance;
 @property (nonatomic, assign) AudioComponent component;
 @property (nonatomic, strong) dispatch_queue_t taskQueue;
-@property (nonatomic, assign) BOOL isRunning;
 @property (nonatomic, strong,nullable) LFLiveAudioConfiguration *configuration;
 
 @end
@@ -28,7 +27,6 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
 - (instancetype)initWithAudioConfiguration:(LFLiveAudioConfiguration *)configuration{
     if(self = [super init]){
         _configuration = configuration;
-        self.isRunning = NO;
         self.taskQueue = dispatch_queue_create("com.youku.Laifeng.audioCapture.Queue", NULL);
         
         AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -100,7 +98,6 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
 
     dispatch_sync(self.taskQueue, ^{
         if (self.componetInstance) {
-            self.isRunning = NO;
             AudioOutputUnitStop(self.componetInstance);
             AudioComponentInstanceDispose(self.componetInstance);
             self.componetInstance = nil;
@@ -110,20 +107,17 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
 }
 
 #pragma mark -- Setter
-- (void)setRunning:(BOOL)running {
-    if (_running == running) return;
-    _running = running;
-    if (_running) {
+- (void)setCapturing:(BOOL)capturing {
+    if (_capturing == capturing) return;
+    _capturing = capturing;
+
+    if (_capturing) {
         dispatch_async(self.taskQueue, ^{
-            self.isRunning = YES;
-            NSLog(@"MicrophoneSource: startRunning");
             [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker | AVAudioSessionCategoryOptionInterruptSpokenAudioAndMixWithOthers error:nil];
             AudioOutputUnitStart(self.componetInstance);
         });
     } else {
         dispatch_sync(self.taskQueue, ^{
-            self.isRunning = NO;
-            NSLog(@"MicrophoneSource: stopRunning");
             AudioOutputUnitStop(self.componetInstance);
         });
     }
@@ -181,9 +175,8 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
         //Posted when an audio interruption occurs.
         reason = [[[notification userInfo] objectForKey:AVAudioSessionInterruptionTypeKey] integerValue];
         if (reason == AVAudioSessionInterruptionTypeBegan) {
-            if (self.isRunning) {
+            if (self.capturing) {
                 dispatch_sync(self.taskQueue, ^{
-                    NSLog(@"MicrophoneSource: stopRunning");
                     AudioOutputUnitStop(self.componetInstance);
                 });
             }
@@ -194,9 +187,8 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
             NSNumber *seccondReason = [[notification userInfo] objectForKey:AVAudioSessionInterruptionOptionKey];
             switch ([seccondReason integerValue]) {
             case AVAudioSessionInterruptionOptionShouldResume:
-                if (self.isRunning) {
+                if (self.capturing) {
                     dispatch_async(self.taskQueue, ^{
-                        NSLog(@"MicrophoneSource: startRunning");
                         AudioOutputUnitStart(self.componetInstance);
                     });
                 }

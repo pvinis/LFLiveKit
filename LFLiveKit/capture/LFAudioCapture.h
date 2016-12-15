@@ -34,8 +34,8 @@ extern NSString *_Nullable const LFAudioComponentFailedToCreateNotification;
 /** The muted control callbackAudioData,muted will memset 0.*/
 @property (nonatomic, assign) BOOL muted;
 
-/** The running control start capture or stop capture*/
-@property (nonatomic, assign) BOOL running;
+// make the audio device listen
+@property (nonatomic, assign) BOOL capturing;
 
 #pragma mark - Initializer
 ///=============================================================================
