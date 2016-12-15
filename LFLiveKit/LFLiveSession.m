@@ -90,7 +90,6 @@
 }
 
 - (void)dealloc {
-    _videoCaptureSource.recording = NO;
     _videoCaptureSource.capturing = NO;
     _audioCaptureSource.capturing = NO;
 }
@@ -224,6 +223,7 @@
 
     self.videoCaptureSource.capturing = _capturing;
     self.audioCaptureSource.capturing = _capturing;
+    self.videoCaptureSource.recording = _capturing;
 }
 
 - (void)setRecording:(BOOL)recording {
