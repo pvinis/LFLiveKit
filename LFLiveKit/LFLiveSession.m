@@ -90,8 +90,9 @@
 }
 
 - (void)dealloc {
-    _videoCaptureSource.running = NO;
-    _audioCaptureSource.running = NO;
+    _videoCaptureSource.recording = NO;
+    _videoCaptureSource.capturing = NO;
+    _audioCaptureSource.capturing = NO;
 }
 
 #pragma mark -- CustomMethod
@@ -216,13 +217,20 @@
 }
 
 #pragma mark -- Getter Setter
-- (void)setRunning:(BOOL)running {
-    if (_running == running) return;
-    [self willChangeValueForKey:@"running"];
-    _running = running;
-    [self didChangeValueForKey:@"running"];
-    self.videoCaptureSource.running = _running;
-    self.audioCaptureSource.running = _running;
+
+- (void)setCapturing:(BOOL)capturing {
+    if (_capturing == capturing) return;
+    _capturing = capturing;
+
+    self.videoCaptureSource.capturing = _capturing;
+    self.audioCaptureSource.capturing = _capturing;
+}
+
+- (void)setRecording:(BOOL)recording {
+    if (_recording == recording) return;
+    _recording = recording;
+
+    self.videoCaptureSource.recording = _recording;
 }
 
 - (void)setPreView:(UIView *)preView {

@@ -62,8 +62,11 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
 /** The delegate of the capture. captureData callback */
 @property (nullable, nonatomic, weak) id<LFLiveSessionDelegate> delegate;
 
-/** The running control start capture or stop capture*/
-@property (nonatomic, assign) BOOL running;
+// make the input devices see and hear
+@property (nonatomic, assign) BOOL capturing;
+
+// saving input from devices to a movie
+@property (nonatomic, assign) BOOL recording;
 
 /** The preView will show OpenGL ES view*/
 @property (nonatomic, strong, null_resettable) UIView *preView;
