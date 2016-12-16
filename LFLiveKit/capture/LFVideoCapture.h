@@ -26,11 +26,8 @@
 /** The delegate of the capture. captureData callback */
 @property (nullable, nonatomic, weak) id<LFVideoCaptureDelegate> delegate;
 
-// make the video device see
-@property (nonatomic, assign) BOOL capturing;
-
-// save what the video device sees
-@property (nonatomic, assign) BOOL recording;
+/** The running control start capture or stop capture*/
+@property (nonatomic, assign) BOOL running;
 
 /** The preView will show OpenGL ES view*/
 @property (null_resettable, nonatomic, strong) UIView *preView;

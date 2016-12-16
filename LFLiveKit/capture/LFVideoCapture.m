@@ -83,30 +83,19 @@
     return _videoCamera;
 }
 
-- (void)setCapturing:(BOOL)capturing {
-    if (_capturing == capturing) return;
-    _capturing = capturing;
-
-    if (_capturing) {
+- (void)setRunning:(BOOL)running {
+    if (_running == running) return;
+    _running = running;
+    
+    if (!_running) {
+        [UIApplication sharedApplication].idleTimerDisabled = NO;
+        [self.videoCamera stopCameraCapture];
+        if(self.saveLocalVideo) [self.movieWriter finishRecording];
+    } else {
         [UIApplication sharedApplication].idleTimerDisabled = YES;
         [self reloadFilter];
         [self.videoCamera startCameraCapture];
-    } else {
-        [UIApplication sharedApplication].idleTimerDisabled = NO;
-        [self.videoCamera stopCameraCapture];
-    }
-}
-
-- (void)setRecording:(BOOL)recording {
-    if (!self.saveLocalVideo) return;
-
-    if (_recording == recording) return;
-    _recording = recording;
-
-    if (_recording) {
-        [self.movieWriter startRecording];
-    } else {
-        [self.movieWriter finishRecording];
+        if(self.saveLocalVideo) [self.movieWriter startRecording];
     }
 }
 
