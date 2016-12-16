@@ -98,7 +98,6 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
 
     dispatch_sync(self.taskQueue, ^{
         if (self.componetInstance) {
-            self.capturing = NO;
             AudioOutputUnitStop(self.componetInstance);
             AudioComponentInstanceDispose(self.componetInstance);
             self.componetInstance = nil;
