@@ -94,7 +94,6 @@
     } else {
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         [self.videoCamera stopCameraCapture];
-        self.recording = NO;
     }
 }
 
