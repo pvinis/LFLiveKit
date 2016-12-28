@@ -164,12 +164,12 @@
 
 - (void)setStabilization:(BOOL)stabilization
 {
-    self.videoCamera.videoCaptureConnection.preferredVideoStabilizationMode = (stabilization ? AVCaptureVideoStabilizationModeAuto : AVCaptureVideoStabilizationModeOff);
+    self.videoCamera.videoCaptureConnection.preferredVideoStabilizationMode = (stabilization ? AVCaptureVideoStabilizationModeStandard : AVCaptureVideoStabilizationModeOff);
 }
 
 - (BOOL)stabilization
 {
-    return (self.videoCamera.videoCaptureConnection.preferredVideoStabilizationMode != AVCaptureVideoStabilizationModeAuto);
+    return (self.videoCamera.videoCaptureConnection.preferredVideoStabilizationMode != AVCaptureVideoStabilizationModeStandard);
 }
 
 - (void)setBeautyFace:(BOOL)beautyFace{
