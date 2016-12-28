@@ -332,6 +332,16 @@
     return self.audioCaptureSource.muted;
 }
 
+- (void)setStabilization:(BOOL)stabilization
+{
+    self.videoCaptureSource.stabilization = stabilization;
+}
+
+- (BOOL)stabilization
+{
+    return self.videoCaptureSource.stabilization;
+}
+
 - (void)setWarterMarkView:(UIView *)warterMarkView{
     [self.videoCaptureSource setWarterMarkView:warterMarkView];
 }

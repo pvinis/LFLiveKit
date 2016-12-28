@@ -44,6 +44,8 @@
 /** The mirror control mirror of front camera is on or off */
 @property (nonatomic, assign) BOOL mirror;
 
+@property (nonatomic, assign) BOOL stabilization;
+
 /** The beautyLevel control beautyFace Level, default 0.5, between 0.0 ~ 1.0 */
 @property (nonatomic, assign) CGFloat beautyLevel;
 
