@@ -162,6 +162,16 @@
     _mirror = mirror;
 }
 
+- (void)setStabilization:(BOOL)stabilization
+{
+    self.videoCamera.videoCaptureConnection.preferredVideoStabilizationMode = (stabilization ? AVCaptureVideoStabilizationModeAuto : AVCaptureVideoStabilizationModeOff);
+}
+
+- (BOOL)stabilization
+{
+    return (self.videoCamera.videoCaptureConnection.preferredVideoStabilizationMode != AVCaptureVideoStabilizationModeAuto);
+}
+
 - (void)setBeautyFace:(BOOL)beautyFace{
     _beautyFace = beautyFace;
     [self reloadFilter];

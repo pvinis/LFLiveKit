@@ -95,6 +95,8 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
 /*  The adaptiveBitrate control auto adjust bitrate. Default is NO */
 @property (nonatomic, assign) BOOL adaptiveBitrate;
 
+@property (nonatomic, assign) BOOL stabilization;
+
 /** The stream control upload and package*/
 @property (nullable, nonatomic, strong, readonly) LFLiveStreamInfo *streamInfo;
 
