@@ -65,8 +65,15 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_videoCamera stopCameraCapture];
     if(_gpuImageView){
-        [_gpuImageView removeFromSuperview];
-        _gpuImageView = nil;
+        dispatch_block_t block = ^{
+            [_gpuImageView removeFromSuperview];
+            _gpuImageView = nil;
+        };
+        if ([NSThread isMainThread]) {
+            block();
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), block);
+        }
     }
 }
 
