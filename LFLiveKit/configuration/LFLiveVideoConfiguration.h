@@ -66,9 +66,6 @@ typedef NS_ENUM (NSUInteger, LFLiveVideoQuality){
 /// 视频输出方向
 @property (nonatomic, assign) UIInterfaceOrientation outputImageOrientation;
 
-/// 自动旋转(这里只支持 left 变 right  portrait 变 portraitUpsideDown)
-@property (nonatomic, assign) BOOL autorotate;
-
 /// 视频的帧率，即 fps
 @property (nonatomic, assign) NSUInteger videoFrameRate;
 

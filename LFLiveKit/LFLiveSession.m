@@ -14,7 +14,6 @@
 #import "LFH264VideoEncoder.h"
 #import "LFStreamRTMPSocket.h"
 #import "LFLiveStreamInfo.h"
-#import "LFGPUImageBeautyFilter.h"
 #import "LFH264VideoEncoder.h"
 
 
@@ -72,6 +71,7 @@
 
 @implementation LFLiveSession
 
+@synthesize previewView = _previewView;
 #pragma mark -- LifeCycle
 - (instancetype)initWithAudioConfiguration:(nullable LFLiveAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFLiveVideoConfiguration *)videoConfiguration {
     return [self initWithAudioConfiguration:audioConfiguration videoConfiguration:videoConfiguration captureType:LFLiveCaptureDefaultMask];
@@ -90,6 +90,18 @@
 }
 
 - (void)dealloc {
+
+  if (_previewView) {
+    dispatch_block_t block = ^{
+      [_previewView removeFromSuperview];
+    };
+    if ([NSThread isMainThread]) {
+      block();
+    } else {
+      dispatch_sync(dispatch_get_main_queue(), block);
+    }
+  }
+
     _videoCaptureSource.running = NO;
     _audioCaptureSource.running = NO;
 }
@@ -225,14 +237,14 @@
     self.audioCaptureSource.running = _running;
 }
 
-- (void)setPreView:(UIView *)preView {
-    [self willChangeValueForKey:@"preView"];
-    [self.videoCaptureSource setPreView:preView];
-    [self didChangeValueForKey:@"preView"];
+- (void)setPreviewView:(LFLivePreviewView *)previewView {
+    [self willChangeValueForKey:@"previewView"];
+    [self.videoCaptureSource setPreviewView:previewView];
+    [self didChangeValueForKey:@"previewView"];
 }
 
-- (UIView *)preView {
-    return self.videoCaptureSource.preView;
+- (LFLivePreviewView *)previewView {
+    return self.videoCaptureSource.previewView;
 }
 
 - (void)setCaptureDevicePosition:(AVCaptureDevicePosition)captureDevicePosition {
@@ -243,12 +255,6 @@
 
 - (AVCaptureDevicePosition)captureDevicePosition {
     return self.videoCaptureSource.captureDevicePosition;
-}
-
-- (void)setBeautyFace:(BOOL)beautyFace {
-    [self willChangeValueForKey:@"beautyFace"];
-    [self.videoCaptureSource setBeautyFace:beautyFace];
-    [self didChangeValueForKey:@"beautyFace"];
 }
 
 - (BOOL)saveLocalVideo{
@@ -266,20 +272,6 @@
 
 - (void)setSaveLocalVideoPath:(NSString*)saveLocalVideoPath{
     [self.videoCaptureSource setSaveLocalVideoPath:saveLocalVideoPath];
-}
-
-- (BOOL)beautyFace {
-    return self.videoCaptureSource.beautyFace;
-}
-
-- (void)setBeautyLevel:(CGFloat)beautyLevel {
-    [self willChangeValueForKey:@"beautyLevel"];
-    [self.videoCaptureSource setBeautyLevel:beautyLevel];
-    [self didChangeValueForKey:@"beautyLevel"];
-}
-
-- (CGFloat)beautyLevel {
-    return self.videoCaptureSource.beautyLevel;
 }
 
 - (void)setBrightLevel:(CGFloat)brightLevel {
@@ -302,26 +294,6 @@
     return self.videoCaptureSource.zoomScale;
 }
 
-- (void)setTorch:(BOOL)torch {
-    [self willChangeValueForKey:@"torch"];
-    [self.videoCaptureSource setTorch:torch];
-    [self didChangeValueForKey:@"torch"];
-}
-
-- (BOOL)torch {
-    return self.videoCaptureSource.torch;
-}
-
-- (void)setMirror:(BOOL)mirror {
-    [self willChangeValueForKey:@"mirror"];
-    [self.videoCaptureSource setMirror:mirror];
-    [self didChangeValueForKey:@"mirror"];
-}
-
-- (BOOL)mirror {
-    return self.videoCaptureSource.mirror;
-}
-
 - (void)setMuted:(BOOL)muted {
     [self willChangeValueForKey:@"muted"];
     [self.audioCaptureSource setMuted:muted];
@@ -340,18 +312,6 @@
 - (BOOL)stabilization
 {
     return self.videoCaptureSource.stabilization;
-}
-
-- (void)setWarterMarkView:(UIView *)warterMarkView{
-    [self.videoCaptureSource setWarterMarkView:warterMarkView];
-}
-
-- (nullable UIView*)warterMarkView{
-    return self.videoCaptureSource.warterMarkView;
-}
-
-- (nullable UIImage *)currentImage{
-    return self.videoCaptureSource.currentImage;
 }
 
 - (LFAudioCapture *)audioCaptureSource {

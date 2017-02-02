@@ -280,7 +280,6 @@
     [aCoder encodeObject:@(self.videoMinBitRate) forKey:@"videoMinBitRate"];
     [aCoder encodeObject:@(self.sessionPreset) forKey:@"sessionPreset"];
     [aCoder encodeObject:@(self.outputImageOrientation) forKey:@"outputImageOrientation"];
-    [aCoder encodeObject:@(self.autorotate) forKey:@"autorotate"];
     [aCoder encodeObject:@(self.videoSizeRespectingAspectRatio) forKey:@"videoSizeRespectingAspectRatio"];
 }
 
@@ -296,7 +295,6 @@
     _videoMinBitRate = [[aDecoder decodeObjectForKey:@"videoMinBitRate"] unsignedIntegerValue];
     _sessionPreset = [[aDecoder decodeObjectForKey:@"sessionPreset"] unsignedIntegerValue];
     _outputImageOrientation = [[aDecoder decodeObjectForKey:@"outputImageOrientation"] unsignedIntegerValue];
-    _autorotate = [[aDecoder decodeObjectForKey:@"autorotate"] boolValue];
     _videoSizeRespectingAspectRatio = [[aDecoder decodeObjectForKey:@"videoSizeRespectingAspectRatio"] unsignedIntegerValue];
     return self;
 }
@@ -314,7 +312,6 @@
                         self.avSessionPreset,
                         @(self.sessionPreset),
                         @(self.outputImageOrientation),
-                        @(self.autorotate),
                         @(self.videoSizeRespectingAspectRatio)];
 
     for (NSObject *value in values) {
@@ -341,7 +338,6 @@
                [object.avSessionPreset isEqualToString:self.avSessionPreset] &&
                object.sessionPreset == self.sessionPreset &&
                object.outputImageOrientation == self.outputImageOrientation &&
-               object.autorotate == self.autorotate &&
                object.videoSizeRespectingAspectRatio == self.videoSizeRespectingAspectRatio;
     }
 }
@@ -366,7 +362,6 @@
     [desc appendFormat:@" avSessionPreset:%@", self.avSessionPreset];
     [desc appendFormat:@" sessionPreset:%zi", self.sessionPreset];
     [desc appendFormat:@" outputImageOrientation:%zi", self.outputImageOrientation];
-    [desc appendFormat:@" autorotate:%zi", self.autorotate];
     return desc;
 }
 
