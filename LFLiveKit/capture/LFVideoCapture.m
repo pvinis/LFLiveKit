@@ -36,7 +36,10 @@
 
 @end
 
-@implementation LFVideoCapture
+@implementation LFVideoCapture {
+  BOOL usingTele;
+  BOOL usingDual;
+}
 @synthesize torch = _torch;
 @synthesize beautyLevel = _beautyLevel;
 @synthesize brightLevel = _brightLevel;
@@ -81,7 +84,10 @@
 
 - (GPUImageVideoCamera *)videoCamera{
     if(!_videoCamera){
-        _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:_configuration.avSessionPreset cameraPosition:AVCaptureDevicePositionFront];
+        _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:_configuration.avSessionPreset cameraPosition:AVCaptureDevicePositionBack];
+      if ([_videoCamera isBuiltInDualCameraPresent]) {
+        [_videoCamera switchToDualCamera];
+      }
         _videoCamera.outputImageOrientation = _configuration.outputImageOrientation;
         _videoCamera.horizontallyMirrorFrontFacingCamera = NO;
         _videoCamera.horizontallyMirrorRearFacingCamera = NO;
@@ -207,10 +213,29 @@
 }
 
 - (void)setZoomScale:(CGFloat)zoomScale {
+  CGFloat fzoomScale = zoomScale;
+  /*
+  if (zoomScale > 2) {
+    if (!usingTele) {
+      [self.videoCamera switchToTelePhotoCamera];
+      usingTele = YES;
+    }
+    fzoomScale /= 2.;
+  } else {
+    if (usingTele) {
+      [self.videoCamera switchToWideAngleCamera];
+      usingTele = NO;
+    }
+  }
+*/
+  if (!usingDual) {
+    [self.videoCamera switchToDualCamera];
+    usingDual = YES;
+  }
     if (self.videoCamera && self.videoCamera.inputCamera) {
         AVCaptureDevice *device = (AVCaptureDevice *)self.videoCamera.inputCamera;
         if ([device lockForConfiguration:nil]) {
-            device.videoZoomFactor = zoomScale;
+            device.videoZoomFactor = fzoomScale;
             [device unlockForConfiguration];
             _zoomScale = zoomScale;
         }
