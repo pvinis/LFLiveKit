@@ -228,10 +228,10 @@
     }
   }
 */
-  if (!usingDual) {
-    [self.videoCamera switchToDualCamera];
-    usingDual = YES;
-  }
+//  if (!usingDual) {
+//    [self.videoCamera switchToDualCamera];
+//    usingDual = YES;
+//  }
     if (self.videoCamera && self.videoCamera.inputCamera) {
         AVCaptureDevice *device = (AVCaptureDevice *)self.videoCamera.inputCamera;
         if ([device lockForConfiguration:nil]) {
