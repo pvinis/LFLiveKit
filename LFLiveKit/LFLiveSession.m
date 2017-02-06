@@ -312,16 +312,6 @@
     return self.videoCaptureSource.torch;
 }
 
-- (void)setMirror:(BOOL)mirror {
-    [self willChangeValueForKey:@"mirror"];
-    [self.videoCaptureSource setMirror:mirror];
-    [self didChangeValueForKey:@"mirror"];
-}
-
-- (BOOL)mirror {
-    return self.videoCaptureSource.mirror;
-}
-
 - (void)setMuted:(BOOL)muted {
     [self willChangeValueForKey:@"muted"];
     [self.audioCaptureSource setMuted:muted];
@@ -340,14 +330,6 @@
 - (BOOL)stabilization
 {
     return self.videoCaptureSource.stabilization;
-}
-
-- (void)setWarterMarkView:(UIView *)warterMarkView{
-    [self.videoCaptureSource setWarterMarkView:warterMarkView];
-}
-
-- (nullable UIView*)warterMarkView{
-    return self.videoCaptureSource.warterMarkView;
 }
 
 - (nullable UIImage *)currentImage{

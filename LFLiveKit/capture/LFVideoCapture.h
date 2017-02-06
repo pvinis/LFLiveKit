@@ -41,9 +41,6 @@
 /** The torch control capture flash is on or off */
 @property (nonatomic, assign) BOOL torch;
 
-/** The mirror control mirror of front camera is on or off */
-@property (nonatomic, assign) BOOL mirror;
-
 @property (nonatomic, assign) BOOL stabilization;
 
 /** The beautyLevel control beautyFace Level, default 0.5, between 0.0 ~ 1.0 */
@@ -57,9 +54,6 @@
 
 /** The videoFrameRate control videoCapture output data count */
 @property (nonatomic, assign) NSInteger videoFrameRate;
-
-/*** The warterMarkView control whether the watermark is displayed or not ,if set ni,will remove watermark,otherwise add *.*/
-@property (nonatomic, strong, nullable) UIView *warterMarkView;
 
 /* The currentImage is videoCapture shot */
 @property (nonatomic, strong, nullable) UIImage *currentImage;

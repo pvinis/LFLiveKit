@@ -28,10 +28,6 @@
 @property (nonatomic, strong) GPUImageView *gpuImageView;
 @property (nonatomic, strong) LFLiveVideoConfiguration *configuration;
 
-@property (nonatomic, strong) GPUImageAlphaBlendFilter *blendFilter;
-@property (nonatomic, strong) GPUImageUIElement *uiElementInput;
-@property (nonatomic, strong) UIView *waterMarkContentView;
-
 @property (nonatomic, strong) GPUImageMovieWriter *movieWriter;
 
 @end
@@ -58,7 +54,6 @@
         self.beautyLevel = 0.5;
         self.brightLevel = 0.5;
         self.zoomScale = 1.0;
-        self.mirror = YES;
     }
     return self;
 }
@@ -126,7 +121,6 @@
     if(captureDevicePosition == self.videoCamera.cameraPosition) return;
     [self.videoCamera rotateCamera];
     self.videoCamera.frameRate = (int32_t)_configuration.videoFrameRate;
-    [self reloadMirror];
 }
 
 - (AVCaptureDevicePosition)captureDevicePosition {
@@ -169,10 +163,6 @@
 
 - (BOOL)torch {
     return self.videoCamera.inputCamera.torchMode;
-}
-
-- (void)setMirror:(BOOL)mirror {
-    _mirror = mirror;
 }
 
 - (void)setStabilization:(BOOL)stabilization
@@ -232,41 +222,6 @@
     return _zoomScale;
 }
 
-- (void)setWarterMarkView:(UIView *)warterMarkView{
-    if(_warterMarkView && _warterMarkView.superview){
-        [_warterMarkView removeFromSuperview];
-        _warterMarkView = nil;
-    }
-    _warterMarkView = warterMarkView;
-    self.blendFilter.mix = warterMarkView.alpha;
-    [self.waterMarkContentView addSubview:_warterMarkView];
-    [self reloadFilter];
-}
-
-- (GPUImageUIElement *)uiElementInput{
-    if(!_uiElementInput){
-        _uiElementInput = [[GPUImageUIElement alloc] initWithView:self.waterMarkContentView];
-    }
-    return _uiElementInput;
-}
-
-- (GPUImageAlphaBlendFilter *)blendFilter{
-    if(!_blendFilter){
-        _blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
-        _blendFilter.mix = 1.0;
-        [_blendFilter disableSecondFrameCheck];
-    }
-    return _blendFilter;
-}
-
-- (UIView *)waterMarkContentView{
-    if(!_waterMarkContentView){
-        _waterMarkContentView = [UIView new];
-        _waterMarkContentView.frame = CGRectMake(0, 0, self.configuration.videoSize.width, self.configuration.videoSize.height);
-        _waterMarkContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    }
-    return _waterMarkContentView;
-}
 
 - (GPUImageView *)gpuImageView{
     if(!_gpuImageView){
@@ -309,8 +264,6 @@
 
 - (void)reloadFilter{
     [self.filter removeAllTargets];
-    [self.blendFilter removeAllTargets];
-    [self.uiElementInput removeAllTargets];
     [self.videoCamera removeAllTargets];
     [self.output removeAllTargets];
     [self.cropfilter removeAllTargets];
@@ -325,9 +278,6 @@
         self.beautyFilter = nil;
     }
     
-    ///< 调节镜像
-    [self reloadMirror];
-    
     //< 480*640 比例为4:3  强制转换为16:9
     if([self.configuration.avSessionPreset isEqualToString:AVCaptureSessionPreset640x480]){
         CGRect cropRect = self.configuration.landscape ? CGRectMake(0, 0.125, 1, 0.75) : CGRectMake(0.125, 0, 0.75, 1);
@@ -337,26 +287,16 @@
     }else{
         [self.videoCamera addTarget:self.filter];
     }
-    
-    //< 添加水印
-    if(self.warterMarkView){
-        [self.filter addTarget:self.blendFilter];
-        [self.uiElementInput addTarget:self.blendFilter];
-        [self.blendFilter addTarget:self.gpuImageView];
-        if(self.saveLocalVideo) [self.blendFilter addTarget:self.movieWriter];
-        [self.filter addTarget:self.output];
-        [self.uiElementInput update];
-    }else{
-        [self.filter addTarget:self.output];
-        [self.output addTarget:self.gpuImageView];
-        if(self.saveLocalVideo) [self.output addTarget:self.movieWriter];
-    }
-    
+  
+  
+    [self.filter addTarget:self.output];
+    [self.output addTarget:self.gpuImageView];
+    if(self.saveLocalVideo) [self.output addTarget:self.movieWriter];
+  
+  
     [self.filter forceProcessingAtSize:self.configuration.videoSize];
     [self.output forceProcessingAtSize:self.configuration.videoSize];
-    [self.blendFilter forceProcessingAtSize:self.configuration.videoSize];
-    [self.uiElementInput forceProcessingAtSize:self.configuration.videoSize];
-    
+  
     
     //< 输出数据
     __weak typeof(self) _self = self;
@@ -364,14 +304,6 @@
         [_self processVideo:output];
     }];
     
-}
-
-- (void)reloadMirror{
-    if(self.mirror && self.captureDevicePosition == AVCaptureDevicePositionFront){
-        self.videoCamera.horizontallyMirrorFrontFacingCamera = YES;
-    }else{
-        self.videoCamera.horizontallyMirrorFrontFacingCamera = NO;
-    }
 }
 
 #pragma mark Notification
