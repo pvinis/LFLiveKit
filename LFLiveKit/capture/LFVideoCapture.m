@@ -213,28 +213,15 @@
 }
 
 - (void)setZoomScale:(CGFloat)zoomScale {
-  CGFloat fzoomScale = zoomScale;
-  /*
-  if (zoomScale > 2) {
-    if (!usingTele) {
-      [self.videoCamera switchToTelePhotoCamera];
-      usingTele = YES;
-    }
-    fzoomScale /= 2.;
-  } else {
-    if (usingTele) {
-      [self.videoCamera switchToWideAngleCamera];
-      usingTele = NO;
-    }
-  }
-*/
+
   if (!usingDual) {
     [self.videoCamera switchToDualCamera];
-    usingDual = YEzZZS;
-~    if (self.videoCamera && self.videoCamera.inputCamera) {
+    usingDual = YES;
+  }
+    if (self.videoCamera && self.videoCamera.inputCamera) {
         AVCaptureDevice *device = (AVCaptureDevice *)self.videoCamera.inputCamera;
         if ([device lockForConfiguration:nil]) {
-            device.videoZoomFactor = fzoomScale;
+            device.videoZoomFactor = zoomScale;
             [device unlockForConfiguration];
             _zoomScale = zoomScale;
         }
