@@ -203,12 +203,7 @@
 }
 
 - (void)setZoomScale:(CGFloat)zoomScale {
-
-  if (!usingDual) {
-    [self.videoCamera switchToDualCamera];
-    usingDual = YES;
-  }
-    if (self.videoCamera && self.videoCamera.inputCamera) {
+	if (self.videoCamera && self.videoCamera.inputCamera) {
         AVCaptureDevice *device = (AVCaptureDevice *)self.videoCamera.inputCamera;
         if ([device lockForConfiguration:nil]) {
             device.videoZoomFactor = zoomScale;
