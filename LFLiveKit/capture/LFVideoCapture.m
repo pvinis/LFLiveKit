@@ -7,7 +7,6 @@
 //
 
 #import "LFVideoCapture.h"
-#import "LFGPUImageBeautyFilter.h"
 #import "LFGPUImageEmptyFilter.h"
 
 #if __has_include(<GPUImage/GPUImage.h>)
@@ -21,9 +20,7 @@
 @interface LFVideoCapture ()
 
 @property (nonatomic, strong) GPUImageVideoCamera *videoCamera;
-@property (nonatomic, strong) LFGPUImageBeautyFilter *beautyFilter;
 @property (nonatomic, strong) GPUImageOutput<GPUImageInput> *filter;
-@property (nonatomic, strong) GPUImageCropFilter *cropfilter;
 @property (nonatomic, strong) GPUImageOutput<GPUImageInput> *output;
 @property (nonatomic, strong) GPUImageView *gpuImageView;
 @property (nonatomic, strong) LFLiveVideoConfiguration *configuration;
@@ -37,7 +34,6 @@
   BOOL usingDual;
 }
 @synthesize torch = _torch;
-@synthesize beautyLevel = _beautyLevel;
 @synthesize brightLevel = _brightLevel;
 @synthesize zoomScale = _zoomScale;
 
@@ -50,8 +46,6 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChanged:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
         
-        self.beautyFace = YES;
-        self.beautyLevel = 0.5;
         self.brightLevel = 0.5;
         self.zoomScale = 1.0;
     }
@@ -175,27 +169,8 @@
     return (self.videoCamera.videoCaptureConnection.preferredVideoStabilizationMode != AVCaptureVideoStabilizationModeStandard);
 }
 
-- (void)setBeautyFace:(BOOL)beautyFace{
-    _beautyFace = beautyFace;
-    [self reloadFilter];
-}
-
-- (void)setBeautyLevel:(CGFloat)beautyLevel {
-    _beautyLevel = beautyLevel;
-    if (self.beautyFilter) {
-        [self.beautyFilter setBeautyLevel:_beautyLevel];
-    }
-}
-
-- (CGFloat)beautyLevel {
-    return _beautyLevel;
-}
-
 - (void)setBrightLevel:(CGFloat)brightLevel {
     _brightLevel = brightLevel;
-    if (self.beautyFilter) {
-        [self.beautyFilter setBrightLevel:brightLevel];
-    }
 }
 
 - (CGFloat)brightLevel {
@@ -266,27 +241,13 @@
     [self.filter removeAllTargets];
     [self.videoCamera removeAllTargets];
     [self.output removeAllTargets];
-    [self.cropfilter removeAllTargets];
     
-    if (self.beautyFace) {
-        self.output = [[LFGPUImageEmptyFilter alloc] init];
-        self.filter = [[LFGPUImageBeautyFilter alloc] init];
-        self.beautyFilter = (LFGPUImageBeautyFilter*)self.filter;
-    } else {
-        self.output = [[LFGPUImageEmptyFilter alloc] init];
-        self.filter = [[LFGPUImageEmptyFilter alloc] init];
-        self.beautyFilter = nil;
-    }
-    
-    //< 480*640 比例为4:3  强制转换为16:9
-    if([self.configuration.avSessionPreset isEqualToString:AVCaptureSessionPreset640x480]){
-        CGRect cropRect = self.configuration.landscape ? CGRectMake(0, 0.125, 1, 0.75) : CGRectMake(0.125, 0, 0.75, 1);
-        self.cropfilter = [[GPUImageCropFilter alloc] initWithCropRegion:cropRect];
-        [self.videoCamera addTarget:self.cropfilter];
-        [self.cropfilter addTarget:self.filter];
-    }else{
-        [self.videoCamera addTarget:self.filter];
-    }
+
+    self.output = [[LFGPUImageEmptyFilter alloc] init];
+    self.filter = [[LFGPUImageEmptyFilter alloc] init];
+
+  
+    [self.videoCamera addTarget:self.filter];
   
   
     [self.filter addTarget:self.output];

@@ -35,16 +35,10 @@
 /** The captureDevicePosition control camraPosition ,default front*/
 @property (nonatomic, assign) AVCaptureDevicePosition captureDevicePosition;
 
-/** The beautyFace control capture shader filter empty or beautiy */
-@property (nonatomic, assign) BOOL beautyFace;
-
 /** The torch control capture flash is on or off */
 @property (nonatomic, assign) BOOL torch;
 
 @property (nonatomic, assign) BOOL stabilization;
-
-/** The beautyLevel control beautyFace Level, default 0.5, between 0.0 ~ 1.0 */
-@property (nonatomic, assign) CGFloat beautyLevel;
 
 /** The brightLevel control brightness Level, default 0.5, between 0.0 ~ 1.0 */
 @property (nonatomic, assign) CGFloat brightLevel;
