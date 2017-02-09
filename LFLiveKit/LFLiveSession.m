@@ -14,7 +14,6 @@
 #import "LFH264VideoEncoder.h"
 #import "LFStreamRTMPSocket.h"
 #import "LFLiveStreamInfo.h"
-#import "LFGPUImageBeautyFilter.h"
 #import "LFH264VideoEncoder.h"
 
 
@@ -245,12 +244,6 @@
     return self.videoCaptureSource.captureDevicePosition;
 }
 
-- (void)setBeautyFace:(BOOL)beautyFace {
-    [self willChangeValueForKey:@"beautyFace"];
-    [self.videoCaptureSource setBeautyFace:beautyFace];
-    [self didChangeValueForKey:@"beautyFace"];
-}
-
 - (BOOL)saveLocalVideo{
     return self.videoCaptureSource.saveLocalVideo;
 }
@@ -266,20 +259,6 @@
 
 - (void)setSaveLocalVideoPath:(NSString*)saveLocalVideoPath{
     [self.videoCaptureSource setSaveLocalVideoPath:saveLocalVideoPath];
-}
-
-- (BOOL)beautyFace {
-    return self.videoCaptureSource.beautyFace;
-}
-
-- (void)setBeautyLevel:(CGFloat)beautyLevel {
-    [self willChangeValueForKey:@"beautyLevel"];
-    [self.videoCaptureSource setBeautyLevel:beautyLevel];
-    [self didChangeValueForKey:@"beautyLevel"];
-}
-
-- (CGFloat)beautyLevel {
-    return self.videoCaptureSource.beautyLevel;
 }
 
 - (void)setBrightLevel:(CGFloat)brightLevel {
