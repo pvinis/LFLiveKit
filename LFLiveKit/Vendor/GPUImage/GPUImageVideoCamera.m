@@ -385,23 +385,20 @@ void setColorConversion709( GLfloat conversionMatrix[9] )
 
 - (void)switchToDualCamera
 {
-	if (NSClassFromString(@"AVCaptureDeviceDiscoverySession") == nil) {
-		return;
-	}
-
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-	AVCaptureDeviceDiscoverySession *session = [AVCaptureDeviceDiscoverySession
-												discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInDualCamera]
-												mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionUnspecified];
-	AVCaptureDevice *device = [session.devices firstObject];
-	if (device == nil)
-	{
-		return;
-	}
-
+  
+  float version = [UIDevice currentDevice].systemVersion.floatValue;
+  
+  if (version < 10.0) { return; }
+  
+  AVCaptureDeviceType dualCamera = (version >= 10.2 ?
+                                    AVCaptureDeviceTypeBuiltInDualCamera :
+                                    AVCaptureDeviceTypeBuiltInDuoCamera);
+  AVCaptureDeviceDiscoverySession *session = [AVCaptureDeviceDiscoverySession
+                                              discoverySessionWithDeviceTypes:@[dualCamera]
+                                              mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionUnspecified];
+  AVCaptureDevice *device = [session.devices firstObject];
+	if (device == nil) { return; }
 	[self switchToCameraDevice:device];
-#endif
-
 }
 
 - (void)switchToWideAngleCamera
@@ -571,19 +568,17 @@ void setColorConversion709( GLfloat conversionMatrix[9] )
 
 - (BOOL)isBuiltInDualCameraPresent
 {
-	if (NSClassFromString(@"AVCaptureDeviceDiscoverySession") == nil) {
-		return NO;
-	}
-
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-	AVCaptureDeviceDiscoverySession *session = [AVCaptureDeviceDiscoverySession
-												discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInDualCamera]
+  float version = [UIDevice currentDevice].systemVersion.floatValue;
+ 
+  if (version < 10.0) { return NO; }
+  
+  AVCaptureDeviceType dualCamera = (version >= 10.2 ?
+                                    AVCaptureDeviceTypeBuiltInDualCamera :
+                                    AVCaptureDeviceTypeBuiltInDuoCamera);
+  AVCaptureDeviceDiscoverySession *session = [AVCaptureDeviceDiscoverySession
+												discoverySessionWithDeviceTypes:@[dualCamera]
 												mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionUnspecified];
-
 	return ([session.devices count] > 0);
-#else
-	return NO;
-#endif
 }
 
 - (void)setCaptureSessionPreset:(NSString *)captureSessionPreset;
