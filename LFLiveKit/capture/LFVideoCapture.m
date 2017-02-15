@@ -178,10 +178,18 @@
 }
 
 - (void)setZoomScale:(CGFloat)zoomScale {
+  [self setZoomScale:zoomScale ramping:NO];
+}
+
+- (void)setZoomScale:(CGFloat)zoomScale ramping:(BOOL)ramping {
 	if (self.videoCamera && self.videoCamera.inputCamera) {
         AVCaptureDevice *device = (AVCaptureDevice *)self.videoCamera.inputCamera;
         if ([device lockForConfiguration:nil]) {
+          if (ramping) {
+            [device rampToVideoZoomFactor:zoomScale withRate:2.];
+          } else {
             device.videoZoomFactor = zoomScale;
+          }
             [device unlockForConfiguration];
             _zoomScale = zoomScale;
         }

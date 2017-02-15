@@ -71,4 +71,6 @@
  */
 - (nullable instancetype)initWithVideoConfiguration:(nullable LFLiveVideoConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
 
+- (void)setZoomScale:(CGFloat)zoomScale ramping:(BOOL)ramping;
+
 @end

@@ -272,8 +272,12 @@
 }
 
 - (void)setZoomScale:(CGFloat)zoomScale {
+    [self setZoomScale:zoomScale ramping:NO];
+}
+
+- (void)setZoomScale:(CGFloat)zoomScale ramping:(BOOL)ramping {
     [self willChangeValueForKey:@"zoomScale"];
-    [self.videoCaptureSource setZoomScale:zoomScale];
+    [self.videoCaptureSource setZoomScale:zoomScale ramping:ramping];
     [self didChangeValueForKey:@"zoomScale"];
 }
 
