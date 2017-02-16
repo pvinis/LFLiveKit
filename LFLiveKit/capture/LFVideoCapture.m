@@ -92,13 +92,23 @@
     if (!_running) {
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         [self.videoCamera stopCameraCapture];
-        if(self.saveLocalVideo) [self.movieWriter finishRecording];
     } else {
         [UIApplication sharedApplication].idleTimerDisabled = YES;
         [self reloadFilter];
         [self.videoCamera startCameraCapture];
-        if(self.saveLocalVideo) [self.movieWriter startRecording];
     }
+}
+
+- (void)setRecording:(BOOL)recording {
+  if (!self.saveLocalVideo) return;
+  if (_recording == recording) return;
+  _recording = recording;
+  
+  if (_recording) {
+    [self.movieWriter startRecording];
+  } else {
+    [self.movieWriter finishRecording];
+  }
 }
 
 - (void)setPreView:(UIView *)preView {
