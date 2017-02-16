@@ -224,6 +224,13 @@
     self.audioCaptureSource.running = _running;
 }
 
+- (void)setRecording:(BOOL)recording {
+  if (_recording == recording) return;
+  _recording = recording;
+  self.videoCaptureSource.recording = _recording;
+  /// audio?
+}
+
 - (void)setPreView:(UIView *)preView {
     [self willChangeValueForKey:@"preView"];
     [self.videoCaptureSource setPreView:preView];
