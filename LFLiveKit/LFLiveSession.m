@@ -225,6 +225,7 @@
 }
 
 - (void)setRecording:(BOOL)recording {
+  if (!self.saveLocalVideo) return;
   if (_recording == recording) return;
   _recording = recording;
   self.videoCaptureSource.recording = _recording;
