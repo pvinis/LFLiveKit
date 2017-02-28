@@ -231,7 +231,9 @@
     if(!_movieWriter){
         _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:[NSURL fileURLWithPath:self.saveLocalVideoPath] size:self.configuration.videoSize];
         _movieWriter.encodingLiveVideo = YES;
-        _movieWriter.shouldPassthroughAudio = YES;
+//        _movieWriter.shouldPassthroughAudio = YES; /// commented this out. its messing with the audio.
+// specifically, when streaming and recording at the same time, the audio on the recording is fine but on the stream its cutting of every other second.
+// without the above line, its fine for both.
         self.videoCamera.audioEncodingTarget = self.movieWriter;
     }
     return _movieWriter;
