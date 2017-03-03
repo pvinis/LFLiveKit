@@ -8,7 +8,6 @@
 
 #import "LFFrame.h"
 
-
 @interface LFVideoFrame : LFFrame
 
 @property (nonatomic, assign) BOOL isKeyFrame;

@@ -36,7 +36,6 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
 #ifdef DEBUG
         enabledWriteVideoFile = NO;
-        [self initForFilePath];
 #endif
         
     }
@@ -223,12 +222,6 @@ static void VideoCompressonOutputCallback(void *VTref, void *VTFrameRef, OSStatu
         }
 
     }
-}
-
-- (void)initForFilePath {
-    NSString *path = [self GetFilePathByfileName:@"IOSCamDemo.h264"];
-    NSLog(@"%@", path);
-    self->fp = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "wb");
 }
 
 - (NSString *)GetFilePathByfileName:(NSString*)filename {

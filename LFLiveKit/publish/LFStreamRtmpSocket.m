@@ -497,7 +497,7 @@ Failed:
                 [self.delegate socketStatus:self status:LFLiveError];
             }
             if (self.delegate && [self.delegate respondsToSelector:@selector(socketDidError:errorCode:)]) {
-                [self.delegate socketDidError:self errorCode:LFLiveSocketError_ReConnectTimeOut];
+                [self.delegate socketDidError:self errorCode:LFLiveSocketErrorReconnectTimeout];
             }
         }
     });
