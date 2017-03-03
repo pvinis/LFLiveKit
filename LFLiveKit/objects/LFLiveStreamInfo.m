@@ -9,5 +9,4 @@
 #import "LFLiveStreamInfo.h"
 
 @implementation LFLiveStreamInfo
-
 @end

@@ -9,5 +9,4 @@
 #import "LFFrame.h"
 
 @implementation LFFrame
-
 @end

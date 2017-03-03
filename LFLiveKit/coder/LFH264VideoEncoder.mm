@@ -57,7 +57,6 @@
     frameCount = 0;
 #ifdef DEBUG
     enabledWriteVideoFile = NO;
-    [self initForFilePath];
 #endif
     
     _encoder = [LFAVEncoder encoderForHeight:(int)_configuration.videoSize.height andWidth:(int)_configuration.videoSize.width bitrate:(int)_configuration.videoBitRate];
@@ -245,12 +244,6 @@
 
 - (void)shutdown {
     [_encoder encodeWithBlock:nil onParams:nil];
-}
-
-- (void)initForFilePath {
-    NSString *path = [self GetFilePathByfileName:@"IOSCamDemo.h264"];
-    NSLog(@"%@", path);
-    self->fp = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "wb");
 }
 
 - (NSString *)GetFilePathByfileName:(NSString*)filename {

@@ -39,7 +39,6 @@
         
 #ifdef DEBUG
         enabledWriteVideoFile = NO;
-        [self initForFilePath];
 #endif
     }
     return self;
@@ -273,12 +272,6 @@ OSStatus inputDataProc(AudioConverterRef inConverter, UInt32 *ioNumberDataPacket
             sampleRateIndex = 15;
     }
     return sampleRateIndex;
-}
-
-- (void)initForFilePath {
-    NSString *path = [self GetFilePathByfileName:@"IOSCamDemo_HW.aac"];
-    NSLog(@"%@", path);
-    self->fp = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "wb");
 }
 
 - (NSString *)GetFilePathByfileName:(NSString*)filename {
