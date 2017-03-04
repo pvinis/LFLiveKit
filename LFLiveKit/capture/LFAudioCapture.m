@@ -18,7 +18,7 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
 @property (nonatomic, assign) AudioComponentInstance componentInstance;
 @property (nonatomic, assign) AudioComponent component;
 @property (nonatomic, strong) dispatch_queue_t taskQueue;
-@property (nonatomic, assign) BOOL isRunning;
+@property (nonatomic, assign) BOOL running;
 @property (nonatomic, strong, nullable) LFLiveAudioConfiguration *configuration;
 
 @end
@@ -30,7 +30,7 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
 {
   if (self = [super init]) {
         _configuration = configuration;
-        _isRunning = NO;
+        _running = NO;
         _taskQueue = dispatch_queue_create("com.youku.Laifeng.audioCapture.Queue", NULL);
         
         AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -96,12 +96,12 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   
   dispatch_sync(self.taskQueue, ^{
-    if (_componentInstance) {
-      _isRunning = NO;
+    if (self.componentInstance) {
+      self.running = NO;//////is this calling the setter below? it should!
       AudioOutputUnitStop(_componentInstance);
       AudioComponentInstanceDispose(_componentInstance);
-      _componentInstance = nil;
-      _component = nil;
+      self.componentInstance = nil;
+      self.component = nil;
     }
   });
 }
@@ -134,15 +134,15 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
   AVAudioSessionInterruptionType type = [notification.userInfo[AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
   switch (type) {
     case AVAudioSessionInterruptionTypeBegan:
-      self.isRunning = YES;
+      self.running = YES;
       break;
     case AVAudioSessionInterruptionTypeEnded:
-      self.isRunning = NO;
+      self.running = NO;
       break;
   }
 }
 
-#pragma mark -- CallBack
+#pragma mark - CallBack
 static OSStatus handleInputBuffer(void *inRefCon,
                                   AudioUnitRenderActionFlags *ioActionFlags,
                                   const AudioTimeStamp *inTimeStamp,

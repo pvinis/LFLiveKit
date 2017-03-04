@@ -67,8 +67,7 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
 
 @property (nonatomic, assign) BOOL recording;
 
-/** The preView will show OpenGL ES view*/
-@property (nonatomic, strong, null_resettable) UIView *preView;
+@property (nonatomic, strong, null_resettable) UIView *previewView;
 
 /** The captureDevicePosition control camraPosition ,default front*/
 @property (nonatomic, assign) AVCaptureDevicePosition captureDevicePosition;
@@ -76,14 +75,8 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
 /** The brightLevel control brightness Level, Default is 0.5, between 0.0 ~ 1.0 */
 @property (nonatomic, assign) CGFloat brightLevel;
 
-/** The torch control camera zoom scale default 1.0, between 1.0 ~ 3.0 */
+/** The zoom scale default 1.0, between 1.0 ~ 3.0 */
 @property (nonatomic, assign) CGFloat zoomScale;
-
-/** The torch control capture flash is on or off */
-@property (nonatomic, assign) BOOL torch;
-
-/** The mirror control mirror of front camera is on or off */
-@property (nonatomic, assign) BOOL mirror;
 
 /** The muted control callbackAudioData,muted will memset 0.*/
 @property (nonatomic, assign) BOOL muted;

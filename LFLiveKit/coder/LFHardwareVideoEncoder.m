@@ -18,7 +18,7 @@
 }
 
 @property (nonatomic, strong) LFLiveVideoConfiguration *configuration;
-@property (nonatomic, weak) id<LFVideoEncodingDelegate> h264Delegate;
+@property (nonatomic, weak) id<LFVideoEncoderDelegate> h264Delegate;
 @property (nonatomic) NSInteger currentVideoBitRate;
 @property (nonatomic) BOOL isBackGround;
 
@@ -114,11 +114,7 @@
     }
 }
 
-- (void)stopEncoder {
-    VTCompressionSessionCompleteFrames(compressionSession, kCMTimeIndefinite);
-}
-
-- (void)setDelegate:(id<LFVideoEncodingDelegate>)delegate {
+- (void)setDelegate:(id<LFVideoEncoderDelegate>)delegate {
     _h264Delegate = delegate;
 }
 
@@ -222,13 +218,6 @@ static void VideoCompressonOutputCallback(void *VTref, void *VTFrameRef, OSStatu
         }
 
     }
-}
-
-- (NSString *)GetFilePathByfileName:(NSString*)filename {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *writablePath = [documentsDirectory stringByAppendingPathComponent:filename];
-    return writablePath;
 }
 
 @end

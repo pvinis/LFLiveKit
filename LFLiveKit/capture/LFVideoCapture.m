@@ -33,7 +33,7 @@
   BOOL usingTele;
   BOOL usingDual;
 }
-@synthesize torch = _torch;
+
 @synthesize brightLevel = _brightLevel;
 @synthesize zoomScale = _zoomScale;
 
@@ -78,8 +78,6 @@
         [_videoCamera switchToDualCamera];
       }
         _videoCamera.outputImageOrientation = _configuration.outputImageOrientation;
-        _videoCamera.horizontallyMirrorFrontFacingCamera = NO;
-        _videoCamera.horizontallyMirrorRearFacingCamera = NO;
         _videoCamera.frameRate = (int32_t)_configuration.videoFrameRate;
     }
     return _videoCamera;
@@ -110,24 +108,27 @@
   }
 }
 
-- (void)setPreView:(UIView *)preView {
-    if (self.gpuImageView.superview) [self.gpuImageView removeFromSuperview];
-    [preView insertSubview:self.gpuImageView atIndex:0];
-    self.gpuImageView.frame = CGRectMake(0, 0, preView.frame.size.width, preView.frame.size.height);
+- (void)setPreviewView:(UIView *)previewView
+{
+  if (self.gpuImageView.superview) [self.gpuImageView removeFromSuperview];
+  [previewView insertSubview:self.gpuImageView atIndex:0];
+  self.gpuImageView.frame = CGRectMake(0, 0, previewView.frame.size.width, previewView.frame.size.height);
 }
 
-- (UIView *)preView {
-    return self.gpuImageView.superview;
+- (UIView *)previewView
+{
+  return self.gpuImageView.superview;
 }
 
-- (void)setCaptureDevicePosition:(AVCaptureDevicePosition)captureDevicePosition {
-    if(captureDevicePosition == self.videoCamera.cameraPosition) return;
-    [self.videoCamera rotateCamera];
-    self.videoCamera.frameRate = (int32_t)_configuration.videoFrameRate;
+- (void)setCaptureDevicePosition:(AVCaptureDevicePosition)captureDevicePosition
+{
+  if (captureDevicePosition == self.videoCamera.cameraPosition) return;
+  [self.videoCamera rotateCamera];
 }
 
-- (AVCaptureDevicePosition)captureDevicePosition {
-    return [self.videoCamera cameraPosition];
+- (AVCaptureDevicePosition)captureDevicePosition
+{
+    return self.videoCamera.cameraPosition;
 }
 
 - (void)setVideoFrameRate:(NSInteger)videoFrameRate {
@@ -138,34 +139,6 @@
 
 - (NSInteger)videoFrameRate {
     return self.videoCamera.frameRate;
-}
-
-- (void)setTorch:(BOOL)torch {
-    BOOL ret;
-    if (!self.videoCamera.captureSession) return;
-    AVCaptureSession *session = (AVCaptureSession *)self.videoCamera.captureSession;
-    [session beginConfiguration];
-    if (self.videoCamera.inputCamera) {
-        if (self.videoCamera.inputCamera.torchAvailable) {
-            NSError *err = nil;
-            if ([self.videoCamera.inputCamera lockForConfiguration:&err]) {
-                [self.videoCamera.inputCamera setTorchMode:(torch ? AVCaptureTorchModeOn : AVCaptureTorchModeOff) ];
-                [self.videoCamera.inputCamera unlockForConfiguration];
-                ret = (self.videoCamera.inputCamera.torchMode == AVCaptureTorchModeOn);
-            } else {
-                NSLog(@"Error while locking device for torch: %@", err);
-                ret = false;
-            }
-        } else {
-            NSLog(@"Torch not available in current camera input");
-        }
-    }
-    [session commitConfiguration];
-    _torch = ret;
-}
-
-- (BOOL)torch {
-    return self.videoCamera.inputCamera.torchMode;
 }
 
 - (void)setStabilization:(BOOL)stabilization

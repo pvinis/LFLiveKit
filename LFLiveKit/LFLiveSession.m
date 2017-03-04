@@ -11,13 +11,11 @@
 #import "LFAudioCapture.h"
 #import "LFHardwareVideoEncoder.h"
 #import "LFHardwareAudioEncoder.h"
-#import "LFH264VideoEncoder.h"
 #import "LFStreamRTMPSocket.h"
 #import "LFLiveStreamInfo.h"
-#import "LFH264VideoEncoder.h"
 
 
-@interface LFLiveSession ()<LFAudioCaptureDelegate, LFVideoCaptureDelegate, LFAudioEncodingDelegate, LFVideoEncodingDelegate, LFStreamSocketDelegate>
+@interface LFLiveSession ()<LFAudioCaptureDelegate, LFVideoCaptureDelegate, LFAudioEncoderDelegate, LFVideoEncoderDelegate, LFStreamSocketDelegate>
 
 /// 音频配置
 @property (nonatomic, strong) LFLiveAudioConfiguration *audioConfiguration;
@@ -28,9 +26,9 @@
 /// 视频采集
 @property (nonatomic, strong) LFVideoCapture *videoCaptureSource;
 /// 音频编码
-@property (nonatomic, strong) id<LFAudioEncoding> audioEncoder;
+@property (nonatomic, strong) id<LFAudioEncoder> audioEncoder;
 /// 视频编码
-@property (nonatomic, strong) id<LFVideoEncoding> videoEncoder;
+@property (nonatomic, strong) id<LFVideoEncoder> videoEncoder;
 /// 上传
 @property (nonatomic, strong) id<LFStreamSocket> socket;
 
@@ -114,10 +112,11 @@
     }
 }
 
-- (void)pushAudio:(nullable NSData*)audioData{
-    if(self.captureType & LFLiveInputMaskAudio){
-        if (self.uploading) [self.audioEncoder encodeAudioData:audioData timeStamp:NOW];
-    }
+- (void)pushAudio:(nullable NSData*)audioData
+{
+  if (self.captureType & LFLiveInputMaskAudio) {
+    if (self.uploading) [self.audioEncoder encodeAudioData:audioData timeStamp:NOW];
+  }
 }
 
 #pragma mark -- PrivateMethod
@@ -129,7 +128,7 @@
     [self.socket sendFrame:frame];
 }
 
-#pragma mark -- CaptureDelegate
+#pragma mark - LFAudioCaptureDelegate
 - (void)captureOutput:(nullable LFAudioCapture *)capture audioData:(nullable NSData*)audioData {
     if (self.uploading) [self.audioEncoder encodeAudioData:audioData timeStamp:NOW];
 }
@@ -138,16 +137,16 @@
     if (self.uploading) [self.videoEncoder encodeVideoData:pixelBuffer timeStamp:NOW];
 }
 
-#pragma mark -- EncoderDelegate
-- (void)audioEncoder:(nullable id<LFAudioEncoding>)encoder audioFrame:(nullable LFAudioFrame *)frame {
-    //<上传  时间戳对齐
-    if (self.uploading){
-        self.hasCaptureAudio = YES;
-        if(self.AVAlignment) [self pushSendBuffer:frame];
-    }
+#pragma mark - LFAudioEncoderDelegate
+- (void)audioEncoder:(nullable id<LFAudioEncoder>)encoder audioFrame:(nullable LFAudioFrame *)frame
+{
+  if (self.uploading) {
+    self.hasCaptureAudio = YES;
+    if (self.AVAlignment) [self pushSendBuffer:frame]; /////???
+  }
 }
 
-- (void)videoEncoder:(nullable id<LFVideoEncoding>)encoder videoFrame:(nullable LFVideoFrame *)frame {
+- (void)videoEncoder:(nullable id<LFVideoEncoder>)encoder videoFrame:(nullable LFVideoFrame *)frame {
     //<上传 时间戳对齐
     if (self.uploading){
         if(frame.isKeyFrame && self.hasCaptureAudio) self.hasKeyFrameVideo = YES;
@@ -214,7 +213,6 @@
     }
 }
 
-#pragma mark -- Getter Setter
 - (void)setRunning:(BOOL)running {
     if (_running == running) return;
     [self willChangeValueForKey:@"running"];
@@ -232,14 +230,14 @@
   /// audio?
 }
 
-- (void)setPreView:(UIView *)preView {
-    [self willChangeValueForKey:@"preView"];
-    [self.videoCaptureSource setPreView:preView];
-    [self didChangeValueForKey:@"preView"];
+- (void)setPreviewView:(UIView *)previewView
+{
+  [self.videoCaptureSource setPreviewView:previewView];
 }
 
-- (UIView *)preView {
-    return self.videoCaptureSource.preView;
+- (UIView *)previewView
+{
+  return self.videoCaptureSource.previewView;
 }
 
 - (void)setCaptureDevicePosition:(AVCaptureDevicePosition)captureDevicePosition {
@@ -289,28 +287,19 @@
     [self didChangeValueForKey:@"zoomScale"];
 }
 
-- (CGFloat)zoomScale {
-    return self.videoCaptureSource.zoomScale;
+- (CGFloat)zoomScale
+{
+  return self.videoCaptureSource.zoomScale;
 }
 
-- (void)setTorch:(BOOL)torch {
-    [self willChangeValueForKey:@"torch"];
-    [self.videoCaptureSource setTorch:torch];
-    [self didChangeValueForKey:@"torch"];
+- (void)setMuted:(BOOL)muted
+{
+  [self.audioCaptureSource setMuted:muted];
 }
 
-- (BOOL)torch {
-    return self.videoCaptureSource.torch;
-}
-
-- (void)setMuted:(BOOL)muted {
-    [self willChangeValueForKey:@"muted"];
-    [self.audioCaptureSource setMuted:muted];
-    [self didChangeValueForKey:@"muted"];
-}
-
-- (BOOL)muted {
-    return self.audioCaptureSource.muted;
+- (BOOL)muted
+{
+  return self.audioCaptureSource.muted;
 }
 
 - (void)setStabilization:(BOOL)stabilization
@@ -328,13 +317,13 @@
 }
 
 - (LFAudioCapture *)audioCaptureSource {
-    if (!_audioCaptureSource) {
-        if(self.captureType & LFLiveCaptureMaskAudio){
-            _audioCaptureSource = [[LFAudioCapture alloc] initWithAudioConfiguration:_audioConfiguration];
-            _audioCaptureSource.delegate = self;
-        }
+  if (!_audioCaptureSource) {
+    if (self.captureType & LFLiveCaptureMaskAudio) {
+      _audioCaptureSource = [[LFAudioCapture alloc] initWithAudioConfiguration:_audioConfiguration];
+      _audioCaptureSource.delegate = self;
     }
-    return _audioCaptureSource;
+  }
+  return _audioCaptureSource;
 }
 
 - (LFVideoCapture *)videoCaptureSource {
@@ -347,7 +336,8 @@
     return _videoCaptureSource;
 }
 
-- (id<LFAudioEncoding>)audioEncoder {
+- (id<LFAudioEncoder>)audioEncoder
+{
     if (!_audioEncoder) {
         _audioEncoder = [[LFHardwareAudioEncoder alloc] initWithAudioStreamConfiguration:_audioConfiguration];
         [_audioEncoder setDelegate:self];
@@ -355,21 +345,20 @@
     return _audioEncoder;
 }
 
-- (id<LFVideoEncoding>)videoEncoder {
-    if (!_videoEncoder) {
-        if([[UIDevice currentDevice].systemVersion floatValue] < 8.0){
-            _videoEncoder = [[LFH264VideoEncoder alloc] initWithVideoStreamConfiguration:_videoConfiguration];
-        }else{
-            _videoEncoder = [[LFHardwareVideoEncoder alloc] initWithVideoStreamConfiguration:_videoConfiguration];
-        }
-        [_videoEncoder setDelegate:self];
-    }
-    return _videoEncoder;
+- (id<LFVideoEncoder>)videoEncoder
+{
+  if (!_videoEncoder) {
+    _videoEncoder = [[LFHardwareVideoEncoder alloc] initWithVideoStreamConfiguration:_videoConfiguration];
+    [_videoEncoder setDelegate:self];
+  }
+  return _videoEncoder;
 }
 
 - (id<LFStreamSocket>)socket {
     if (!_socket) {
-        _socket = [[LFStreamRTMPSocket alloc] initWithStream:self.streamInfo reconnectInterval:self.reconnectInterval reconnectCount:self.reconnectCount];
+        _socket = [[LFStreamRTMPSocket alloc] initWithStream:self.streamInfo
+                                           reconnectInterval:self.reconnectInterval
+                                              reconnectCount:self.reconnectCount];
         [_socket setDelegate:self];
     }
     return _socket;

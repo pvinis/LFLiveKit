@@ -17,7 +17,7 @@
     BOOL enabledWriteVideoFile;
 }
 @property (nonatomic, strong) LFLiveAudioConfiguration *configuration;
-@property (nonatomic, weak) id<LFAudioEncodingDelegate> aacDeleage;
+@property (nonatomic, weak) id<LFAudioEncoderDelegate> aacDeleage;
 
 @end
 
@@ -50,7 +50,7 @@
 }
 
 #pragma mark -- LFAudioEncoder
-- (void)setDelegate:(id<LFAudioEncodingDelegate>)delegate {
+- (void)setDelegate:(id<LFAudioEncoderDelegate>)delegate {
     _aacDeleage = delegate;
 }
 
@@ -131,57 +131,50 @@
     
 }
 
-- (void)stopEncoder {
+- (BOOL)createAudioConvert
+{
+  if (m_converter != nil) {
+    return TRUE;
+  }
     
-}
+  AudioStreamBasicDescription input = {0};
+  input.mSampleRate = _configuration.audioSampleRate;
+  input.mChannelsPerFrame = (UInt32)_configuration.numberOfChannels;
+  input.mBitsPerChannel = 16;
+  input.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked;
+  input.mFormatID = kAudioFormatLinearPCM;
+  input.mFramesPerPacket = 1;
+  input.mBytesPerFrame = input.mChannelsPerFrame * input.mBitsPerChannel / 8;
+  input.mBytesPerPacket = input.mFramesPerPacket * input.mBytesPerFrame;
+    
+  AudioStreamBasicDescription output = {0};
+  output.mFormatID = kAudioFormatMPEG4AAC;
+  output.mFramesPerPacket = 1024;
+  output.mSampleRate = _configuration.audioSampleRate;
+  output.mChannelsPerFrame = (UInt32)_configuration.numberOfChannels;
 
-#pragma mark -- CustomMethod
-- (BOOL)createAudioConvert { //根据输入样本初始化一个编码转换器
-    if (m_converter != nil) {
-        return TRUE;
+  const OSType subtype = kAudioFormatMPEG4AAC;
+  AudioClassDescription requestedCodecs[2] = {
+    {
+      kAudioEncoderComponentType,
+      subtype,
+      kAppleSoftwareAudioCodecManufacturer
+    },
+    {
+      kAudioEncoderComponentType,
+      subtype,
+      kAppleHardwareAudioCodecManufacturer
     }
-    
-    AudioStreamBasicDescription inputFormat = {0};
-    inputFormat.mSampleRate = _configuration.audioSampleRate;
-    inputFormat.mFormatID = kAudioFormatLinearPCM;
-    inputFormat.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked;
-    inputFormat.mChannelsPerFrame = (UInt32)_configuration.numberOfChannels;
-    inputFormat.mFramesPerPacket = 1;
-    inputFormat.mBitsPerChannel = 16;
-    inputFormat.mBytesPerFrame = inputFormat.mBitsPerChannel / 8 * inputFormat.mChannelsPerFrame;
-    inputFormat.mBytesPerPacket = inputFormat.mBytesPerFrame * inputFormat.mFramesPerPacket;
-    
-    AudioStreamBasicDescription outputFormat; // 这里开始是输出音频格式
-    memset(&outputFormat, 0, sizeof(outputFormat));
-    outputFormat.mSampleRate = inputFormat.mSampleRate;       // 采样率保持一致
-    outputFormat.mFormatID = kAudioFormatMPEG4AAC;            // AAC编码 kAudioFormatMPEG4AAC kAudioFormatMPEG4AAC_HE_V2
-    outputFormat.mChannelsPerFrame = (UInt32)_configuration.numberOfChannels;;
-    outputFormat.mFramesPerPacket = 1024;                     // AAC一帧是1024个字节
-    
-    const OSType subtype = kAudioFormatMPEG4AAC;
-    AudioClassDescription requestedCodecs[2] = {
-        {
-            kAudioEncoderComponentType,
-            subtype,
-            kAppleSoftwareAudioCodecManufacturer
-        },
-        {
-            kAudioEncoderComponentType,
-            subtype,
-            kAppleHardwareAudioCodecManufacturer
-        }
-    };
-    
-    OSStatus result = AudioConverterNewSpecific(&inputFormat, &outputFormat, 2, requestedCodecs, &m_converter);;
-    UInt32 outputBitrate = _configuration.audioBitrate;
-    UInt32 propSize = sizeof(outputBitrate);
-    
-    
-    if(result == noErr) {
-        result = AudioConverterSetProperty(m_converter, kAudioConverterEncodeBitRate, propSize, &outputBitrate);
-    }
-    
-    return YES;
+  };
+  
+  UInt32 outputBitrate = _configuration.audioBitrate;
+  UInt32 propSize = sizeof(outputBitrate);
+  OSStatus result = AudioConverterNewSpecific(&input, &output, 2, requestedCodecs, &m_converter);
+  if (result == noErr) {
+      result = AudioConverterSetProperty(m_converter, kAudioConverterEncodeBitRate, propSize, &outputBitrate);
+  }
+ 
+  return YES;
 }
 
 
@@ -272,13 +265,6 @@ OSStatus inputDataProc(AudioConverterRef inConverter, UInt32 *ioNumberDataPacket
             sampleRateIndex = 15;
     }
     return sampleRateIndex;
-}
-
-- (NSString *)GetFilePathByfileName:(NSString*)filename {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *writablePath = [documentsDirectory stringByAppendingPathComponent:filename];
-    return writablePath;
 }
 
 @end

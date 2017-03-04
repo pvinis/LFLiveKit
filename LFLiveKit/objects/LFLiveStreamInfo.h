@@ -31,10 +31,10 @@ typedef NS_ENUM (NSUInteger, LFLiveSocketErrorCode) {
 
 @property (nonatomic, copy) NSString *streamId;
 
-#pragma mark -- FLV
+#pragma mark - FLV
 @property (nonatomic, copy) NSString *host;
 @property (nonatomic, assign) NSInteger port;
-#pragma mark -- RTMP
+#pragma mark - RTMP
 @property (nonatomic, copy) NSString *url;
 
 @property (nonatomic, strong) LFLiveAudioConfiguration *audioConfiguration;

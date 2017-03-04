@@ -1,5 +1,5 @@
 //
-//  LFVideoEncoding.h
+//  LFVideoEncoder.h
 //  LFLiveKit
 //
 //  Created by LaiFeng on 16/5/20.
@@ -10,21 +10,21 @@
 #import "LFVideoFrame.h"
 #import "LFLiveVideoConfiguration.h"
 
-@protocol LFVideoEncoding;
-/// 编码器编码后回调
-@protocol LFVideoEncodingDelegate <NSObject>
+@protocol LFVideoEncoder;
+
+
+@protocol LFVideoEncoderDelegate <NSObject>
 @required
-- (void)videoEncoder:(nullable id<LFVideoEncoding>)encoder videoFrame:(nullable LFVideoFrame *)frame;
+- (void)videoEncoder:(nullable id<LFVideoEncoder>)encoder videoFrame:(nullable LFVideoFrame *)frame;
 @end
 
-/// 编码器抽象的接口
-@protocol LFVideoEncoding <NSObject>
+
+@protocol LFVideoEncoder <NSObject>
 @required
 - (void)encodeVideoData:(nullable CVPixelBufferRef)pixelBuffer timeStamp:(uint64_t)timeStamp;
 @optional
 @property (nonatomic, assign) NSInteger videoBitRate;
 - (nullable instancetype)initWithVideoStreamConfiguration:(nullable LFLiveVideoConfiguration *)configuration;
-- (void)setDelegate:(nullable id<LFVideoEncodingDelegate>)delegate;
-- (void)stopEncoder;
+- (void)setDelegate:(nullable id<LFVideoEncoderDelegate>)delegate;
 @end
 

@@ -31,21 +31,17 @@
 
 @property (nonatomic, assign) BOOL recording;
 
-/** The preView will show OpenGL ES view*/
-@property (null_resettable, nonatomic, strong) UIView *preView;
+@property (null_resettable, nonatomic, strong) UIView *previewView;
 
 /** The captureDevicePosition control camraPosition ,default front*/
 @property (nonatomic, assign) AVCaptureDevicePosition captureDevicePosition;
-
-/** The torch control capture flash is on or off */
-@property (nonatomic, assign) BOOL torch;
 
 @property (nonatomic, assign) BOOL stabilization;
 
 /** The brightLevel control brightness Level, default 0.5, between 0.0 ~ 1.0 */
 @property (nonatomic, assign) CGFloat brightLevel;
 
-/** The torch control camera zoom scale default 1.0, between 1.0 ~ 3.0 */
+/** The camera zoom scale default 1.0, between 1.0 ~ 3.0 */
 @property (nonatomic, assign) CGFloat zoomScale;
 
 /** The videoFrameRate control videoCapture output data count */

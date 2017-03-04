@@ -6,14 +6,10 @@
 //  Copyright © 2016年 LaiFeng All rights reserved.
 //
 
-#import "LFVideoEncoding.h"
+#import "LFVideoEncoder.h"
 
-@interface LFHardwareVideoEncoder : NSObject<LFVideoEncoding>
+@interface LFHardwareVideoEncoder : NSObject <LFVideoEncoder>
 
-#pragma mark - Initializer
-///=============================================================================
-/// @name Initializer
-///=============================================================================
 - (nullable instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (nullable instancetype)new UNAVAILABLE_ATTRIBUTE;
 

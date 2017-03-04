@@ -6,14 +6,10 @@
 //  Copyright © 2016年 LaiFeng All rights reserved.
 //
 
-#import "LFAudioEncoding.h"
+#import "LFAudioEncoder.h"
 
-@interface LFHardwareAudioEncoder : NSObject<LFAudioEncoding>
+@interface LFHardwareAudioEncoder : NSObject <LFAudioEncoder>
 
-#pragma mark - Initializer
-///=============================================================================
-/// @name Initializer
-///=============================================================================
 - (nullable instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (nullable instancetype)new UNAVAILABLE_ATTRIBUTE;
 

@@ -1,5 +1,5 @@
 //
-//  LFAudioEncoding.h
+//  LFAudioEncoder.h
 //  LFLiveKit
 //
 //  Created by LaiFeng on 16/5/20.
@@ -11,23 +11,20 @@
 #import "LFAudioFrame.h"
 #import "LFLiveAudioConfiguration.h"
 
+@protocol LFAudioEncoder;
 
 
-@protocol LFAudioEncoding;
-/// 编码器编码后回调
-@protocol LFAudioEncodingDelegate <NSObject>
+@protocol LFAudioEncoderDelegate <NSObject>
 @required
-- (void)audioEncoder:(nullable id<LFAudioEncoding>)encoder audioFrame:(nullable LFAudioFrame *)frame;
+- (void)audioEncoder:(nullable id<LFAudioEncoder>)encoder audioFrame:(nullable LFAudioFrame *)frame;
 @end
 
-/// 编码器抽象的接口
-@protocol LFAudioEncoding <NSObject>
+
+@protocol LFAudioEncoder <NSObject>
 @required
-- (void)encodeAudioData:(nullable NSData*)audioData timeStamp:(uint64_t)timeStamp;
-- (void)stopEncoder;
+- (void)encodeAudioData:(nullable NSData *)audioData timeStamp:(uint64_t)timeStamp;
 @optional
 - (nullable instancetype)initWithAudioStreamConfiguration:(nullable LFLiveAudioConfiguration *)configuration;
-- (void)setDelegate:(nullable id<LFAudioEncodingDelegate>)delegate;
+- (void)setDelegate:(nullable id<LFAudioEncoderDelegate>)delegate;
 - (nullable NSData *)adtsData:(NSInteger)channel rawDataLength:(NSInteger)rawDataLength;
 @end
-
