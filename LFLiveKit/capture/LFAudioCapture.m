@@ -18,7 +18,6 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
 @property (nonatomic, assign) AudioComponentInstance componentInstance;
 @property (nonatomic, assign) AudioComponent component;
 @property (nonatomic, strong) dispatch_queue_t taskQueue;
-@property (nonatomic, assign) BOOL running;
 @property (nonatomic, strong, nullable) LFLiveAudioConfiguration *configuration;
 
 @end
