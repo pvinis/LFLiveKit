@@ -68,7 +68,10 @@ static const NSUInteger defaultSendBufferMaxCount = 600;///< 最大缓冲区为6
         /// 添加至缓冲区
         LFFrame *firstFrame = [self.sortList lfPopFirstObject];
 
-        if (firstFrame) [self.list addObject:firstFrame];
+        if (firstFrame) {
+        [self.list addObject:firstFrame];
+//            NSLog(@"has %d", self.list.count);
+        }
     }
     dispatch_semaphore_signal(_lock);
 }
@@ -152,11 +155,14 @@ NSInteger frameDataCompare(id obj1, id obj2, void *context){
     NSInteger increaseCount = 0;
     NSInteger decreaseCount = 0;
 
+    NSLog(@"thresh %@", self.thresholdList);
     for (NSNumber *number in self.thresholdList) {
-        if (number.integerValue > currentCount) {
-            increaseCount++;
-        } else{
+        if (number.integerValue == 1) {
             decreaseCount++;
+//            increaseCount++;
+        } else {
+            increaseCount++;
+//            decreaseCount++;
         }
         currentCount = [number integerValue];
     }
@@ -198,25 +204,34 @@ NSInteger frameDataCompare(id obj1, id obj2, void *context){
 - (void)tick {
     /** 采样 3个阶段   如果网络都是好或者都是差给回调 */
     _currentInterval += self.updateInterval;
+    if (_currentInterval <= 0) {
+        [self.thresholdList removeAllObjects];
+    }
 
     dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
-    [self.thresholdList addObject:@(self.list.count)];
+    [self.thresholdList addObject:@(self.list.count > 150 ? 1 : 0)];
     dispatch_semaphore_signal(_lock);
-    
     if (self.currentInterval >= self.callBackInterval) {
         LFLiveBuffferState state = [self currentBufferState];
+        NSLog(@"tick");
         if (state == LFLiveBuffferIncrease) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(streamingBuffer:bufferState:)]) {
                 [self.delegate streamingBuffer:self bufferState:LFLiveBuffferIncrease];
             }
+            self.currentInterval = -6;
         } else if (state == LFLiveBuffferDecline) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(streamingBuffer:bufferState:)]) {
                 [self.delegate streamingBuffer:self bufferState:LFLiveBuffferDecline];
+                self.currentInterval = -6;
+
             }
+        } else {
+self.currentInterval = 0;
+            [self.thresholdList removeAllObjects];
+
         }
 
-        self.currentInterval = 0;
-        [self.thresholdList removeAllObjects];
+
     }
     __weak typeof(self) _self = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.updateInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

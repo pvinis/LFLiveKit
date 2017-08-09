@@ -69,6 +69,7 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
 
 /** The preView will show OpenGL ES view*/
 @property (nonatomic, strong, null_resettable) UIView *preView;
+- (void)setBitrate:(NSInteger)bitrate;
 
 /** The captureDevicePosition control camraPosition ,default front*/
 @property (nonatomic, assign) AVCaptureDevicePosition captureDevicePosition;
