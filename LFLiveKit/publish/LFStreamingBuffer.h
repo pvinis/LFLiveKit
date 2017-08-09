@@ -10,12 +10,10 @@
 #import "LFAudioFrame.h"
 #import "LFVideoFrame.h"
 
-
-/** current buffer status */
-typedef NS_ENUM (NSUInteger, LFLiveBuffferState) {
-    LFLiveBuffferUnknown = 0,      //< 未知
-    LFLiveBuffferIncrease = 1,    //< 缓冲区状态差应该降低码率
-    LFLiveBuffferDecline = 2      //< 缓冲区状态好应该提升码率
+typedef NS_ENUM (NSUInteger, LFLiveBufferState) {
+    LFLiveBufferStateStable = 0,
+    LFLiveBufferStateFillingUp,
+    LFLiveBufferStateEmptying,
 };
 
 @class LFStreamingBuffer;
@@ -23,7 +21,7 @@ typedef NS_ENUM (NSUInteger, LFLiveBuffferState) {
 @protocol LFStreamingBufferDelegate <NSObject>
 @optional
 /** 当前buffer变动（增加or减少） 根据buffer中的updateInterval时间回调*/
-- (void)streamingBuffer:(nullable LFStreamingBuffer *)buffer bufferState:(LFLiveBuffferState)state;
+- (void)streamingBuffer:(nullable LFStreamingBuffer *)buffer bufferState:(LFLiveBufferState)state;
 @end
 
 @interface LFStreamingBuffer : NSObject

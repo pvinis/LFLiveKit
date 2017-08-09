@@ -196,10 +196,10 @@
     }
 }
 
-- (void)socketBufferStatus:(nullable id<LFStreamSocket>)socket status:(LFLiveBuffferState)status {
+- (void)socketBufferStatus:(nullable id<LFStreamSocket>)socket status:(LFLiveBufferState)status {
     if((self.captureType & LFLiveCaptureMaskVideo || self.captureType & LFLiveInputMaskVideo) && self.adaptiveBitrate){
         NSUInteger videoBitRate = [self.videoEncoder videoBitRate];
-        if (status == LFLiveBuffferDecline) {
+        if (status == LFLiveBufferStateEmptying) {
             if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
                 videoBitRate = videoBitRate + 50 * 1000;
                 [self.videoEncoder setVideoBitRate:videoBitRate];

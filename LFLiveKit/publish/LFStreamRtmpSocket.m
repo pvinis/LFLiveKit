@@ -542,7 +542,7 @@ void ConnectionTimeCallback(PILI_CONNECTION_TIME *conn_time, void *userData) {
 }
 
 #pragma mark -- LFStreamingBufferDelegate
-- (void)streamingBuffer:(nullable LFStreamingBuffer *)buffer bufferState:(LFLiveBuffferState)state{
+- (void)streamingBuffer:(nullable LFStreamingBuffer *)buffer bufferState:(LFLiveBufferState)state{
     if(self.delegate && [self.delegate respondsToSelector:@selector(socketBufferStatus:status:)]){
         [self.delegate socketBufferStatus:self status:state];
     }
