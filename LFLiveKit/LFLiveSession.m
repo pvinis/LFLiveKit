@@ -332,12 +332,12 @@
     return self.audioCaptureSource.muted;
 }
 
-- (void)setWarterMarkView:(UIView *)warterMarkView{
-    [self.videoCaptureSource setWarterMarkView:warterMarkView];
+- (void)setWaterMarkView:(UIView *)waterMarkView{
+    [self.videoCaptureSource setWaterMarkView:waterMarkView];
 }
 
-- (nullable UIView*)warterMarkView{
-    return self.videoCaptureSource.warterMarkView;
+- (nullable UIView*)waterMarkView{
+    return self.videoCaptureSource.waterMarkView;
 }
 
 - (nullable UIImage *)currentImage{
