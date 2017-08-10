@@ -209,7 +209,7 @@
             if (videoBitRate > self.videoConfiguration.videoMinBitRate) {
                 videoBitRate = videoBitRate - 100 * 1000;
                 [self.videoEncoder setVideoBitRate:videoBitRate];
-                NSLog(@"Decline bitrate %@", @(videoBitRate));
+                NSLog(@"Decrease bitrate %@", @(videoBitRate));
             }
         }
     }

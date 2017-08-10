@@ -51,7 +51,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChanged:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
         
-        self.beautyFace = YES;
+        self.beautyFace = NO;
         self.beautyLevel = 0.5;
         self.brightLevel = 0.5;
         self.zoomScale = 1.0;
@@ -74,7 +74,7 @@
 
 - (GPUImageVideoCamera *)videoCamera{
     if(!_videoCamera){
-        _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:_configuration.avSessionPreset cameraPosition:AVCaptureDevicePositionFront];
+        _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:_configuration.avSessionPreset cameraPosition:AVCaptureDevicePositionBack];
         _videoCamera.outputImageOrientation = _configuration.outputImageOrientation;
         _videoCamera.horizontallyMirrorFrontFacingCamera = NO;
         _videoCamera.horizontallyMirrorRearFacingCamera = NO;
