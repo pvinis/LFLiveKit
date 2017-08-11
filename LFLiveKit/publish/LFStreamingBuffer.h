@@ -17,7 +17,7 @@ typedef NS_ENUM (NSUInteger, LFLiveBufferState) {
 };
 
 @class LFStreamingBuffer;
-/** this two method will control videoBitRate */
+/** this two method will control videoBitrate */
 @protocol LFStreamingBufferDelegate <NSObject>
 @optional
 /** 当前buffer变动（增加or减少） 根据buffer中的updateInterval时间回调*/

@@ -121,6 +121,12 @@
     }
 }
 
+- (void)setVideoBitrate:(NSUInteger)bitrate
+{
+    self.videoEncoder.videoBitrate = bitrate;
+    NSLog(@"Moved bitrate %@", @(bitrate));
+}
+
 #pragma mark -- PrivateMethod
 - (void)pushSendBuffer:(LFFrame*)frame{
     if(self.relativeTimestamps == 0){
@@ -198,18 +204,18 @@
 
 - (void)socketBufferStatus:(nullable id<LFStreamSocket>)socket status:(LFLiveBufferState)status {
     if((self.captureType & LFLiveCaptureMaskVideo || self.captureType & LFLiveInputMaskVideo) && self.adaptiveBitrate){
-        NSUInteger videoBitRate = [self.videoEncoder videoBitRate];
+        NSUInteger videoBitrate = [self.videoEncoder videoBitrate];
         if (status == LFLiveBufferStateEmptying) {
-            if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
-                videoBitRate = videoBitRate + 50 * 1000;
-                [self.videoEncoder setVideoBitRate:videoBitRate];
-                NSLog(@"Increase bitrate %@", @(videoBitRate));
+            if (videoBitrate < _videoConfiguration.videoMaxBitrate) {
+                videoBitrate = videoBitrate + 50 * 1000;
+                [self.videoEncoder setVideoBitrate:videoBitrate];
+                NSLog(@"Increase bitrate %@", @(videoBitrate));
             }
         } else {
-            if (videoBitRate > self.videoConfiguration.videoMinBitRate) {
-                videoBitRate = videoBitRate - 100 * 1000;
-                [self.videoEncoder setVideoBitRate:videoBitRate];
-                NSLog(@"Decrease bitrate %@", @(videoBitRate));
+            if (videoBitrate > self.videoConfiguration.videoMinBitrate) {
+                videoBitrate = videoBitrate - 100 * 1000;
+                [self.videoEncoder setVideoBitrate:videoBitrate];
+                NSLog(@"Decrease bitrate %@", @(videoBitrate));
             }
         }
     }
