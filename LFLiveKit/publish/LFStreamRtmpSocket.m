@@ -481,6 +481,8 @@ Failed:
     free(body);
 }
 
+
+///reconnect is firing when the info.url is @"blabla"; (no ://)
 // 断线重连
 - (void)reconnect {
     dispatch_async(self.rtmpSendQueue, ^{
