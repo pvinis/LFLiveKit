@@ -82,13 +82,13 @@ typedef NS_ENUM (NSUInteger, LFLiveVideoQuality){
 @property (nonatomic, assign) NSUInteger videoMaxKeyframeInterval;
 
 /// 视频的码率，单位是 bps
-@property (nonatomic, assign) NSUInteger videoBitRate;
+@property (nonatomic, assign) NSUInteger videoBitrate;
 
 /// 视频的最大码率，单位是 bps
-@property (nonatomic, assign) NSUInteger videoMaxBitRate;
+@property (nonatomic, assign) NSUInteger videoMaxBitrate;
 
 /// 视频的最小码率，单位是 bps
-@property (nonatomic, assign) NSUInteger videoMinBitRate;
+@property (nonatomic, assign) NSUInteger videoMinBitrate;
 
 ///< 分辨率
 @property (nonatomic, assign) LFLiveVideoSessionPreset sessionPreset;

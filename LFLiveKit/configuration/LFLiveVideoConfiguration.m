@@ -32,9 +32,9 @@
         configuration.videoFrameRate = 15;
         configuration.videoMaxFrameRate = 15;
         configuration.videoMinFrameRate = 10;
-        configuration.videoBitRate = 500 * 1000;
-        configuration.videoMaxBitRate = 600 * 1000;
-        configuration.videoMinBitRate = 400 * 1000;
+        configuration.videoBitrate = 500 * 1000;
+        configuration.videoMaxBitrate = 600 * 1000;
+        configuration.videoMinBitrate = 400 * 1000;
         configuration.videoSize = CGSizeMake(360, 640);
     }
         break;
@@ -43,9 +43,9 @@
         configuration.videoFrameRate = 24;
         configuration.videoMaxFrameRate = 24;
         configuration.videoMinFrameRate = 12;
-        configuration.videoBitRate = 600 * 1000;
-        configuration.videoMaxBitRate = 720 * 1000;
-        configuration.videoMinBitRate = 500 * 1000;
+        configuration.videoBitrate = 600 * 1000;
+        configuration.videoMaxBitrate = 720 * 1000;
+        configuration.videoMinBitrate = 500 * 1000;
         configuration.videoSize = CGSizeMake(360, 640);
     }
         break;
@@ -54,9 +54,9 @@
         configuration.videoFrameRate = 30;
         configuration.videoMaxFrameRate = 30;
         configuration.videoMinFrameRate = 15;
-        configuration.videoBitRate = 800 * 1000;
-        configuration.videoMaxBitRate = 960 * 1000;
-        configuration.videoMinBitRate = 600 * 1000;
+        configuration.videoBitrate = 800 * 1000;
+        configuration.videoMaxBitrate = 960 * 1000;
+        configuration.videoMinBitrate = 600 * 1000;
         configuration.videoSize = CGSizeMake(360, 640);
     }
         break;
@@ -65,9 +65,9 @@
         configuration.videoFrameRate = 15;
         configuration.videoMaxFrameRate = 15;
         configuration.videoMinFrameRate = 10;
-        configuration.videoBitRate = 800 * 1000;
-        configuration.videoMaxBitRate = 960 * 1000;
-        configuration.videoMinBitRate = 500 * 1000;
+        configuration.videoBitrate = 800 * 1000;
+        configuration.videoMaxBitrate = 960 * 1000;
+        configuration.videoMinBitrate = 500 * 1000;
         configuration.videoSize = CGSizeMake(540, 960);
     }
         break;
@@ -76,9 +76,9 @@
         configuration.videoFrameRate = 24;
         configuration.videoMaxFrameRate = 24;
         configuration.videoMinFrameRate = 12;
-        configuration.videoBitRate = 800 * 1000;
-        configuration.videoMaxBitRate = 960 * 1000;
-        configuration.videoMinBitRate = 500 * 1000;
+        configuration.videoBitrate = 800 * 1000;
+        configuration.videoMaxBitrate = 960 * 1000;
+        configuration.videoMinBitrate = 500 * 1000;
         configuration.videoSize = CGSizeMake(540, 960);
     }
         break;
@@ -87,9 +87,9 @@
         configuration.videoFrameRate = 30;
         configuration.videoMaxFrameRate = 30;
         configuration.videoMinFrameRate = 15;
-        configuration.videoBitRate = 1000 * 1000;
-        configuration.videoMaxBitRate = 1200 * 1000;
-        configuration.videoMinBitRate = 500 * 1000;
+        configuration.videoBitrate = 1000 * 1000;
+        configuration.videoMaxBitrate = 1200 * 1000;
+        configuration.videoMinBitrate = 500 * 1000;
         configuration.videoSize = CGSizeMake(540, 960);
     }
         break;
@@ -98,9 +98,9 @@
         configuration.videoFrameRate = 15;
         configuration.videoMaxFrameRate = 15;
         configuration.videoMinFrameRate = 10;
-        configuration.videoBitRate = 1000 * 1000;
-        configuration.videoMaxBitRate = 1200 * 1000;
-        configuration.videoMinBitRate = 500 * 1000;
+        configuration.videoBitrate = 1000 * 1000;
+        configuration.videoMaxBitrate = 1200 * 1000;
+        configuration.videoMinBitrate = 500 * 1000;
         configuration.videoSize = CGSizeMake(720, 1280);
     }
         break;
@@ -109,9 +109,9 @@
         configuration.videoFrameRate = 24;
         configuration.videoMaxFrameRate = 24;
         configuration.videoMinFrameRate = 12;
-        configuration.videoBitRate = 1200 * 1000;
-        configuration.videoMaxBitRate = 1440 * 1000;
-        configuration.videoMinBitRate = 800 * 1000;
+        configuration.videoBitrate = 1200 * 1000;
+        configuration.videoMaxBitrate = 1440 * 1000;
+        configuration.videoMinBitrate = 800 * 1000;
         configuration.videoSize = CGSizeMake(720, 1280);
     }
         break;
@@ -120,9 +120,9 @@
         configuration.videoFrameRate = 30;
         configuration.videoMaxFrameRate = 30;
         configuration.videoMinFrameRate = 15;
-        configuration.videoBitRate = 1200 * 1000;
-        configuration.videoMaxBitRate = 1440 * 1000;
-        configuration.videoMinBitRate = 500 * 1000;
+        configuration.videoBitrate = 1200 * 1000;
+        configuration.videoMaxBitrate = 1440 * 1000;
+        configuration.videoMinBitrate = 500 * 1000;
         configuration.videoSize = CGSizeMake(720, 1280);
     }
         break;
@@ -177,14 +177,14 @@
     return _videoSize;
 }
 
-- (void)setVideoMaxBitRate:(NSUInteger)videoMaxBitRate {
-    if (videoMaxBitRate <= _videoBitRate) return;
-    _videoMaxBitRate = videoMaxBitRate;
+- (void)setVideoMaxBitrate:(NSUInteger)videoMaxBitrate {
+    if (videoMaxBitrate <= _videoBitrate) return;
+    _videoMaxBitrate = videoMaxBitrate;
 }
 
-- (void)setVideoMinBitRate:(NSUInteger)videoMinBitRate {
-    if (videoMinBitRate >= _videoBitRate) return;
-    _videoMinBitRate = videoMinBitRate;
+- (void)setVideoMinBitrate:(NSUInteger)videoMinBitrate {
+    if (videoMinBitrate >= _videoBitrate) return;
+    _videoMinBitrate = videoMinBitrate;
 }
 
 - (void)setVideoMaxFrameRate:(NSUInteger)videoMaxFrameRate {
@@ -275,9 +275,9 @@
     [aCoder encodeObject:@(self.videoMaxFrameRate) forKey:@"videoMaxFrameRate"];
     [aCoder encodeObject:@(self.videoMinFrameRate) forKey:@"videoMinFrameRate"];
     [aCoder encodeObject:@(self.videoMaxKeyframeInterval) forKey:@"videoMaxKeyframeInterval"];
-    [aCoder encodeObject:@(self.videoBitRate) forKey:@"videoBitRate"];
-    [aCoder encodeObject:@(self.videoMaxBitRate) forKey:@"videoMaxBitRate"];
-    [aCoder encodeObject:@(self.videoMinBitRate) forKey:@"videoMinBitRate"];
+    [aCoder encodeObject:@(self.videoBitrate) forKey:@"videoBitrate"];
+    [aCoder encodeObject:@(self.videoMaxBitrate) forKey:@"videoMaxBitrate"];
+    [aCoder encodeObject:@(self.videoMinBitrate) forKey:@"videoMinBitrate"];
     [aCoder encodeObject:@(self.sessionPreset) forKey:@"sessionPreset"];
     [aCoder encodeObject:@(self.outputImageOrientation) forKey:@"outputImageOrientation"];
     [aCoder encodeObject:@(self.autorotate) forKey:@"autorotate"];
@@ -291,9 +291,9 @@
     _videoMaxFrameRate = [[aDecoder decodeObjectForKey:@"videoMaxFrameRate"] unsignedIntegerValue];
     _videoMinFrameRate = [[aDecoder decodeObjectForKey:@"videoMinFrameRate"] unsignedIntegerValue];
     _videoMaxKeyframeInterval = [[aDecoder decodeObjectForKey:@"videoMaxKeyframeInterval"] unsignedIntegerValue];
-    _videoBitRate = [[aDecoder decodeObjectForKey:@"videoBitRate"] unsignedIntegerValue];
-    _videoMaxBitRate = [[aDecoder decodeObjectForKey:@"videoMaxBitRate"] unsignedIntegerValue];
-    _videoMinBitRate = [[aDecoder decodeObjectForKey:@"videoMinBitRate"] unsignedIntegerValue];
+    _videoBitrate = [[aDecoder decodeObjectForKey:@"videoBitRate"] unsignedIntegerValue];
+    _videoMaxBitrate = [[aDecoder decodeObjectForKey:@"videoMaxBitRate"] unsignedIntegerValue];
+    _videoMinBitrate = [[aDecoder decodeObjectForKey:@"videoMinBitRate"] unsignedIntegerValue];
     _sessionPreset = [[aDecoder decodeObjectForKey:@"sessionPreset"] unsignedIntegerValue];
     _outputImageOrientation = [[aDecoder decodeObjectForKey:@"outputImageOrientation"] unsignedIntegerValue];
     _autorotate = [[aDecoder decodeObjectForKey:@"autorotate"] boolValue];
@@ -308,9 +308,9 @@
                         @(self.videoMaxFrameRate),
                         @(self.videoMinFrameRate),
                         @(self.videoMaxKeyframeInterval),
-                        @(self.videoBitRate),
-                        @(self.videoMaxBitRate),
-                        @(self.videoMinBitRate),
+                        @(self.videoBitrate),
+                        @(self.videoMaxBitrate),
+                        @(self.videoMinBitrate),
                         self.avSessionPreset,
                         @(self.sessionPreset),
                         @(self.outputImageOrientation),
@@ -335,9 +335,9 @@
                object.videoMaxFrameRate == self.videoMaxFrameRate &&
                object.videoMinFrameRate == self.videoMinFrameRate &&
                object.videoMaxKeyframeInterval == self.videoMaxKeyframeInterval &&
-               object.videoBitRate == self.videoBitRate &&
-               object.videoMaxBitRate == self.videoMaxBitRate &&
-               object.videoMinBitRate == self.videoMinBitRate &&
+               object.videoBitrate == self.videoBitrate &&
+               object.videoMaxBitrate == self.videoMaxBitrate &&
+               object.videoMinBitrate == self.videoMinBitrate &&
                [object.avSessionPreset isEqualToString:self.avSessionPreset] &&
                object.sessionPreset == self.sessionPreset &&
                object.outputImageOrientation == self.outputImageOrientation &&
@@ -360,9 +360,9 @@
     [desc appendFormat:@" videoMaxFrameRate:%zi", self.videoMaxFrameRate];
     [desc appendFormat:@" videoMinFrameRate:%zi", self.videoMinFrameRate];
     [desc appendFormat:@" videoMaxKeyframeInterval:%zi", self.videoMaxKeyframeInterval];
-    [desc appendFormat:@" videoBitRate:%zi", self.videoBitRate];
-    [desc appendFormat:@" videoMaxBitRate:%zi", self.videoMaxBitRate];
-    [desc appendFormat:@" videoMinBitRate:%zi", self.videoMinBitRate];
+    [desc appendFormat:@" videoBitRate:%zi", self.videoBitrate];
+    [desc appendFormat:@" videoMaxBitRate:%zi", self.videoMaxBitrate];
+    [desc appendFormat:@" videoMinBitRate:%zi", self.videoMinBitrate];
     [desc appendFormat:@" avSessionPreset:%@", self.avSessionPreset];
     [desc appendFormat:@" sessionPreset:%zi", self.sessionPreset];
     [desc appendFormat:@" outputImageOrientation:%zi", self.outputImageOrientation];

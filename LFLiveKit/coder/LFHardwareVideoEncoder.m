@@ -19,8 +19,8 @@
 
 @property (nonatomic, strong) LFLiveVideoConfiguration *configuration;
 @property (nonatomic, weak) id<LFVideoEncodingDelegate> h264Delegate;
-@property (nonatomic) NSInteger currentVideoBitRate;
-@property (nonatomic) BOOL isBackGround;
+@property (nonatomic) NSInteger currentVideoBitrate;
+@property (nonatomic) BOOL isBackground;
 
 @end
 
@@ -57,12 +57,12 @@
         return;
     }
 
-    _currentVideoBitRate = _configuration.videoBitRate;
+    _currentVideoBitrate = _configuration.videoBitrate;
     VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_MaxKeyFrameInterval, (__bridge CFTypeRef)@(_configuration.videoMaxKeyframeInterval));
     VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_MaxKeyFrameIntervalDuration, (__bridge CFTypeRef)@(_configuration.videoMaxKeyframeInterval/_configuration.videoFrameRate));
     VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_ExpectedFrameRate, (__bridge CFTypeRef)@(_configuration.videoFrameRate));
-    VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_AverageBitRate, (__bridge CFTypeRef)@(_configuration.videoBitRate));
-    NSArray *limit = @[@(_configuration.videoBitRate * 1.5/8), @(1)];
+    VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_AverageBitRate, (__bridge CFTypeRef)@(_configuration.videoBitrate));
+    NSArray *limit = @[@(_configuration.videoBitrate * 1.5/8), @(1)];
     VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_DataRateLimits, (__bridge CFArrayRef)limit);
     VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_RealTime, kCFBooleanTrue);
     VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_ProfileLevel, kVTProfileLevel_H264_Main_AutoLevel);
@@ -72,16 +72,16 @@
 
 }
 
-- (void)setVideoBitRate:(NSInteger)videoBitRate {
-    if(_isBackGround) return;
-    VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_AverageBitRate, (__bridge CFTypeRef)@(videoBitRate));
-    NSArray *limit = @[@(videoBitRate * 1.5/8), @(1)];
+- (void)setVideoBitrate:(NSInteger)videoBitrate {
+    if(_isBackground) return;
+    VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_AverageBitRate, (__bridge CFTypeRef)@(videoBitrate));
+    NSArray *limit = @[@(videoBitrate * 1.5/8), @(1)];
     VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_DataRateLimits, (__bridge CFArrayRef)limit);
-    _currentVideoBitRate = videoBitRate;
+    _currentVideoBitrate = videoBitrate;
 }
 
-- (NSInteger)videoBitRate {
-    return _currentVideoBitRate;
+- (NSInteger)videoBitrate {
+    return _currentVideoBitrate;
 }
 
 - (void)dealloc {
@@ -97,7 +97,7 @@
 
 #pragma mark -- LFVideoEncoder
 - (void)encodeVideoData:(CVPixelBufferRef)pixelBuffer timeStamp:(uint64_t)timeStamp {
-    if(_isBackGround) return;
+    if(_isBackground) return;
     frameCount++;
     CMTime presentationTimeStamp = CMTimeMake(frameCount, (int32_t)_configuration.videoFrameRate);
     VTEncodeInfoFlags flags;
@@ -125,12 +125,12 @@
 
 #pragma mark -- Notification
 - (void)willEnterBackground:(NSNotification*)notification{
-    _isBackGround = YES;
+    _isBackground = YES;
 }
 
 - (void)willEnterForeground:(NSNotification*)notification{
     [self resetCompressionSession];
-    _isBackGround = NO;
+    _isBackground = NO;
 }
 
 #pragma mark -- VideoCallBack

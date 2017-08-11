@@ -21,7 +21,7 @@
 @property (nonatomic, strong) LFLiveVideoConfiguration *configuration;
 @property (nonatomic, weak) id<LFVideoEncodingDelegate> h264Delegate;
 @property (nonatomic) BOOL isBackGround;
-@property (nonatomic) NSInteger currentVideoBitRate;
+@property (nonatomic) NSInteger currentVideoBitrate;
 @property (nonatomic, strong) dispatch_queue_t sendQueue;
 
 @property (nonatomic, strong) LFAVEncoder *encoder;
@@ -60,7 +60,7 @@
     [self initForFilePath];
 #endif
     
-    _encoder = [LFAVEncoder encoderForHeight:(int)_configuration.videoSize.height andWidth:(int)_configuration.videoSize.width bitrate:(int)_configuration.videoBitRate];
+    _encoder = [LFAVEncoder encoderForHeight:(int)_configuration.videoSize.height andWidth:(int)_configuration.videoSize.width bitrate:(int)_configuration.videoBitrate];
     [_encoder encodeWithBlock:^int(NSArray* dataArray, CMTimeValue ptsValue) {
         [self incomingVideoFrames:dataArray ptsValue:ptsValue];
         return 0;
@@ -80,7 +80,8 @@
     _naluStartCode = [NSData dataWithBytesNoCopy:nalu length:naluLength freeWhenDone:YES];
 }
 
-- (void) generateSPSandPPS {
+- (void) generateSPSandPPS
+{
     NSData* config = _encoder.getConfigData;
     if (!config) {
         return;
@@ -109,16 +110,19 @@
 
 
 
-- (void)setVideoBitRate:(NSInteger)videoBitRate{
-    _currentVideoBitRate = videoBitRate;
-    _encoder.bitrate = _currentVideoBitRate;
+- (void)setVideoBitrate:(NSInteger)videoBitrate
+{
+    _currentVideoBitrate = videoBitrate;
+    _encoder.bitrate = _currentVideoBitrate;
 }
 
-- (NSInteger)videoBitRate{
-    return _currentVideoBitRate;
+- (NSInteger)videoBitrate
+{
+    return _currentVideoBitrate;
 }
 
-- (void)setDelegate:(id<LFVideoEncodingDelegate>)delegate{
+- (void)setDelegate:(id<LFVideoEncodingDelegate>)delegate
+{
     _h264Delegate = delegate;
 }
 
