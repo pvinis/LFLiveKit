@@ -131,7 +131,7 @@
 }
 
 - (void)setTorch:(BOOL)torch {
-    BOOL ret;
+    BOOL ret = NO;
     if (!self.videoCamera.captureSession) return;
     AVCaptureSession *session = (AVCaptureSession *)self.videoCamera.captureSession;
     [session beginConfiguration];
@@ -297,10 +297,10 @@
         self.beautyFilter = nil;
     }
     
-    ///< 调节镜像
+    /// 调节镜像
     [self reloadMirror];
     
-    //< 480*640 比例为4:3  强制转换为16:9
+    // 480*640 比例为4:3  强制转换为16:9
     if([self.configuration.avSessionPreset isEqualToString:AVCaptureSessionPreset640x480]){
         CGRect cropRect = self.configuration.landscape ? CGRectMake(0, 0.125, 1, 0.75) : CGRectMake(0.125, 0, 0.75, 1);
         self.cropfilter = [[GPUImageCropFilter alloc] initWithCropRegion:cropRect];
@@ -310,7 +310,7 @@
         [self.videoCamera addTarget:self.filter];
     }
     
-    //< 添加水印
+    // 添加水印
     if(self.waterMarkView){
         [self.filter addTarget:self.blendFilter];
         [self.uiElementInput addTarget:self.blendFilter];
@@ -330,7 +330,7 @@
     [self.uiElementInput forceProcessingAtSize:self.configuration.videoSize];
     
     
-    //< 输出数据
+    // 输出数据
     __weak typeof(self) _self = self;
     [self.output setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {
         [_self processVideo:output];

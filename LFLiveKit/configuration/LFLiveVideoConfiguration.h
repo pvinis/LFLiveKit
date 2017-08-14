@@ -90,13 +90,13 @@ typedef NS_ENUM (NSUInteger, LFLiveVideoQuality){
 /// 视频的最小码率，单位是 bps
 @property (nonatomic, assign) NSUInteger videoMinBitrate;
 
-///< 分辨率
+/// 分辨率
 @property (nonatomic, assign) LFLiveVideoSessionPreset sessionPreset;
 
-///< ≈sde3分辨率
+/// ≈sde3分辨率
 @property (nonatomic, assign, readonly) NSString *avSessionPreset;
 
-///< 是否是横屏
+/// 是否是横屏
 @property (nonatomic, assign, readonly) BOOL landscape;
 
 @end

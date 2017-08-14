@@ -9,10 +9,10 @@
 #import "LFStreamingBuffer.h"
 #import "NSMutableArray+LFAdd.h"
 
-static const NSUInteger defaultSortBufferMaxCount = 5;///< 排序10个内
-static const NSUInteger defaultUpdateInterval = 1;///< 更新频率为1s
-static const NSUInteger defaultCallBackInterval = 5;///< 5s计时一次
-static const NSUInteger defaultSendBufferMaxCount = 600;///< 最大缓冲区为600
+static const NSUInteger defaultSortBufferMaxCount = 5;/// 排序10个内
+static const NSUInteger defaultUpdateInterval = 1;/// 更新频率为1s
+static const NSUInteger defaultCallBackInterval = 5;/// 5s计时一次
+static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为600
 
 @interface LFStreamingBuffer (){
     dispatch_semaphore_t _lock;
@@ -60,7 +60,7 @@ static const NSUInteger defaultSendBufferMaxCount = 600;///< 最大缓冲区为6
     if (self.sortList.count < defaultSortBufferMaxCount) {
         [self.sortList addObject:frame];
     } else {
-        ///< 排序
+        /// 排序
         [self.sortList addObject:frame];
 		[self.sortList sortUsingFunction:frameDataCompare context:nil];
         /// 丢帧
@@ -89,14 +89,14 @@ static const NSUInteger defaultSendBufferMaxCount = 600;///< 最大缓冲区为6
 - (void)removeExpireFrame {
     if (self.list.count < self.maxCount) return;
 
-    NSArray *pFrames = [self expirePFrames];///< 第一个P到第一个I之间的p帧
+    NSArray *pFrames = [self expirePFrames];/// 第一个P到第一个I之间的p帧
     self.lastDropFrames += [pFrames count];
     if (pFrames && pFrames.count > 0) {
         [self.list removeObjectsInArray:pFrames];
         return;
     }
     
-    NSArray *iFrames = [self expireIFrames];///<  删除一个I帧（但一个I帧可能对应多个nal）
+    NSArray *iFrames = [self expireIFrames];///  删除一个I帧（但一个I帧可能对应多个nal）
     self.lastDropFrames += [iFrames count];
     if (iFrames && iFrames.count > 0) {
         [self.list removeObjectsInArray:iFrames];

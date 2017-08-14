@@ -14,19 +14,19 @@
 #import "rtmp.h"
 #endif
 
-static const NSInteger RetryTimesBreaken = 5;  ///<  重连1分钟  3秒一次 一共20次
+static const NSInteger RetryTimesBreaken = 5;  ///  重连1分钟  3秒一次 一共20次
 static const NSInteger RetryTimesMargin = 3;
 
 
-#define RTMP_RECEIVE_TIMEOUT    2
+#define RTMP_RECEIVE_TIMEOUT 2
 #define DATA_ITEMS_MAX_COUNT 100
 #define RTMP_DATA_RESERVE_SIZE 400
 #define RTMP_HEAD_SIZE (sizeof(RTMPPacket) + RTMP_MAX_HEADER_SIZE)
 
-#define SAVC(x)    static const AVal av_ ## x = AVC(#x)
+#define SAVC(x)    static const PILI_AVal av_ ## x = AVC(#x)
 
-static const AVal av_setDataFrame = AVC("@setDataFrame");
-static const AVal av_SDKVersion = AVC("LFLiveKit 2.4.0");
+static const PILI_AVal av_setDataFrame = AVC("@setDataFrame");
+static const PILI_AVal av_SDKVersion = AVC("LFLiveKit 2.4.0");
 SAVC(onMetaData);
 SAVC(duration);
 SAVC(width);
@@ -225,7 +225,7 @@ SAVC(mp4a);
             
             //修改发送状态
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                //< 这里只为了不循环调用sendFrame方法 调用栈是保证先出栈再进栈
+                // 这里只为了不循环调用sendFrame方法 调用栈是保证先出栈再进栈
                 _self.isSending = NO;
             });
             
@@ -312,38 +312,38 @@ Failed:
     packet.m_body = pbuf + RTMP_MAX_HEADER_SIZE;
 
     char *enc = packet.m_body;
-    enc = AMF_EncodeString(enc, pend, &av_setDataFrame);
-    enc = AMF_EncodeString(enc, pend, &av_onMetaData);
+    enc = PILI_AMF_EncodeString(enc, pend, &av_setDataFrame);
+    enc = PILI_AMF_EncodeString(enc, pend, &av_onMetaData);
 
-    *enc++ = AMF_OBJECT;
+    *enc++ = PILI_AMF_OBJECT;
 
-    enc = AMF_EncodeNamedNumber(enc, pend, &av_duration, 0.0);
-    enc = AMF_EncodeNamedNumber(enc, pend, &av_fileSize, 0.0);
+    enc = PILI_AMF_EncodeNamedNumber(enc, pend, &av_duration, 0.0);
+    enc = PILI_AMF_EncodeNamedNumber(enc, pend, &av_fileSize, 0.0);
 
     // videosize
-    enc = AMF_EncodeNamedNumber(enc, pend, &av_width, _stream.videoConfiguration.videoSize.width);
-    enc = AMF_EncodeNamedNumber(enc, pend, &av_height, _stream.videoConfiguration.videoSize.height);
+    enc = PILI_AMF_EncodeNamedNumber(enc, pend, &av_width, _stream.videoConfiguration.videoSize.width);
+    enc = PILI_AMF_EncodeNamedNumber(enc, pend, &av_height, _stream.videoConfiguration.videoSize.height);
 
     // video
-    enc = AMF_EncodeNamedString(enc, pend, &av_videocodecid, &av_avc1);
+    enc = PILI_AMF_EncodeNamedString(enc, pend, &av_videocodecid, &av_avc1);
 
-    enc = AMF_EncodeNamedNumber(enc, pend, &av_videodatarate, _stream.videoConfiguration.videoBitrate / 1000.f);
-    enc = AMF_EncodeNamedNumber(enc, pend, &av_framerate, _stream.videoConfiguration.videoFrameRate);
+    enc = PILI_AMF_EncodeNamedNumber(enc, pend, &av_videodatarate, _stream.videoConfiguration.videoBitrate / 1000.f);
+    enc = PILI_AMF_EncodeNamedNumber(enc, pend, &av_framerate, _stream.videoConfiguration.videoFrameRate);
 
     // audio
-    enc = AMF_EncodeNamedString(enc, pend, &av_audiocodecid, &av_mp4a);
-    enc = AMF_EncodeNamedNumber(enc, pend, &av_audiodatarate, _stream.audioConfiguration.audioBitrate);
+    enc = PILI_AMF_EncodeNamedString(enc, pend, &av_audiocodecid, &av_mp4a);
+    enc = PILI_AMF_EncodeNamedNumber(enc, pend, &av_audiodatarate, _stream.audioConfiguration.audioBitrate);
 
-    enc = AMF_EncodeNamedNumber(enc, pend, &av_audiosamplerate, _stream.audioConfiguration.audioSampleRate);
-    enc = AMF_EncodeNamedNumber(enc, pend, &av_audiosamplesize, 16.0);
-    enc = AMF_EncodeNamedBoolean(enc, pend, &av_stereo, _stream.audioConfiguration.numberOfChannels == 2);
+    enc = PILI_AMF_EncodeNamedNumber(enc, pend, &av_audiosamplerate, _stream.audioConfiguration.audioSampleRate);
+    enc = PILI_AMF_EncodeNamedNumber(enc, pend, &av_audiosamplesize, 16.0);
+    enc = PILI_AMF_EncodeNamedBoolean(enc, pend, &av_stereo, _stream.audioConfiguration.numberOfChannels == 2);
 
     // sdk version
-    enc = AMF_EncodeNamedString(enc, pend, &av_encoder, &av_SDKVersion);
+    enc = PILI_AMF_EncodeNamedString(enc, pend, &av_encoder, &av_SDKVersion);
 
     *enc++ = 0;
     *enc++ = 0;
-    *enc++ = AMF_OBJECT_END;
+    *enc++ = PILI_AMF_OBJECT_END;
 
     packet.m_nBodySize = (uint32_t)(enc - packet.m_body);
     if (!PILI_RTMP_SendPacket(_rtmp, &packet, FALSE, &_error)) {

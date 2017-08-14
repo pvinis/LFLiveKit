@@ -61,7 +61,7 @@
     }
     
     if(leftLength + audioData.length >= self.configuration.bufferLength){
-        ///<  发送
+        ///  发送
         NSInteger totalSize = leftLength + audioData.length;
         NSInteger encodeCount = totalSize/self.configuration.bufferLength;
         char *totalBuf = malloc(totalSize);
@@ -83,7 +83,7 @@
         free(totalBuf);
         
     }else{
-        ///< 积累
+        /// 积累
         memcpy(leftBuf+leftLength, audioData.bytes, audioData.length);
         leftLength = leftLength + audioData.length;
     }
@@ -187,7 +187,7 @@
 
 
 #pragma mark -- AudioCallBack
-OSStatus inputDataProc(AudioConverterRef inConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription * *outDataPacketDescription, void *inUserData) { //<span style="font-family: Arial, Helvetica, sans-serif;">AudioConverterFillComplexBuffer 编码过程中，会要求这个函数来填充输入数据，也就是原始PCM数据</span>
+OSStatus inputDataProc(AudioConverterRef inConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription * *outDataPacketDescription, void *inUserData) { // <span style="font-family: Arial, Helvetica, sans-serif;">AudioConverterFillComplexBuffer 编码过程中，会要求这个函数来填充输入数据，也就是原始PCM数据</span>
     AudioBufferList bufferList = *(AudioBufferList *)inUserData;
     ioData->mBuffers[0].mNumberChannels = 1;
     ioData->mBuffers[0].mData = bufferList.mBuffers[0].mData;
