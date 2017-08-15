@@ -6,17 +6,21 @@
 //  Copyright © 2016年 LaiFeng All rights reserved.
 //
 
-#ifndef LFLiveKit_h
-#define LFLiveKit_h
+#import <UIKit/UIKit.h>
 
-#import "LFLiveSession.h"
-#import "LFLiveAudioConfiguration.h"
-#import "LFLiveVideoConfiguration.h"
-#import "LFAudioFrame.h"
-#import "LFFrame.h"
-#import "LFLiveStreamInfo.h"
-#import "LFVideoFrame.h"
-#import "LFLiveDebug.h"
+//! Project version number for LFLiveKit.
+FOUNDATION_EXPORT double LFLiveKitVersionNumber;
 
-#endif
+//! Project version string for LFLiveKit.
+FOUNDATION_EXPORT const unsigned char LFLiveKitVersionString[];
 
+// In this header, you should import all the public headers of your framework using statements like #import <LFLiveKit/PublicHeader.h>
+
+#import <LFLiveKit/LFLiveSession.h>
+#import <LFLiveKit/LFLiveAudioConfiguration.h>
+#import <LFLiveKit/LFLiveVideoConfiguration.h>
+#import <LFLiveKit/LFAudioFrame.h>
+#import <LFLiveKit/LFFrame.h>
+#import <LFLiveKit/LFLiveStreamInfo.h>
+#import <LFLiveKit/LFVideoFrame.h>
+#import <LFLiveKit/LFLiveDebug.h>
