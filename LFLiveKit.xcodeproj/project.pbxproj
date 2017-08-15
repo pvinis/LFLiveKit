@@ -638,7 +638,6 @@
 		84D8B5D51D768B6E00752B56 /* LFGPUImageEmptyFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5A31D768B6E00752B56 /* LFGPUImageEmptyFilter.h */; };
 		84D8B5D61D768B6E00752B56 /* LFGPUImageEmptyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5A41D768B6E00752B56 /* LFGPUImageEmptyFilter.m */; };
 		84D8B5D71D768B6E00752B56 /* LFLiveKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5A51D768B6E00752B56 /* LFLiveKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84D8B5D81D768B6E00752B56 /* LFLiveSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5A61D768B6E00752B56 /* LFLiveSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84D8B5D91D768B6E00752B56 /* LFLiveSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5A71D768B6E00752B56 /* LFLiveSession.m */; };
 		84D8B5DA1D768B6E00752B56 /* LFAudioFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5A91D768B6E00752B56 /* LFAudioFrame.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84D8B5DB1D768B6E00752B56 /* LFAudioFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5AA1D768B6E00752B56 /* LFAudioFrame.m */; };
@@ -657,6 +656,10 @@
 		84D8B5E81D768B6E00752B56 /* LFStreamSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */; };
 		84D8B5E91D768B6E00752B56 /* NSMutableArray+LFAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B91D768B6E00752B56 /* NSMutableArray+LFAdd.h */; };
 		84D8B5EA1D768B6E00752B56 /* NSMutableArray+LFAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5BA1D768B6E00752B56 /* NSMutableArray+LFAdd.m */; };
+		AF55BC761F42FA96002640C5 /* LFLiveSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5A61D768B6E00752B56 /* LFLiveSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AF55BC791F42FADF002640C5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF55BC781F42FADF002640C5 /* AudioToolbox.framework */; };
+		AF55BC7B1F42FAE6002640C5 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF55BC7A1F42FAE6002640C5 /* VideoToolbox.framework */; };
+		AF55BC7D1F42FB00002640C5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF55BC7C1F42FB00002640C5 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1083,6 +1086,9 @@
 		84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStreamSocket.h; sourceTree = "<group>"; };
 		84D8B5B91D768B6E00752B56 /* NSMutableArray+LFAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+LFAdd.h"; sourceTree = "<group>"; };
 		84D8B5BA1D768B6E00752B56 /* NSMutableArray+LFAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+LFAdd.m"; sourceTree = "<group>"; };
+		AF55BC781F42FADF002640C5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		AF55BC7A1F42FAE6002640C5 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		AF55BC7C1F42FB00002640C5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1097,6 +1103,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF55BC7D1F42FB00002640C5 /* AVFoundation.framework in Frameworks */,
+				AF55BC7B1F42FAE6002640C5 /* VideoToolbox.framework in Frameworks */,
+				AF55BC791F42FADF002640C5 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1509,6 +1518,7 @@
 			children = (
 				84D8B5831D768B6E00752B56 /* LFLiveKit */,
 				84D8B3911D7574D600752B56 /* Products */,
+				AF55BC771F42FADE002640C5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1536,8 +1546,7 @@
 				84D8B5B31D768B6E00752B56 /* publish */,
 				84358E851DD1FEB500811FC7 /* Vendor */,
 			);
-			name = LFLiveKit;
-			path = ../LFLiveKit;
+			path = LFLiveKit;
 			sourceTree = "<group>";
 		};
 		84D8B5841D768B6E00752B56 /* capture */ = {
@@ -1635,6 +1644,16 @@
 			path = publish;
 			sourceTree = "<group>";
 		};
+		AF55BC771F42FADE002640C5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AF55BC7C1F42FB00002640C5 /* AVFoundation.framework */,
+				AF55BC7A1F42FAE6002640C5 /* VideoToolbox.framework */,
+				AF55BC781F42FADF002640C5 /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1678,6 +1697,7 @@
 				843590CB1DD1FEB600811FC7 /* GPUImagePerlinNoiseFilter.h in Headers */,
 				843591501DD1FEB600811FC7 /* bytes.h in Headers */,
 				84D8B5CF1D768B6E00752B56 /* LFLiveAudioConfiguration.h in Headers */,
+				AF55BC761F42FA96002640C5 /* LFLiveSession.h in Headers */,
 				843590FF1DD1FEB600811FC7 /* GPUImageSobelEdgeDetectionFilter.h in Headers */,
 				8435907D1DD1FEB600811FC7 /* GPUImageHoughTransformLineDetector.h in Headers */,
 				843590C71DD1FEB600811FC7 /* GPUImageOverlayBlendFilter.h in Headers */,
@@ -1720,7 +1740,6 @@
 				843591071DD1FEB600811FC7 /* GPUImageSolidColorGenerator.h in Headers */,
 				843590A71DD1FEB600811FC7 /* GPUImageMaskFilter.h in Headers */,
 				843590431DD1FEB600811FC7 /* GPUImageDivideBlendFilter.h in Headers */,
-				84D8B5D81D768B6E00752B56 /* LFLiveSession.h in Headers */,
 				8435909B1DD1FEB600811FC7 /* GPUImageLookupFilter.h in Headers */,
 				843591431DD1FEB600811FC7 /* GPUImageFramework.h in Headers */,
 				843590A51DD1FEB600811FC7 /* GPUImageLuminosityBlendFilter.h in Headers */,
@@ -2538,7 +2557,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -2583,7 +2602,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2605,9 +2624,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../samples/LFLiveKitDemo/Pods\"/**",
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/LFLiveKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACH_O_TYPE = mh_dylib;
@@ -2630,9 +2649,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../samples/LFLiveKitDemo/Pods\"/**",
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/LFLiveKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACH_O_TYPE = mh_dylib;
