@@ -520,7 +520,7 @@ Failed:
     _sendVideoHead = NO;
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
-        [self.delegate socketStatus:self status:LFLiveRefresh];
+        [self.delegate socketStatus:self status:LFLiveReconnecting];
     }
     
     if (_rtmp != NULL) {
