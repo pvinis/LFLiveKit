@@ -7,6 +7,7 @@
 //
 
 #import "LFAudioCapture.h"
+
 #import <AudioToolbox/AudioToolbox.h>
 #import <AVFoundation/AVFoundation.h>
 
@@ -18,14 +19,14 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
 @property (nonatomic, assign) AudioComponent component;
 @property (nonatomic, strong) dispatch_queue_t taskQueue;
 @property (nonatomic, assign) BOOL isRunning;
-@property (nonatomic, strong,nullable) LFLiveAudioConfiguration *configuration;
+@property (nonatomic, strong,nullable) LFAudioConfiguration *configuration;
 
 @end
 
 @implementation LFAudioCapture
 
 #pragma mark -- LiftCycle
-- (instancetype)initWithAudioConfiguration:(LFLiveAudioConfiguration *)configuration{
+- (instancetype)initWithAudioConfiguration:(LFAudioConfiguration *)configuration{
     if(self = [super init]){
         _configuration = configuration;
         self.isRunning = NO;

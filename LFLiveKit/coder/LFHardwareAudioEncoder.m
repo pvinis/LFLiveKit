@@ -17,10 +17,12 @@
     char *aacBuf;
     NSInteger leftLength;
     FILE *fp;
-    BOOL enabledWriteVideoFile;
+
+	// debug
+    BOOL _writeToFile;
 }
 
-@property (nonatomic, strong) LFLiveAudioConfiguration *configuration;
+@property (nonatomic, strong) LFAudioConfiguration *configuration;
 @property (nonatomic, weak) id<LFAudioEncodingDelegate> aacDeleage;
 
 @end
@@ -28,23 +30,23 @@
 
 @implementation LFHardwareAudioEncoder
 
-- (instancetype)initWithAudioStreamConfiguration:(nullable LFLiveAudioConfiguration *)configuration {
+- (instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)configuration {
     if (self = [super init]) {
 		_configuration = configuration;
         
         if (!leftBuf) {
             leftBuf = malloc(_configuration.bufferLength);
         }
-        
+
         if (!aacBuf) {
             aacBuf = malloc(_configuration.bufferLength);
         }
-        
-        
+
 #ifdef DEBUG
-        enabledWriteVideoFile = NO;
+        _writeToFile = NO;
         [self initForFilePath];
 #endif
+
     }
     return self;
 }
@@ -55,6 +57,7 @@
 }
 
 #pragma mark -- LFAudioEncoder
+
 - (void)setDelegate:(id<LFAudioEncodingDelegate>)delegate {
     _aacDeleage = delegate;
 }
@@ -64,7 +67,7 @@
         return;
     }
     
-    if(leftLength + audioData.length >= self.configuration.bufferLength){
+    if (leftLength + audioData.length >= self.configuration.bufferLength){
         ///  发送
         NSInteger totalSize = leftLength + audioData.length;
         NSInteger encodeCount = totalSize/self.configuration.bufferLength;
@@ -94,7 +97,6 @@
 }
 
 - (void)encodeBuffer:(char*)buf timeStamp:(uint64_t)timeStamp{
-    
     AudioBuffer inBuffer;
     inBuffer.mNumberChannels = 1;
     inBuffer.mData = buf;
@@ -128,7 +130,7 @@
         [self.aacDeleage audioEncoder:self audioFrame:audioFrame];
     }
     
-    if (self->enabledWriteVideoFile) {
+    if (_writeToFile) {
         NSData *adts = [self adtsData:_configuration.numberOfChannels rawDataLength:audioFrame.data.length];
         fwrite(adts.bytes, 1, adts.length, self->fp);
         fwrite(audioFrame.data.bytes, 1, audioFrame.data.length, self->fp);
@@ -137,9 +139,10 @@
 }
 
 #pragma mark -- CustomMethod
+
 - (BOOL)createAudioConvert { //根据输入样本初始化一个编码转换器
     if (m_converter != nil) {
-        return TRUE;
+        return YES;
     }
     
     AudioStreamBasicDescription inputFormat = {0};
@@ -187,8 +190,11 @@
 
 
 #pragma mark -- AudioCallBack
-OSStatus inputDataProc(AudioConverterRef inConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription * *outDataPacketDescription, void *inUserData) { // <span style="font-family: Arial, Helvetica, sans-serif;">AudioConverterFillComplexBuffer 编码过程中，会要求这个函数来填充输入数据，也就是原始PCM数据</span>
-    AudioBufferList bufferList = *(AudioBufferList *)inUserData;
+
+OSStatus inputDataProc(AudioConverterRef inConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription * *outDataPacketDescription, void *inUserData)
+{ // AudioConverterFillComplexBuffer 编码过程中，会要求这个函数来填充输入数据，也就是原始PCM数据
+
+	AudioBufferList bufferList = *(AudioBufferList *)inUserData;
     ioData->mBuffers[0].mNumberChannels = 1;
     ioData->mBuffers[0].mData = bufferList.mBuffers[0].mData;
     ioData->mBuffers[0].mDataByteSize = bufferList.mBuffers[0].mDataByteSize;
@@ -197,6 +203,7 @@ OSStatus inputDataProc(AudioConverterRef inConverter, UInt32 *ioNumberDataPacket
 
 
 #pragma mark -- Custom Method
+
 /**
  *  Add ADTS header at the beginning of each and every AAC packet.
  *  This is needed as MediaCodec encoder generates a packet of raw
@@ -276,12 +283,12 @@ OSStatus inputDataProc(AudioConverterRef inConverter, UInt32 *ioNumberDataPacket
 }
 
 - (void)initForFilePath {
-    NSString *path = [self GetFilePathByfileName:@"IOSCamDemo_HW.aac"];
+    NSString *path = [self getFilePathByFileName:@"IOSCamDemo_HW.aac"];
     NSLog(@"%@", path);
     self->fp = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "wb");
 }
 
-- (NSString *)GetFilePathByfileName:(NSString*)filename {
+- (NSString *)getFilePathByFileName:(NSString*)filename {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *writablePath = [documentsDirectory stringByAppendingPathComponent:filename];

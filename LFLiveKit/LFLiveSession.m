@@ -12,15 +12,13 @@
 #import "LFAudioCapture.h"
 #import "LFHardwareVideoEncoder.h"
 #import "LFHardwareAudioEncoder.h"
-#import "LFH264VideoEncoder.h"
 #import "LFStreamRTMPSocket.h"
-#import "LFH264VideoEncoder.h"
 
 
 @interface LFLiveSession ()<LFAudioCaptureDelegate, LFVideoCaptureDelegate, LFAudioEncodingDelegate, LFVideoEncodingDelegate, LFStreamSocketDelegate>
 
 /// 音频配置
-@property (nonatomic, strong) LFLiveAudioConfiguration *audioConfiguration;
+@property (nonatomic, strong) LFAudioConfiguration *audioConfiguration;
 /// 视频配置
 @property (nonatomic, strong) LFLiveVideoConfiguration *videoConfiguration;
 /// 声音采集
@@ -72,11 +70,11 @@
 @implementation LFLiveSession
 
 #pragma mark -- LifeCycle
-- (instancetype)initWithAudioConfiguration:(nullable LFLiveAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFLiveVideoConfiguration *)videoConfiguration {
+- (instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFLiveVideoConfiguration *)videoConfiguration {
     return [self initWithAudioConfiguration:audioConfiguration videoConfiguration:videoConfiguration captureType:LFLiveCaptureDefaultMask];
 }
 
-- (nullable instancetype)initWithAudioConfiguration:(nullable LFLiveAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFLiveVideoConfiguration *)videoConfiguration captureType:(LFLiveCaptureTypeMask)captureType{
+- (nullable instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFLiveVideoConfiguration *)videoConfiguration captureType:(LFLiveCaptureTypeMask)captureType{
     if((captureType & LFLiveCaptureMaskAudio || captureType & LFLiveInputMaskAudio) && !audioConfiguration) @throw [NSException exceptionWithName:@"LFLiveSession init error" reason:@"audioConfiguration is nil " userInfo:nil];
     if((captureType & LFLiveCaptureMaskVideo || captureType & LFLiveInputMaskVideo) && !videoConfiguration) @throw [NSException exceptionWithName:@"LFLiveSession init error" reason:@"videoConfiguration is nil " userInfo:nil];
     if (self = [super init]) {
@@ -350,7 +348,7 @@
 
 - (id<LFAudioEncoding>)audioEncoder {
     if (!_audioEncoder) {
-        _audioEncoder = [[LFHardwareAudioEncoder alloc] initWithAudioStreamConfiguration:_audioConfiguration];
+        _audioEncoder = [[LFHardwareAudioEncoder alloc] initWithAudioConfiguration:_audioConfiguration];
         [_audioEncoder setDelegate:self];
     }
     return _audioEncoder;
@@ -358,11 +356,7 @@
 
 - (id<LFVideoEncoding>)videoEncoder {
     if (!_videoEncoder) {
-        if([[UIDevice currentDevice].systemVersion floatValue] < 8.0){
-            _videoEncoder = [[LFH264VideoEncoder alloc] initWithVideoStreamConfiguration:_videoConfiguration];
-        }else{
-            _videoEncoder = [[LFHardwareVideoEncoder alloc] initWithVideoStreamConfiguration:_videoConfiguration];
-        }
+		_videoEncoder = [[LFHardwareVideoEncoder alloc] initWithVideoStreamConfiguration:_videoConfiguration];
         [_videoEncoder setDelegate:self];
     }
     return _videoEncoder;

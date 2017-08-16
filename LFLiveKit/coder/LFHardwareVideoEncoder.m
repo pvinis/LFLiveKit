@@ -6,39 +6,44 @@
 //  Copyright © 2016年 LaiFeng All rights reserved.
 //
 #import "LFHardwareVideoEncoder.h"
+
 #import <VideoToolbox/VideoToolbox.h>
 
-@interface LFHardwareVideoEncoder (){
+
+@interface LFHardwareVideoEncoder () {
     VTCompressionSessionRef compressionSession;
     NSInteger frameCount;
     NSData *sps;
     NSData *pps;
     FILE *fp;
-    BOOL enabledWriteVideoFile;
+	BOOL _isBackground;
+
+	// debug
+    BOOL _writeToFile;
 }
 
 @property (nonatomic, strong) LFLiveVideoConfiguration *configuration;
 @property (nonatomic, weak) id<LFVideoEncodingDelegate> h264Delegate;
 @property (nonatomic) NSInteger currentVideoBitrate;
-@property (nonatomic) BOOL isBackground;
 
 @end
+
 
 @implementation LFHardwareVideoEncoder
 
 #pragma mark -- LifeCycle
 - (instancetype)initWithVideoStreamConfiguration:(LFLiveVideoConfiguration *)configuration {
     if (self = [super init]) {
-        NSLog(@"USE LFHardwareVideoEncoder");
         _configuration = configuration;
         [self resetCompressionSession];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
 #ifdef DEBUG
-        enabledWriteVideoFile = NO;
+        _writeToFile = NO;
         [self initForFilePath];
 #endif
-        
+
     }
     return self;
 }
@@ -163,7 +168,7 @@ static void VideoCompressonOutputCallback(void *VTref, void *VTFrameRef, OSStatu
                 videoEncoder->sps = [NSData dataWithBytes:sparameterSet length:sparameterSetSize];
                 videoEncoder->pps = [NSData dataWithBytes:pparameterSet length:pparameterSetSize];
 
-                if (videoEncoder->enabledWriteVideoFile) {
+                if (videoEncoder->_writeToFile) {
                     NSMutableData *data = [[NSMutableData alloc] init];
                     uint8_t header[] = {0x00, 0x00, 0x00, 0x01};
                     [data appendBytes:header length:4];
@@ -176,7 +181,6 @@ static void VideoCompressonOutputCallback(void *VTref, void *VTFrameRef, OSStatu
             }
         }
     }
-
 
     CMBlockBufferRef dataBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
     size_t length, totalLength;
@@ -203,7 +207,7 @@ static void VideoCompressonOutputCallback(void *VTref, void *VTFrameRef, OSStatu
                 [videoEncoder.h264Delegate videoEncoder:videoEncoder videoFrame:videoFrame];
             }
 
-            if (videoEncoder->enabledWriteVideoFile) {
+            if (videoEncoder->_writeToFile) {
                 NSMutableData *data = [[NSMutableData alloc] init];
                 if (keyframe) {
                     uint8_t header[] = {0x00, 0x00, 0x00, 0x01};
@@ -219,19 +223,17 @@ static void VideoCompressonOutputCallback(void *VTref, void *VTFrameRef, OSStatu
 
 
             bufferOffset += AVCCHeaderLength + NALUnitLength;
-
         }
-
     }
 }
 
 - (void)initForFilePath {
-    NSString *path = [self GetFilePathByfileName:@"IOSCamDemo.h264"];
+    NSString *path = [self getFilePathByFileName:@"IOSCamDemo.h264"];
     NSLog(@"%@", path);
     self->fp = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "wb");
 }
 
-- (NSString *)GetFilePathByfileName:(NSString*)filename {
+- (NSString *)getFilePathByFileName:(NSString*)filename {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *writablePath = [documentsDirectory stringByAppendingPathComponent:filename];

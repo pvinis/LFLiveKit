@@ -17,7 +17,7 @@ FOUNDATION_EXPORT const unsigned char LFLiveKitVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <LFLiveKit/PublicHeader.h>
 
 #import <LFLiveKit/LFLiveSession.h>
-#import <LFLiveKit/LFLiveAudioConfiguration.h>
+#import <LFLiveKit/LFAudioConfiguration.h>
 #import <LFLiveKit/LFLiveVideoConfiguration.h>
 #import <LFLiveKit/LFAudioFrame.h>
 #import <LFLiveKit/LFVideoFrame.h>

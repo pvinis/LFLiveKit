@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LFLiveAudioConfiguration.h"
+
+#import "LFAudioConfiguration.h"
 #import "LFLiveVideoConfiguration.h"
 
 typedef NS_ENUM (NSUInteger, LFLiveState){
@@ -45,7 +46,7 @@ typedef NS_ENUM (NSUInteger, LFLiveSocketError) {
 #pragma mark -- RTMP
 @property (nonatomic, copy) NSString *url;          // upload address
 
-@property (nonatomic, strong) LFLiveAudioConfiguration *audioConfiguration;
+@property (nonatomic, strong) LFAudioConfiguration *audioConfiguration;
 @property (nonatomic, strong) LFLiveVideoConfiguration *videoConfiguration;
 
 @end

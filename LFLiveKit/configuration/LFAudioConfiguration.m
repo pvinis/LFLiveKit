@@ -1,49 +1,49 @@
 //
-//  LFLiveAudioConfiguration.m
+//  LFAudioConfiguration.m
 //  LFLiveKit
 //
 //  Created by LaiFeng on 16/5/20.
 //  Copyright © 2016年 LaiFeng All rights reserved.
 //
 
-#import "LFLiveAudioConfiguration.h"
+#import "LFAudioConfiguration.h"
 #import <sys/utsname.h>
 
-@implementation LFLiveAudioConfiguration
+@implementation LFAudioConfiguration
 
 #pragma mark -- LifyCycle
 + (instancetype)defaultConfiguration {
-    LFLiveAudioConfiguration *audioConfig = [LFLiveAudioConfiguration defaultConfigurationForQuality:LFLiveAudioQuality_Default];
+    LFAudioConfiguration *audioConfig = [LFAudioConfiguration defaultConfigurationForQuality:LFAudioQualityDefault];
     return audioConfig;
 }
 
-+ (instancetype)defaultConfigurationForQuality:(LFLiveAudioQuality)audioQuality {
-    LFLiveAudioConfiguration *audioConfig = [LFLiveAudioConfiguration new];
++ (instancetype)defaultConfigurationForQuality:(LFAudioQuality)audioQuality {
+    LFAudioConfiguration *audioConfig = [LFAudioConfiguration new];
     audioConfig.numberOfChannels = 2;
     switch (audioQuality) {
-    case LFLiveAudioQuality_Low: {
-        audioConfig.audioBitrate = audioConfig.numberOfChannels == 1 ? LFLiveAudioBitRate_32Kbps : LFLiveAudioBitRate_64Kbps;
-        audioConfig.audioSampleRate = LFLiveAudioSampleRate_16000Hz;
+    case LFAudioQualityLow: {
+        audioConfig.audioBitrate = audioConfig.numberOfChannels == 1 ? LFAudioBitrate32Kbps : LFAudioBitrate64Kbps;
+        audioConfig.audioSampleRate = LFAudioSampleRate16000Hz;
     }
         break;
-    case LFLiveAudioQuality_Medium: {
-        audioConfig.audioBitrate = LFLiveAudioBitRate_96Kbps;
-        audioConfig.audioSampleRate = LFLiveAudioSampleRate_44100Hz;
+    case LFAudioQualityMedium: {
+        audioConfig.audioBitrate = LFAudioBitrate96Kbps;
+        audioConfig.audioSampleRate = LFAudioSampleRate44100Hz;
     }
         break;
-    case LFLiveAudioQuality_High: {
-        audioConfig.audioBitrate = LFLiveAudioBitRate_128Kbps;
-        audioConfig.audioSampleRate = LFLiveAudioSampleRate_44100Hz;
+    case LFAudioQualityHigh: {
+        audioConfig.audioBitrate = LFAudioBitrate128Kbps;
+        audioConfig.audioSampleRate = LFAudioSampleRate44100Hz;
     }
         break;
-    case LFLiveAudioQuality_VeryHigh: {
-        audioConfig.audioBitrate = LFLiveAudioBitRate_128Kbps;
-        audioConfig.audioSampleRate = LFLiveAudioSampleRate_48000Hz;
+    case LFAudioQualityVeryHigh: {
+        audioConfig.audioBitrate = LFAudioBitrate128Kbps;
+        audioConfig.audioSampleRate = LFAudioSampleRate48000Hz;
     }
         break;
     default:{
-        audioConfig.audioBitrate = LFLiveAudioBitRate_96Kbps;
-        audioConfig.audioSampleRate = LFLiveAudioSampleRate_44100Hz;
+        audioConfig.audioBitrate = LFAudioBitrate96Kbps;
+        audioConfig.audioSampleRate = LFAudioSampleRate44100Hz;
     }
         break;
     }
@@ -63,7 +63,7 @@
 }
 
 #pragma mark Setter
-- (void)setAudioSampleRate:(LFLiveAudioSampleRate)audioSampleRate {
+- (void)setAudioSampleRate:(LFAudioSampleRate)audioSampleRate {
     _audioSampleRate = audioSampleRate;
     NSInteger sampleRateIndex = [self sampleRateIndex:audioSampleRate];
     self.asc[0] = 0x10 | ((sampleRateIndex>>1) & 0x7);
@@ -153,7 +153,7 @@
     } else if (![super isEqual:other]) {
         return NO;
     } else {
-        LFLiveAudioConfiguration *object = other;
+        LFAudioConfiguration *object = other;
         return object.numberOfChannels == self.numberOfChannels &&
                object.audioBitrate == self.audioBitrate &&
                strcmp(object.asc, self.asc) == 0 &&
@@ -175,13 +175,13 @@
 }
 
 - (id)copyWithZone:(nullable NSZone *)zone {
-    LFLiveAudioConfiguration *other = [self.class defaultConfiguration];
+    LFAudioConfiguration *other = [self.class defaultConfiguration];
     return other;
 }
 
 - (NSString *)description {
     NSMutableString *desc = @"".mutableCopy;
-    [desc appendFormat:@"<LFLiveAudioConfiguration: %p>", self];
+    [desc appendFormat:@"<LFAudioConfiguration: %p>", self];
     [desc appendFormat:@" numberOfChannels:%zi", self.numberOfChannels];
     [desc appendFormat:@" audioSampleRate:%zi", self.audioSampleRate];
     [desc appendFormat:@" audioBitrate:%zi", self.audioBitrate];
