@@ -1,5 +1,5 @@
 //
-//  LFLiveStreamInfo.h
+//  LFStreamInfo.h
 //  LFLiveKit
 //
 //  Created by LaiFeng on 16/5/20.
@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "LFLiveAudioConfiguration.h"
 #import "LFLiveVideoConfiguration.h"
-
-
 
 typedef NS_ENUM (NSUInteger, LFLiveState){
     // prepared
@@ -27,26 +25,27 @@ typedef NS_ENUM (NSUInteger, LFLiveState){
     LFLiveReconnecting = 5,
 };
 
-typedef NS_ENUM (NSUInteger, LFLiveSocketErrorCode) {
-    LFLiveSocketError_PreView = 201,              /// 预览失败
-    LFLiveSocketError_GetStreamInfo = 202,        /// 获取流媒体信息失败
-    LFLiveSocketError_ConnectSocket = 203,        /// 连接socket失败
-    LFLiveSocketError_Verification = 204,         /// 验证服务器失败
-    LFLiveSocketError_ReConnectTimeOut = 205      /// 重新连接服务器超时
+typedef NS_ENUM (NSUInteger, LFLiveSocketError) {
+//    LFLiveSocketErrorPreView = 201,              /// 预览失败
+//    LFLiveSocketErrorGetStreamInfo = 202,        /// 获取流媒体信息失败
+//    LFLiveSocketErrorConnectSocket = 203,        /// 连接socket失败
+//    LFLiveSocketErrorVerification = 204,         /// 验证服务器失败
+    LFLiveSocketErrorReconnectTimeout = 205, // reconnecting to server timed out
 };
 
-@interface LFLiveStreamInfo : NSObject
+
+@interface LFStreamInfo : NSObject
 
 @property (nonatomic, copy) NSString *streamId;
 
 #pragma mark -- FLV
 @property (nonatomic, copy) NSString *host;
 @property (nonatomic, assign) NSInteger port;
+
 #pragma mark -- RTMP
-@property (nonatomic, copy) NSString *url;          /// 上传地址 (RTMP用就好了)
-///音频配置
+@property (nonatomic, copy) NSString *url;          // upload address
+
 @property (nonatomic, strong) LFLiveAudioConfiguration *audioConfiguration;
-///视频配置
 @property (nonatomic, strong) LFLiveVideoConfiguration *videoConfiguration;
 
 @end

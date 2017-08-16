@@ -14,6 +14,9 @@
 #import "rtmp.h"
 #endif
 
+#import "LFAudioFrame.h"
+
+
 static const NSInteger RetryTimesBreaken = 5;  ///  重连1分钟  3秒一次 一共20次
 static const NSInteger RetryTimesMargin = 3;
 
@@ -51,7 +54,7 @@ SAVC(mp4a);
     PILI_RTMP *_rtmp;
 }
 @property (nonatomic, weak) id<LFStreamSocketDelegate> delegate;
-@property (nonatomic, strong) LFLiveStreamInfo *stream;
+@property (nonatomic, strong) LFStreamInfo *stream;
 @property (nonatomic, strong) LFStreamingBuffer *buffer;
 @property (nonatomic, strong) LFLiveDebug *debugInfo;
 @property (nonatomic, strong) dispatch_queue_t rtmpSendQueue;
@@ -74,11 +77,11 @@ SAVC(mp4a);
 @implementation LFStreamRTMPSocket
 
 #pragma mark -- LFStreamSocket
-- (nullable instancetype)initWithStream:(nullable LFLiveStreamInfo *)stream{
+- (nullable instancetype)initWithStream:(nullable LFStreamInfo *)stream{
     return [self initWithStream:stream reconnectInterval:0 reconnectCount:0];
 }
 
-- (nullable instancetype)initWithStream:(nullable LFLiveStreamInfo *)stream reconnectInterval:(NSInteger)reconnectInterval reconnectCount:(NSInteger)reconnectCount{
+- (nullable instancetype)initWithStream:(nullable LFStreamInfo *)stream reconnectInterval:(NSInteger)reconnectInterval reconnectCount:(NSInteger)reconnectCount{
     if (!stream) @throw [NSException exceptionWithName:@"LFStreamRtmpSocket init error" reason:@"stream is nil" userInfo:nil];
     if (self = [super init]) {
         _stream = stream;
@@ -109,7 +112,6 @@ SAVC(mp4a);
     if (_rtmp != NULL) return;
     self.debugInfo.streamId = self.stream.streamId;
     self.debugInfo.uploadUrl = self.stream.url;
-    self.debugInfo.isRtmp = YES;
     if (_isConnecting) return;
     
     _isConnecting = YES;
@@ -496,8 +498,8 @@ Failed:
             if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
                 [self.delegate socketStatus:self status:LFLiveError];
             }
-            if (self.delegate && [self.delegate respondsToSelector:@selector(socketDidError:errorCode:)]) {
-                [self.delegate socketDidError:self errorCode:LFLiveSocketError_ReConnectTimeOut];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(socketDidError:error:)]) {
+                [self.delegate socketDidError:self error:LFLiveSocketErrorReconnectTimeout];
             }
         }
     });

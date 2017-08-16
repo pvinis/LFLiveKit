@@ -7,13 +7,13 @@
 //
 
 #import "LFLiveSession.h"
+
 #import "LFVideoCapture.h"
 #import "LFAudioCapture.h"
 #import "LFHardwareVideoEncoder.h"
 #import "LFHardwareAudioEncoder.h"
 #import "LFH264VideoEncoder.h"
 #import "LFStreamRTMPSocket.h"
-#import "LFLiveStreamInfo.h"
 #import "LFH264VideoEncoder.h"
 
 
@@ -39,7 +39,7 @@
 /// 调试信息
 @property (nonatomic, strong) LFLiveDebug *debugInfo;
 /// 流信息
-@property (nonatomic, strong) LFLiveStreamInfo *streamInfo;
+@property (nonatomic, strong) LFStreamInfo *streamInfo;
 /// 是否开始上传
 @property (nonatomic, assign) BOOL uploading;
 /// 当前状态
@@ -94,7 +94,7 @@
 }
 
 #pragma mark -- CustomMethod
-- (void)startLive:(LFLiveStreamInfo *)streamInfo {
+- (void)startLive:(LFStreamInfo *)streamInfo {
     if (!streamInfo) return;
     _streamInfo = streamInfo;
     _streamInfo.videoConfiguration = _videoConfiguration;
@@ -182,10 +182,10 @@
     });
 }
 
-- (void)socketDidError:(nullable id<LFStreamSocket>)socket errorCode:(LFLiveSocketErrorCode)errorCode {
+- (void)socketDidError:(nullable id<LFStreamSocket>)socket error:(LFLiveSocketError)error {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.delegate && [self.delegate respondsToSelector:@selector(liveSession:errorCode:)]) {
-            [self.delegate liveSession:self errorCode:errorCode];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(liveSession:socketError:)]) {
+            [self.delegate liveSession:self socketError:error];
         }
     });
 }
@@ -376,9 +376,9 @@
     return _socket;
 }
 
-- (LFLiveStreamInfo *)streamInfo {
+- (LFStreamInfo *)streamInfo {
     if (!_streamInfo) {
-        _streamInfo = [[LFLiveStreamInfo alloc] init];
+        _streamInfo = [[LFStreamInfo alloc] init];
     }
     return _streamInfo;
 }

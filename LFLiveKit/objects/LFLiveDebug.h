@@ -11,10 +11,9 @@
 
 @interface LFLiveDebug : NSObject
 
-@property (nonatomic, copy) NSString *streamId;                         /// 流id
-@property (nonatomic, copy) NSString *uploadUrl;                        /// 流地址
-@property (nonatomic, assign) CGSize videoSize;                         /// 上传的分辨率
-@property (nonatomic, assign) BOOL isRtmp;                              /// 上传方式（TCP or RTMP）
+@property (nonatomic, copy) NSString *streamId;
+@property (nonatomic, copy) NSString *uploadUrl;
+@property (nonatomic, assign) CGSize videoSize;                         // upload resolution
 
 @property (nonatomic, assign) CGFloat elapsedMilli;                     /// 距离上次统计的时间 单位ms
 @property (nonatomic, assign) CGFloat timeStamp;                        /// 当前的时间戳，从而计算1s内数据

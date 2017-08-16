@@ -7,27 +7,33 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AVFoundation/AVFoundation.h>
+
 #import "LFAudioFrame.h"
 #import "LFLiveAudioConfiguration.h"
 
 
-
 @protocol LFAudioEncoding;
-/// 编码器编码后回调
+
+
+// encoder work after callback
 @protocol LFAudioEncodingDelegate <NSObject>
+
 @required
 - (void)audioEncoder:(nullable id<LFAudioEncoding>)encoder audioFrame:(nullable LFAudioFrame *)frame;
+
 @end
 
-/// 编码器抽象的接口
+
+// encoder interface
 @protocol LFAudioEncoding <NSObject>
+
 @required
 - (void)encodeAudioData:(nullable NSData*)audioData timeStamp:(uint64_t)timeStamp;
-- (void)stopEncoder;
+
 @optional
 - (nullable instancetype)initWithAudioStreamConfiguration:(nullable LFLiveAudioConfiguration *)configuration;
 - (void)setDelegate:(nullable id<LFAudioEncodingDelegate>)delegate;
 - (nullable NSData *)adtsData:(NSInteger)channel rawDataLength:(NSInteger)rawDataLength;
-@end
+- (void)stopEncoder;
 
+@end

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LFAudioFrame.h"
+
 #import "LFVideoFrame.h"
 
 typedef NS_ENUM (NSUInteger, LFLiveBufferState) {

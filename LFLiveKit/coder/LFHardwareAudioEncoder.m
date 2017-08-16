@@ -8,7 +8,10 @@
 
 #import "LFHardwareAudioEncoder.h"
 
-@interface LFHardwareAudioEncoder (){
+#import <AVFoundation/AVFoundation.h>
+
+
+@interface LFHardwareAudioEncoder () {
     AudioConverterRef m_converter;
     char *leftBuf;
     char *aacBuf;
@@ -16,17 +19,18 @@
     FILE *fp;
     BOOL enabledWriteVideoFile;
 }
+
 @property (nonatomic, strong) LFLiveAudioConfiguration *configuration;
 @property (nonatomic, weak) id<LFAudioEncodingDelegate> aacDeleage;
 
 @end
 
+
 @implementation LFHardwareAudioEncoder
 
 - (instancetype)initWithAudioStreamConfiguration:(nullable LFLiveAudioConfiguration *)configuration {
     if (self = [super init]) {
-        NSLog(@"USE LFHardwareAudioEncoder");
-        _configuration = configuration;
+		_configuration = configuration;
         
         if (!leftBuf) {
             leftBuf = malloc(_configuration.bufferLength);
@@ -129,10 +133,6 @@
         fwrite(adts.bytes, 1, adts.length, self->fp);
         fwrite(audioFrame.data.bytes, 1, audioFrame.data.length, self->fp);
     }
-    
-}
-
-- (void)stopEncoder {
     
 }
 

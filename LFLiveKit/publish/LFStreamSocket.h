@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LFLiveStreamInfo.h"
+#import "LFStreamInfo.h"
 #import "LFStreamingBuffer.h"
 #import "LFLiveDebug.h"
 
@@ -20,8 +20,8 @@
 - (void)socketBufferStatus:(nullable id <LFStreamSocket>)socket status:(LFLiveBufferState)status;
 /** callback socket current status (回调当前网络情况) */
 - (void)socketStatus:(nullable id <LFStreamSocket>)socket status:(LFLiveState)status;
-/** callback socket errorcode */
-- (void)socketDidError:(nullable id <LFStreamSocket>)socket errorCode:(LFLiveSocketErrorCode)errorCode;
+/** callback socket error */
+- (void)socketDidError:(nullable id <LFStreamSocket>)socket error:(LFLiveSocketError)error;
 @optional
 /** callback debugInfo */
 - (void)socketDebug:(nullable id <LFStreamSocket>)socket debugInfo:(nullable LFLiveDebug *)debugInfo;
@@ -33,6 +33,6 @@
 - (void)sendFrame:(nullable LFFrame *)frame;
 - (void)setDelegate:(nullable id <LFStreamSocketDelegate>)delegate;
 @optional
-- (nullable instancetype)initWithStream:(nullable LFLiveStreamInfo *)stream;
-- (nullable instancetype)initWithStream:(nullable LFLiveStreamInfo *)stream reconnectInterval:(NSInteger)reconnectInterval reconnectCount:(NSInteger)reconnectCount;
+- (nullable instancetype)initWithStream:(nullable LFStreamInfo *)stream;
+- (nullable instancetype)initWithStream:(nullable LFStreamInfo *)stream reconnectInterval:(NSInteger)reconnectInterval reconnectCount:(NSInteger)reconnectCount;
 @end
