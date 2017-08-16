@@ -7,7 +7,6 @@
 //
 
 #import "LFVideoCapture.h"
-#import "LFGPUImageBeautyFilter.h"
 #import "LFGPUImageEmptyFilter.h"
 
 #if __has_include(<GPUImage/GPUImage.h>)
@@ -21,16 +20,11 @@
 @interface LFVideoCapture ()
 
 @property (nonatomic, strong) GPUImageVideoCamera *videoCamera;
-@property (nonatomic, strong) LFGPUImageBeautyFilter *beautyFilter;
 @property (nonatomic, strong) GPUImageOutput<GPUImageInput> *filter;
 @property (nonatomic, strong) GPUImageCropFilter *cropfilter;
 @property (nonatomic, strong) GPUImageOutput<GPUImageInput> *output;
 @property (nonatomic, strong) GPUImageView *gpuImageView;
 @property (nonatomic, strong) LFLiveVideoConfiguration *configuration;
-
-@property (nonatomic, strong) GPUImageAlphaBlendFilter *blendFilter;
-@property (nonatomic, strong) GPUImageUIElement *uiElementInput;
-@property (nonatomic, strong) UIView *waterMarkContentView;
 
 @property (nonatomic, strong) GPUImageMovieWriter *movieWriter;
 
@@ -38,8 +32,6 @@
 
 @implementation LFVideoCapture
 @synthesize torch = _torch;
-@synthesize beautyLevel = _beautyLevel;
-@synthesize brightLevel = _brightLevel;
 @synthesize zoomScale = _zoomScale;
 
 #pragma mark -- LifeCycle
@@ -51,9 +43,6 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChanged:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
         
-        self.beautyFace = NO;
-        self.beautyLevel = 0.5;
-        self.brightLevel = 0.5;
 		[self setZoomScale:1.0 ramping:NO];
         self.mirror = YES;
     }
@@ -162,33 +151,6 @@
     _mirror = mirror;
 }
 
-- (void)setBeautyFace:(BOOL)beautyFace{
-    _beautyFace = beautyFace;
-    [self reloadFilter];
-}
-
-- (void)setBeautyLevel:(CGFloat)beautyLevel {
-    _beautyLevel = beautyLevel;
-    if (self.beautyFilter) {
-        [self.beautyFilter setBeautyLevel:_beautyLevel];
-    }
-}
-
-- (CGFloat)beautyLevel {
-    return _beautyLevel;
-}
-
-- (void)setBrightLevel:(CGFloat)brightLevel {
-    _brightLevel = brightLevel;
-    if (self.beautyFilter) {
-        [self.beautyFilter setBrightLevel:brightLevel];
-    }
-}
-
-- (CGFloat)brightLevel {
-    return _brightLevel;
-}
-
 - (void)setStabilization:(BOOL)stabilization
 {
 	if (self.videoCamera.videoCaptureConnection.isVideoStabilizationSupported) {
@@ -228,42 +190,6 @@
 
 - (CGFloat)zoomScale {
     return _zoomScale;
-}
-
-- (void)setWaterMarkView:(UIView *)waterMarkView{
-    if(_waterMarkView && _waterMarkView.superview){
-        [_waterMarkView removeFromSuperview];
-        _waterMarkView = nil;
-    }
-    _waterMarkView = waterMarkView;
-    self.blendFilter.mix = waterMarkView.alpha;
-    [self.waterMarkContentView addSubview:_waterMarkView];
-    [self reloadFilter];
-}
-
-- (GPUImageUIElement *)uiElementInput{
-    if(!_uiElementInput){
-        _uiElementInput = [[GPUImageUIElement alloc] initWithView:self.waterMarkContentView];
-    }
-    return _uiElementInput;
-}
-
-- (GPUImageAlphaBlendFilter *)blendFilter{
-    if(!_blendFilter){
-        _blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
-        _blendFilter.mix = 1.0;
-        [_blendFilter disableSecondFrameCheck];
-    }
-    return _blendFilter;
-}
-
-- (UIView *)waterMarkContentView{
-    if(!_waterMarkContentView){
-        _waterMarkContentView = [UIView new];
-        _waterMarkContentView.frame = CGRectMake(0, 0, self.configuration.videoSize.width, self.configuration.videoSize.height);
-        _waterMarkContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    }
-    return _waterMarkContentView;
 }
 
 - (GPUImageView *)gpuImageView{
@@ -307,21 +233,12 @@
 
 - (void)reloadFilter{
     [self.filter removeAllTargets];
-    [self.blendFilter removeAllTargets];
-    [self.uiElementInput removeAllTargets];
     [self.videoCamera removeAllTargets];
     [self.output removeAllTargets];
     [self.cropfilter removeAllTargets];
-    
-    if (self.beautyFace) {
-        self.output = [[LFGPUImageEmptyFilter alloc] init];
-        self.filter = [[LFGPUImageBeautyFilter alloc] init];
-        self.beautyFilter = (LFGPUImageBeautyFilter*)self.filter;
-    } else {
-        self.output = [[LFGPUImageEmptyFilter alloc] init];
-        self.filter = [[LFGPUImageEmptyFilter alloc] init];
-        self.beautyFilter = nil;
-    }
+
+	self.output = [[LFGPUImageEmptyFilter alloc] init];
+	self.filter = [[LFGPUImageEmptyFilter alloc] init];
     
     /// 调节镜像
     [self reloadMirror];
@@ -335,26 +252,14 @@
     }else{
         [self.videoCamera addTarget:self.filter];
     }
-    
-    // 添加水印
-    if(self.waterMarkView){
-        [self.filter addTarget:self.blendFilter];
-        [self.uiElementInput addTarget:self.blendFilter];
-        [self.blendFilter addTarget:self.gpuImageView];
-        if(self.saveLocalVideo) [self.blendFilter addTarget:self.movieWriter];
-        [self.filter addTarget:self.output];
-        [self.uiElementInput update];
-    }else{
-        [self.filter addTarget:self.output];
-        [self.output addTarget:self.gpuImageView];
-        if(self.saveLocalVideo) [self.output addTarget:self.movieWriter];
-    }
-    
+
+	[self.filter addTarget:self.output];
+	[self.output addTarget:self.gpuImageView];
+	if(self.saveLocalVideo) [self.output addTarget:self.movieWriter];
+
     [self.filter forceProcessingAtSize:self.configuration.videoSize];
     [self.output forceProcessingAtSize:self.configuration.videoSize];
-    [self.blendFilter forceProcessingAtSize:self.configuration.videoSize];
-    [self.uiElementInput forceProcessingAtSize:self.configuration.videoSize];
-    
+
     
     // 输出数据
     __weak typeof(self) _self = self;

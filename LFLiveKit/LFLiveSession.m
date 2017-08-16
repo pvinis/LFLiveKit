@@ -14,7 +14,6 @@
 #import "LFH264VideoEncoder.h"
 #import "LFStreamRTMPSocket.h"
 #import "LFLiveStreamInfo.h"
-#import "LFGPUImageBeautyFilter.h"
 #import "LFH264VideoEncoder.h"
 
 
@@ -251,12 +250,6 @@
     return self.videoCaptureSource.captureDevicePosition;
 }
 
-- (void)setBeautyFace:(BOOL)beautyFace {
-    [self willChangeValueForKey:@"beautyFace"];
-    [self.videoCaptureSource setBeautyFace:beautyFace];
-    [self didChangeValueForKey:@"beautyFace"];
-}
-
 - (BOOL)saveLocalVideo{
     return self.videoCaptureSource.saveLocalVideo;
 }
@@ -272,30 +265,6 @@
 
 - (void)setSaveLocalVideoPath:(NSURL*)saveLocalVideoPath{
     [self.videoCaptureSource setSaveLocalVideoPath:saveLocalVideoPath];
-}
-
-- (BOOL)beautyFace {
-    return self.videoCaptureSource.beautyFace;
-}
-
-- (void)setBeautyLevel:(CGFloat)beautyLevel {
-    [self willChangeValueForKey:@"beautyLevel"];
-    [self.videoCaptureSource setBeautyLevel:beautyLevel];
-    [self didChangeValueForKey:@"beautyLevel"];
-}
-
-- (CGFloat)beautyLevel {
-    return self.videoCaptureSource.beautyLevel;
-}
-
-- (void)setBrightLevel:(CGFloat)brightLevel {
-    [self willChangeValueForKey:@"brightLevel"];
-    [self.videoCaptureSource setBrightLevel:brightLevel];
-    [self didChangeValueForKey:@"brightLevel"];
-}
-
-- (CGFloat)brightLevel {
-    return self.videoCaptureSource.brightLevel;
 }
 
 - (void)setStabilization:(BOOL)stabilization
@@ -353,14 +322,6 @@
 
 - (BOOL)muted {
     return self.audioCaptureSource.muted;
-}
-
-- (void)setWaterMarkView:(UIView *)waterMarkView{
-    [self.videoCaptureSource setWaterMarkView:waterMarkView];
-}
-
-- (nullable UIView*)waterMarkView{
-    return self.videoCaptureSource.waterMarkView;
 }
 
 - (nullable UIImage *)currentImage{
