@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-#import "LFLiveAudioConfiguration.h"
+#import "LFAudioConfiguration.h"
 
 #pragma mark -- AudioCaptureNotification
 /** compoentFialed will post the notification */
@@ -48,6 +48,6 @@ extern NSString *_Nullable const LFAudioComponentFailedToCreateNotification;
    The designated initializer. Multiple instances with the same configuration will make the
    capture unstable.
  */
-- (nullable instancetype)initWithAudioConfiguration:(nullable LFLiveAudioConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
 
 @end

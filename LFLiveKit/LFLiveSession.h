@@ -11,10 +11,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import "LFStreamInfo.h"
 #import "LFVideoFrame.h"
-#import "LFLiveAudioConfiguration.h"
-#import "LFLiveVideoConfiguration.h"
+#import "LFAudioConfiguration.h"
+#import "LFVideoConfiguration.h"
 #import "LFLiveDebug.h"
-
 
 
 typedef NS_ENUM(NSInteger,LFLiveCaptureType) {
@@ -125,13 +124,13 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
    The designated initializer. Multiple instances with the same configuration will make the
    capture unstable.
  */
-- (nullable instancetype)initWithAudioConfiguration:(nullable LFLiveAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFLiveVideoConfiguration *)videoConfiguration;
+- (nullable instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFVideoConfiguration *)videoConfiguration;
 
 /**
  The designated initializer. Multiple instances with the same configuration will make the
  capture unstable.
  */
-- (nullable instancetype)initWithAudioConfiguration:(nullable LFLiveAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFLiveVideoConfiguration *)videoConfiguration captureType:(LFLiveCaptureTypeMask)captureType NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFVideoConfiguration *)videoConfiguration captureType:(LFLiveCaptureTypeMask)captureType NS_DESIGNATED_INITIALIZER;
 
 /** The start stream .*/
 - (void)startLive:(nonnull LFStreamInfo *)streamInfo;

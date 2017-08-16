@@ -24,7 +24,7 @@
 @property (nonatomic, strong) GPUImageCropFilter *cropfilter;
 @property (nonatomic, strong) GPUImageOutput<GPUImageInput> *output;
 @property (nonatomic, strong) GPUImageView *gpuImageView;
-@property (nonatomic, strong) LFLiveVideoConfiguration *configuration;
+@property (nonatomic, strong) LFVideoConfiguration *configuration;
 
 @property (nonatomic, strong) GPUImageMovieWriter *movieWriter;
 
@@ -35,7 +35,7 @@
 @synthesize zoomScale = _zoomScale;
 
 #pragma mark -- LifeCycle
-- (instancetype)initWithVideoConfiguration:(LFLiveVideoConfiguration *)configuration {
+- (instancetype)initWithVideoConfiguration:(LFVideoConfiguration *)configuration {
     if (self = [super init]) {
         _configuration = configuration;
 
