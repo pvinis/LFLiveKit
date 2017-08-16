@@ -298,6 +298,16 @@
     return self.videoCaptureSource.brightLevel;
 }
 
+- (void)setStabilization:(BOOL)stabilization
+{
+	self.videoCaptureSource.stabilization = stabilization;
+}
+
+- (BOOL)stabilization
+{
+	return self.videoCaptureSource.stabilization;
+}
+
 - (void)setZoomScale:(CGFloat)zoomScale {
     [self willChangeValueForKey:@"zoomScale"];
     [self.videoCaptureSource setZoomScale:zoomScale];

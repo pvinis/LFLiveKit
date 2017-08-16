@@ -189,6 +189,21 @@
     return _brightLevel;
 }
 
+- (void)setStabilization:(BOOL)stabilization
+{
+	if (self.videoCamera.videoCaptureConnection.isVideoStabilizationSupported) {
+		self.videoCamera.videoCaptureConnection.preferredVideoStabilizationMode = (
+			stabilization ?
+			AVCaptureVideoStabilizationModeStandard :
+			AVCaptureVideoStabilizationModeOff);
+	}
+}
+
+- (BOOL)stabilization
+{
+	return !(self.videoCamera.videoCaptureConnection.preferredVideoStabilizationMode == AVCaptureVideoStabilizationModeOff);
+}
+
 - (void)setZoomScale:(CGFloat)zoomScale {
     if (self.videoCamera && self.videoCamera.inputCamera) {
         AVCaptureDevice *device = (AVCaptureDevice *)self.videoCamera.inputCamera;
