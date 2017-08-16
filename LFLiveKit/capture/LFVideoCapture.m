@@ -54,7 +54,7 @@
         self.beautyFace = NO;
         self.beautyLevel = 0.5;
         self.brightLevel = 0.5;
-        self.zoomScale = 1.0;
+		[self setZoomScale:1.0 ramping:NO];
         self.mirror = YES;
     }
     return self;
@@ -204,15 +204,26 @@
 	return !(self.videoCamera.videoCaptureConnection.preferredVideoStabilizationMode == AVCaptureVideoStabilizationModeOff);
 }
 
-- (void)setZoomScale:(CGFloat)zoomScale {
-    if (self.videoCamera && self.videoCamera.inputCamera) {
-        AVCaptureDevice *device = (AVCaptureDevice *)self.videoCamera.inputCamera;
-        if ([device lockForConfiguration:nil]) {
-            device.videoZoomFactor = zoomScale;
-            [device unlockForConfiguration];
-            _zoomScale = zoomScale;
-        }
-    }
+- (void)setZoomScale:(CGFloat)zoomScale
+			 ramping:(BOOL)ramping
+{
+	if (self.videoCamera && self.videoCamera.inputCamera) {
+		AVCaptureDevice *device = (AVCaptureDevice *)self.videoCamera.inputCamera;
+		if ([device lockForConfiguration:nil]) {
+			if (ramping) {
+				[device rampToVideoZoomFactor:zoomScale withRate:2.0];
+			} else {
+				device.videoZoomFactor = zoomScale;
+			}
+			[device unlockForConfiguration];
+			_zoomScale = zoomScale;
+		}
+	}
+}
+
+- (void)setZoomScale:(CGFloat)zoomScale
+{
+	[self setZoomScale:zoomScale ramping:YES];
 }
 
 - (CGFloat)zoomScale {

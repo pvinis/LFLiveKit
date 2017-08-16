@@ -308,10 +308,17 @@
 	return self.videoCaptureSource.stabilization;
 }
 
-- (void)setZoomScale:(CGFloat)zoomScale {
-    [self willChangeValueForKey:@"zoomScale"];
-    [self.videoCaptureSource setZoomScale:zoomScale];
-    [self didChangeValueForKey:@"zoomScale"];
+- (void)setZoomScale:(CGFloat)zoomScale
+			 ramping:(BOOL)ramping
+{
+	[self willChangeValueForKey:@"zoomScale"];
+	[self.videoCaptureSource setZoomScale:zoomScale ramping:ramping];
+	[self didChangeValueForKey:@"zoomScale"];
+}
+
+- (void)setZoomScale:(CGFloat)zoomScale
+{
+	[self.videoCaptureSource setZoomScale:zoomScale ramping:YES];
 }
 
 - (CGFloat)zoomScale {

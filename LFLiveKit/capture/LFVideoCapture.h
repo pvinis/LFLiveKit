@@ -54,6 +54,8 @@
 
 /** The torch control camera zoom scale default 1.0, between 1.0 ~ 3.0 */
 @property (nonatomic, assign) CGFloat zoomScale;
+- (void)setZoomScale:(CGFloat)zoomScale
+			 ramping:(BOOL)ramping;
 
 /** The videoFrameRate control videoCapture output data count */
 @property (nonatomic, assign) NSInteger videoFrameRate;

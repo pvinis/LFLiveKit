@@ -84,6 +84,8 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
 
 /** The torch control camera zoom scale default 1.0, between 1.0 ~ 3.0 */
 @property (nonatomic, assign) CGFloat zoomScale;
+- (void)setZoomScale:(CGFloat)zoomScale
+			 ramping:(BOOL)ramping;
 
 /** The torch control capture flash is on or off */
 @property (nonatomic, assign) BOOL torch;
