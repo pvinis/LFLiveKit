@@ -22,7 +22,7 @@
     BOOL _writeToFile;
 }
 
-@property (nonatomic, strong) LFLiveVideoConfiguration *configuration;
+@property (nonatomic, strong) LFVideoConfiguration *configuration;
 @property (nonatomic, weak) id<LFVideoEncodingDelegate> h264Delegate;
 @property (nonatomic) NSInteger currentVideoBitrate;
 
@@ -32,7 +32,7 @@
 @implementation LFHardwareVideoEncoder
 
 #pragma mark -- LifeCycle
-- (instancetype)initWithVideoStreamConfiguration:(LFLiveVideoConfiguration *)configuration {
+- (instancetype)initWithVideoStreamConfiguration:(LFVideoConfiguration *)configuration {
     if (self = [super init]) {
         _configuration = configuration;
         [self resetCompressionSession];

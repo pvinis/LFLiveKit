@@ -20,7 +20,7 @@
 /// 音频配置
 @property (nonatomic, strong) LFAudioConfiguration *audioConfiguration;
 /// 视频配置
-@property (nonatomic, strong) LFLiveVideoConfiguration *videoConfiguration;
+@property (nonatomic, strong) LFVideoConfiguration *videoConfiguration;
 /// 声音采集
 @property (nonatomic, strong) LFAudioCapture *audioCaptureSource;
 /// 视频采集
@@ -70,11 +70,11 @@
 @implementation LFLiveSession
 
 #pragma mark -- LifeCycle
-- (instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFLiveVideoConfiguration *)videoConfiguration {
+- (instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFVideoConfiguration *)videoConfiguration {
     return [self initWithAudioConfiguration:audioConfiguration videoConfiguration:videoConfiguration captureType:LFLiveCaptureDefaultMask];
 }
 
-- (nullable instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFLiveVideoConfiguration *)videoConfiguration captureType:(LFLiveCaptureTypeMask)captureType{
+- (nullable instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFVideoConfiguration *)videoConfiguration captureType:(LFLiveCaptureTypeMask)captureType{
     if((captureType & LFLiveCaptureMaskAudio || captureType & LFLiveInputMaskAudio) && !audioConfiguration) @throw [NSException exceptionWithName:@"LFLiveSession init error" reason:@"audioConfiguration is nil " userInfo:nil];
     if((captureType & LFLiveCaptureMaskVideo || captureType & LFLiveInputMaskVideo) && !videoConfiguration) @throw [NSException exceptionWithName:@"LFLiveSession init error" reason:@"videoConfiguration is nil " userInfo:nil];
     if (self = [super init]) {

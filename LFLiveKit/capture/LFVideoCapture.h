@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-#import "LFLiveVideoConfiguration.h"
+#import "LFVideoConfiguration.h"
 
 @class LFVideoCapture;
 /** LFVideoCapture callback videoData */
@@ -71,6 +71,6 @@
    The designated initializer. Multiple instances with the same configuration will make the
    capture unstable.
  */
-- (nullable instancetype)initWithVideoConfiguration:(nullable LFLiveVideoConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithVideoConfiguration:(nullable LFVideoConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
 
 @end

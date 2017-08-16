@@ -18,7 +18,7 @@ FOUNDATION_EXPORT const unsigned char LFLiveKitVersionString[];
 
 #import <LFLiveKit/LFLiveSession.h>
 #import <LFLiveKit/LFAudioConfiguration.h>
-#import <LFLiveKit/LFLiveVideoConfiguration.h>
+#import <LFLiveKit/LFVideoConfiguration.h>
 #import <LFLiveKit/LFAudioFrame.h>
 #import <LFLiveKit/LFVideoFrame.h>
 #import <LFLiveKit/LFStreamInfo.h>

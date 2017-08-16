@@ -85,8 +85,8 @@
 		84D8B5CE1D768B6E00752B56 /* LFVideoEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B59A1D768B6E00752B56 /* LFVideoEncoding.h */; };
 		84D8B5CF1D768B6E00752B56 /* LFAudioConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B59C1D768B6E00752B56 /* LFAudioConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84D8B5D01D768B6E00752B56 /* LFAudioConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B59D1D768B6E00752B56 /* LFAudioConfiguration.m */; };
-		84D8B5D11D768B6E00752B56 /* LFLiveVideoConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B59E1D768B6E00752B56 /* LFLiveVideoConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84D8B5D21D768B6E00752B56 /* LFLiveVideoConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B59F1D768B6E00752B56 /* LFLiveVideoConfiguration.m */; };
+		84D8B5D11D768B6E00752B56 /* LFVideoConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B59E1D768B6E00752B56 /* LFVideoConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		84D8B5D21D768B6E00752B56 /* LFVideoConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B59F1D768B6E00752B56 /* LFVideoConfiguration.m */; };
 		84D8B5D51D768B6E00752B56 /* LFGPUImageEmptyFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5A31D768B6E00752B56 /* LFGPUImageEmptyFilter.h */; };
 		84D8B5D61D768B6E00752B56 /* LFGPUImageEmptyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5A41D768B6E00752B56 /* LFGPUImageEmptyFilter.m */; };
 		84D8B5D71D768B6E00752B56 /* LFLiveKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5A51D768B6E00752B56 /* LFLiveKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -195,8 +195,8 @@
 		84D8B59A1D768B6E00752B56 /* LFVideoEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFVideoEncoding.h; sourceTree = "<group>"; };
 		84D8B59C1D768B6E00752B56 /* LFAudioConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFAudioConfiguration.h; sourceTree = "<group>"; };
 		84D8B59D1D768B6E00752B56 /* LFAudioConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFAudioConfiguration.m; sourceTree = "<group>"; };
-		84D8B59E1D768B6E00752B56 /* LFLiveVideoConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFLiveVideoConfiguration.h; sourceTree = "<group>"; };
-		84D8B59F1D768B6E00752B56 /* LFLiveVideoConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFLiveVideoConfiguration.m; sourceTree = "<group>"; };
+		84D8B59E1D768B6E00752B56 /* LFVideoConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFVideoConfiguration.h; sourceTree = "<group>"; };
+		84D8B59F1D768B6E00752B56 /* LFVideoConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFVideoConfiguration.m; sourceTree = "<group>"; };
 		84D8B5A31D768B6E00752B56 /* LFGPUImageEmptyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFGPUImageEmptyFilter.h; sourceTree = "<group>"; };
 		84D8B5A41D768B6E00752B56 /* LFGPUImageEmptyFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFGPUImageEmptyFilter.m; sourceTree = "<group>"; };
 		84D8B5A51D768B6E00752B56 /* LFLiveKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFLiveKit.h; sourceTree = "<group>"; };
@@ -407,8 +407,8 @@
 			children = (
 				84D8B59C1D768B6E00752B56 /* LFAudioConfiguration.h */,
 				84D8B59D1D768B6E00752B56 /* LFAudioConfiguration.m */,
-				84D8B59E1D768B6E00752B56 /* LFLiveVideoConfiguration.h */,
-				84D8B59F1D768B6E00752B56 /* LFLiveVideoConfiguration.m */,
+				84D8B59E1D768B6E00752B56 /* LFVideoConfiguration.h */,
+				84D8B59F1D768B6E00752B56 /* LFVideoConfiguration.m */,
 			);
 			path = configuration;
 			sourceTree = "<group>";
@@ -479,7 +479,7 @@
 				843591591DD1FEB600811FC7 /* log.h in Headers */,
 				843591441DD1FEB600811FC7 /* GPUImageContext.h in Headers */,
 				84D8B5E01D768B6E00752B56 /* LFStreamInfo.h in Headers */,
-				84D8B5D11D768B6E00752B56 /* LFLiveVideoConfiguration.h in Headers */,
+				84D8B5D11D768B6E00752B56 /* LFVideoConfiguration.h in Headers */,
 				8435901F1DD1FEB600811FC7 /* GPUImageColorConversion.h in Headers */,
 				8435900D1DD1FEB600811FC7 /* GPUImageBuffer.h in Headers */,
 				8435914C1DD1FEB600811FC7 /* GPUImageView.h in Headers */,
@@ -600,7 +600,7 @@
 				8435900E1DD1FEB600811FC7 /* GPUImageBuffer.m in Sources */,
 				843591471DD1FEB600811FC7 /* GPUImageMovieWriter.m in Sources */,
 				843591561DD1FEB600811FC7 /* hashswf.c in Sources */,
-				84D8B5D21D768B6E00752B56 /* LFLiveVideoConfiguration.m in Sources */,
+				84D8B5D21D768B6E00752B56 /* LFVideoConfiguration.m in Sources */,
 				843591421DD1FEB600811FC7 /* GPUImageZoomBlurFilter.m in Sources */,
 				84D8B5D61D768B6E00752B56 /* LFGPUImageEmptyFilter.m in Sources */,
 				843591531DD1FEB600811FC7 /* error.c in Sources */,

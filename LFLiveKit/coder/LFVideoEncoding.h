@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "LFVideoFrame.h"
-#import "LFLiveVideoConfiguration.h"
+#import "LFVideoConfiguration.h"
 
 
 @protocol LFVideoEncoding;
@@ -32,7 +32,7 @@
 
 @optional
 @property (nonatomic, assign) NSInteger videoBitrate;
-- (nullable instancetype)initWithVideoStreamConfiguration:(nullable LFLiveVideoConfiguration *)configuration;
+- (nullable instancetype)initWithVideoStreamConfiguration:(nullable LFVideoConfiguration *)configuration;
 - (void)setDelegate:(nullable id<LFVideoEncodingDelegate>)delegate;
 - (void)stopEncoder;
 
