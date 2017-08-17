@@ -101,8 +101,8 @@
 		84D8B5E11D768B6E00752B56 /* LFStreamInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5B01D768B6E00752B56 /* LFStreamInfo.m */; };
 		84D8B5E21D768B6E00752B56 /* LFVideoFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B11D768B6E00752B56 /* LFVideoFrame.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84D8B5E31D768B6E00752B56 /* LFVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5B21D768B6E00752B56 /* LFVideoFrame.m */; };
-		84D8B5E41D768B6E00752B56 /* LFStreamingBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B41D768B6E00752B56 /* LFStreamingBuffer.h */; };
-		84D8B5E51D768B6E00752B56 /* LFStreamingBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5B51D768B6E00752B56 /* LFStreamingBuffer.m */; };
+		84D8B5E41D768B6E00752B56 /* LFBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B41D768B6E00752B56 /* LFBuffer.h */; };
+		84D8B5E51D768B6E00752B56 /* LFBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5B51D768B6E00752B56 /* LFBuffer.m */; };
 		84D8B5E61D768B6E00752B56 /* LFStreamRTMPSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B61D768B6E00752B56 /* LFStreamRTMPSocket.h */; };
 		84D8B5E71D768B6E00752B56 /* LFStreamRTMPSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5B71D768B6E00752B56 /* LFStreamRTMPSocket.m */; };
 		84D8B5E81D768B6E00752B56 /* LFStreamSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */; };
@@ -212,8 +212,8 @@
 		84D8B5B01D768B6E00752B56 /* LFStreamInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFStreamInfo.m; sourceTree = "<group>"; };
 		84D8B5B11D768B6E00752B56 /* LFVideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFVideoFrame.h; sourceTree = "<group>"; };
 		84D8B5B21D768B6E00752B56 /* LFVideoFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFVideoFrame.m; sourceTree = "<group>"; };
-		84D8B5B41D768B6E00752B56 /* LFStreamingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStreamingBuffer.h; sourceTree = "<group>"; };
-		84D8B5B51D768B6E00752B56 /* LFStreamingBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFStreamingBuffer.m; sourceTree = "<group>"; };
+		84D8B5B41D768B6E00752B56 /* LFBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFBuffer.h; sourceTree = "<group>"; };
+		84D8B5B51D768B6E00752B56 /* LFBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFBuffer.m; sourceTree = "<group>"; };
 		84D8B5B61D768B6E00752B56 /* LFStreamRTMPSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStreamRTMPSocket.h; sourceTree = "<group>"; };
 		84D8B5B71D768B6E00752B56 /* LFStreamRTMPSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFStreamRTMPSocket.m; sourceTree = "<group>"; };
 		84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStreamSocket.h; sourceTree = "<group>"; };
@@ -442,8 +442,8 @@
 		84D8B5B31D768B6E00752B56 /* publish */ = {
 			isa = PBXGroup;
 			children = (
-				84D8B5B41D768B6E00752B56 /* LFStreamingBuffer.h */,
-				84D8B5B51D768B6E00752B56 /* LFStreamingBuffer.m */,
+				84D8B5B41D768B6E00752B56 /* LFBuffer.h */,
+				84D8B5B51D768B6E00752B56 /* LFBuffer.m */,
 				84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */,
 				84D8B5B61D768B6E00752B56 /* LFStreamRTMPSocket.h */,
 				84D8B5B71D768B6E00752B56 /* LFStreamRTMPSocket.m */,
@@ -523,7 +523,7 @@
 				843591571DD1FEB600811FC7 /* http.h in Headers */,
 				84D8B5CE1D768B6E00752B56 /* LFVideoEncoding.h in Headers */,
 				843590511DD1FEB600811FC7 /* GPUImageFilter.h in Headers */,
-				84D8B5E41D768B6E00752B56 /* LFStreamingBuffer.h in Headers */,
+				84D8B5E41D768B6E00752B56 /* LFBuffer.h in Headers */,
 				8435910D1DD1FEB600811FC7 /* GPUImageStillCamera.h in Headers */,
 				8435914A1DD1FEB600811FC7 /* GPUImagePicture.h in Headers */,
 			);
@@ -616,7 +616,7 @@
 				843590C61DD1FEB600811FC7 /* GPUImageOutput.m in Sources */,
 				843590E01DD1FEB600811FC7 /* GPUImageRawDataOutput.m in Sources */,
 				843590201DD1FEB600811FC7 /* GPUImageColorConversion.m in Sources */,
-				84D8B5E51D768B6E00752B56 /* LFStreamingBuffer.m in Sources */,
+				84D8B5E51D768B6E00752B56 /* LFBuffer.m in Sources */,
 				8435914E1DD1FEB600811FC7 /* amf.c in Sources */,
 				843590DE1DD1FEB600811FC7 /* GPUImageRawDataInput.m in Sources */,
 				84D8B5CD1D768B6E00752B56 /* LFHardwareVideoEncoder.m in Sources */,

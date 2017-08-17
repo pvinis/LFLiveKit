@@ -49,13 +49,13 @@ SAVC(fileSize);
 SAVC(avc1);
 SAVC(mp4a);
 
-@interface LFStreamRTMPSocket ()<LFStreamingBufferDelegate>
+@interface LFStreamRTMPSocket ()<LFBufferDelegate>
 {
     PILI_RTMP *_rtmp;
 }
 @property (nonatomic, weak) id<LFStreamSocketDelegate> delegate;
 @property (nonatomic, strong) LFStreamInfo *stream;
-@property (nonatomic, strong) LFStreamingBuffer *buffer;
+@property (nonatomic, strong) LFBuffer *buffer;
 @property (nonatomic, strong) LFLiveDebug *debugInfo;
 @property (nonatomic, strong) dispatch_queue_t rtmpSendQueue;
 //错误信息
@@ -543,8 +543,8 @@ void RTMPErrorCallback(RTMPError *error, void *userData) {
 void ConnectionTimeCallback(PILI_CONNECTION_TIME *conn_time, void *userData) {
 }
 
-#pragma mark -- LFStreamingBufferDelegate
-- (void)streamingBuffer:(nullable LFStreamingBuffer *)buffer bufferState:(LFBufferState)state {
+#pragma mark -- LFBufferDelegate
+- (void)streamingBuffer:(nullable LFBuffer *)buffer bufferState:(LFBufferState)state {
     if (self.delegate && [self.delegate respondsToSelector:@selector(socketBufferStatus:status:)]) {
         [self.delegate socketBufferStatus:self status:state];
     }
@@ -561,9 +561,9 @@ void ConnectionTimeCallback(PILI_CONNECTION_TIME *conn_time, void *userData) {
 
 #pragma mark -- Getter Setter
 
-- (LFStreamingBuffer *)buffer {
+- (LFBuffer *)buffer {
     if (!_buffer) {
-        _buffer = [[LFStreamingBuffer alloc] init];
+        _buffer = [[LFBuffer alloc] init];
         _buffer.delegate = self;
 
     }

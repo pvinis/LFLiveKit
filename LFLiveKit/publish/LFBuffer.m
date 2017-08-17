@@ -1,12 +1,12 @@
 //
-//  LFStreamingBuffer.m
+//  LFBuffer.m
 //  LFLiveKit
 //
 //  Created by LaiFeng on 16/5/20.
 //  Copyright © 2016年 LaiFeng All rights reserved.
 //
 
-#import "LFStreamingBuffer.h"
+#import "LFBuffer.h"
 
 #import "NSMutableArray+LFAdditions.h"
 
@@ -16,7 +16,7 @@ static const NSUInteger defaultCallBackInterval = 5;/// 5s计时一次
 static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为600
 
 
-@interface LFStreamingBuffer () {
+@interface LFBuffer () {
     dispatch_semaphore_t _lock;
 }
 
@@ -33,7 +33,7 @@ static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为60
 @end
 
 
-@implementation LFStreamingBuffer
+@implementation LFBuffer
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -58,16 +58,23 @@ static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为60
     dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
     if (self.sortList.count < defaultSortBufferMaxCount) {
         [self.sortList addObject:frame];
+		NSLog(@"sort: added new");
+		NSLog(@"sort: %@", self.sortList);
     } else {
         // sort
         [self.sortList addObject:frame];
+		NSLog(@"sort: added new and sort");
 		[self.sortList sortUsingFunction:frameDataCompare context:nil];
+		NSLog(@"sort: %@", self.sortList);
         // dropped frames
         [self removeExpireFrame];
         // added to buffer
         LFFrame *firstFrame = [self.sortList popFirstObject];
 
-        if (firstFrame) [self.list addObject:firstFrame];
+		if (firstFrame) {
+			[self.list addObject:firstFrame];
+			NSLog(@"list: %@", self.list);
+		}
     }
     dispatch_semaphore_signal(_lock);
 }

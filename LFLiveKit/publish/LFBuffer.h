@@ -1,5 +1,5 @@
 //
-//  LFStreamingBuffer.h
+//  LFBuffer.h
 //  LFLiveKit
 //
 //  Created by LaiFeng on 16/5/20.
@@ -17,22 +17,22 @@ typedef NS_ENUM (NSUInteger, LFBufferState) {
     LFBufferStateEmptying,
 };
 
-@class LFStreamingBuffer;
+@class LFBuffer;
 
 
 // this two methods will control videoBitrate
-@protocol LFStreamingBufferDelegate <NSObject>
+@protocol LFBufferDelegate <NSObject>
 
 @optional
 /** 当前buffer变动（增加or减少） 根据buffer中的updateInterval时间回调*/
-- (void)streamingBuffer:(nullable LFStreamingBuffer *)buffer bufferState:(LFBufferState)state;
+- (void)streamingBuffer:(nullable LFBuffer *)buffer bufferState:(LFBufferState)state;
 
 @end
 
 
-@interface LFStreamingBuffer : NSObject
+@interface LFBuffer : NSObject
 
-@property (nullable, nonatomic, weak) id <LFStreamingBufferDelegate> delegate;
+@property (nullable, nonatomic, weak) id <LFBufferDelegate> delegate;
 
 // current frame buffer
 @property (nonatomic, strong, readonly) NSMutableArray <LFFrame *> *_Nonnull list;

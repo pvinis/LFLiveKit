@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "LFStreamInfo.h"
-#import "LFStreamingBuffer.h"
+#import "LFBuffer.h"
 #import "LFLiveDebug.h"
 
 
