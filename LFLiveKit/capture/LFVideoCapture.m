@@ -30,7 +30,9 @@
 
 @end
 
+
 @implementation LFVideoCapture
+
 @synthesize torch = _torch;
 @synthesize zoomScale = _zoomScale;
 
@@ -61,8 +63,8 @@
 
 #pragma mark -- Setter Getter
 
-- (GPUImageVideoCamera *)videoCamera{
-    if(!_videoCamera){
+- (GPUImageVideoCamera *)videoCamera {
+    if (!_videoCamera) {
         _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:_configuration.avSessionPreset cameraPosition:AVCaptureDevicePositionBack];
         _videoCamera.outputImageOrientation = _configuration.outputImageOrientation;
         _videoCamera.horizontallyMirrorFrontFacingCamera = NO;
@@ -88,13 +90,13 @@
     }
 }
 
-- (void)setPreView:(UIView *)preView {
+- (void)setPreviewView:(UIView *)previewView {
     if (self.gpuImageView.superview) [self.gpuImageView removeFromSuperview];
-    [preView insertSubview:self.gpuImageView atIndex:0];
-    self.gpuImageView.frame = CGRectMake(0, 0, preView.frame.size.width, preView.frame.size.height);
+    [previewView insertSubview:self.gpuImageView atIndex:0];
+    self.gpuImageView.frame = CGRectMake(0, 0, previewView.frame.size.width, previewView.frame.size.height);
 }
 
-- (UIView *)preView {
+- (UIView *)previewView {
     return self.gpuImageView.superview;
 }
 
@@ -193,7 +195,7 @@
 }
 
 - (GPUImageView *)gpuImageView{
-    if(!_gpuImageView){
+    if (!_gpuImageView){
         _gpuImageView = [[GPUImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
         [_gpuImageView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
@@ -201,7 +203,7 @@
     return _gpuImageView;
 }
 
--(UIImage *)currentImage{
+- (UIImage *)currentImage {
     if(_filter){
         [_filter useNextFrameForImageCapture];
         return _filter.imageFromCurrentFramebuffer;
@@ -209,7 +211,7 @@
     return nil;
 }
 
-- (GPUImageMovieWriter*)movieWriter{
+- (GPUImageMovieWriter*)movieWriter {
     if(!_movieWriter){
         _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.saveLocalVideoPath size:self.configuration.videoSize];
         _movieWriter.encodingLiveVideo = YES;
@@ -231,7 +233,7 @@
     }
 }
 
-- (void)reloadFilter{
+- (void)reloadFilter {
     [self.filter removeAllTargets];
     [self.videoCamera removeAllTargets];
     [self.output removeAllTargets];
@@ -280,7 +282,7 @@
 #pragma mark Notification
 
 - (void)willEnterBackground:(NSNotification *)notification {
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
+	UIApplication.sharedApplication.idleTimerDisabled = NO;
     [self.videoCamera pauseCameraCapture];
     runSynchronouslyOnVideoProcessingQueue(^{
         glFinish();
@@ -289,7 +291,7 @@
 
 - (void)willEnterForeground:(NSNotification *)notification {
     [self.videoCamera resumeCameraCapture];
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    UIApplication.sharedApplication.idleTimerDisabled = YES;
 }
 
 - (void)statusBarChanged:(NSNotification *)notification {

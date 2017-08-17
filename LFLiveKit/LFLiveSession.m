@@ -199,10 +199,10 @@
     }
 }
 
-- (void)socketBufferStatus:(nullable id<LFStreamSocket>)socket status:(LFLiveBufferState)status {
+- (void)socketBufferStatus:(nullable id<LFStreamSocket>)socket status:(LFBufferState)status {
     if((self.captureType & LFLiveCaptureMaskVideo || self.captureType & LFLiveInputMaskVideo) && self.adaptiveBitrate){
         NSUInteger videoBitrate = [self.videoEncoder videoBitrate];
-        if (status == LFLiveBufferStateEmptying) {
+        if (status == LFBufferStateEmptying) {
             if (videoBitrate < _videoConfiguration.videoMaxBitrate) {
                 videoBitrate = videoBitrate + 50 * 1000;
                 [self.videoEncoder setVideoBitrate:videoBitrate];
@@ -228,14 +228,14 @@
     self.audioCaptureSource.running = _running;
 }
 
-- (void)setPreView:(UIView *)preView {
-    [self willChangeValueForKey:@"preView"];
-    [self.videoCaptureSource setPreView:preView];
-    [self didChangeValueForKey:@"preView"];
+- (void)setPreviewView:(UIView *)previewView {
+    [self willChangeValueForKey:@"previewView"];
+    [self.videoCaptureSource setPreviewView:previewView];
+    [self didChangeValueForKey:@"previewView"];
 }
 
-- (UIView *)preView {
-    return self.videoCaptureSource.preView;
+- (UIView *)previewView {
+    return self.videoCaptureSource.previewView;
 }
 
 - (void)setCaptureDevicePosition:(AVCaptureDevicePosition)captureDevicePosition {

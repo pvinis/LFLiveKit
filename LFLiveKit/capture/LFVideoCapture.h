@@ -8,29 +8,28 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+
 #import "LFVideoConfiguration.h"
 
 @class LFVideoCapture;
-/** LFVideoCapture callback videoData */
+
+
 @protocol LFVideoCaptureDelegate <NSObject>
+
 - (void)captureOutput:(nullable LFVideoCapture *)capture pixelBuffer:(nullable CVPixelBufferRef)pixelBuffer;
+
 @end
+
 
 @interface LFVideoCapture : NSObject
 
-#pragma mark - Attribute
-///=============================================================================
-/// @name Attribute
-///=============================================================================
-
-/** The delegate of the capture. captureData callback */
 @property (nullable, nonatomic, weak) id<LFVideoCaptureDelegate> delegate;
 
-/** The running control start capture or stop capture*/
+// The running control start capture or stop capture
 @property (nonatomic, assign) BOOL running;
 
-/** The preView will show OpenGL ES view*/
-@property (null_resettable, nonatomic, strong) UIView *preView;
+/** The previewView will show OpenGL ES view*/
+@property (null_resettable, nonatomic, strong) UIView *previewView;
 
 /** The captureDevicePosition control camraPosition ,default front*/
 @property (nonatomic, assign) AVCaptureDevicePosition captureDevicePosition;
@@ -60,10 +59,7 @@
 /* The saveLocalVideoPath is save the local video  path */
 @property (nonatomic, strong, nullable) NSURL *saveLocalVideoPath;
 
-#pragma mark - Initializer
-///=============================================================================
-/// @name Initializer
-///=============================================================================
+
 - (nullable instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (nullable instancetype)new UNAVAILABLE_ATTRIBUTE;
 

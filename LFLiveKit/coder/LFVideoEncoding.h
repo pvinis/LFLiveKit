@@ -15,7 +15,7 @@
 @protocol LFVideoEncoding;
 
 
-// encoder work after callback
+// get frame back after encoding
 @protocol LFVideoEncodingDelegate <NSObject>
 
 @required

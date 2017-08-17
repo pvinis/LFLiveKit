@@ -10,42 +10,46 @@
 
 #import "LFVideoFrame.h"
 
-typedef NS_ENUM (NSUInteger, LFLiveBufferState) {
-    LFLiveBufferStateStable = 0,
-    LFLiveBufferStateFillingUp,
-    LFLiveBufferStateEmptying,
+
+typedef NS_ENUM (NSUInteger, LFBufferState) {
+    LFBufferStateStable = 0,
+    LFBufferStateFillingUp,
+    LFBufferStateEmptying,
 };
 
 @class LFStreamingBuffer;
-/** this two method will control videoBitrate */
+
+
+// this two methods will control videoBitrate
 @protocol LFStreamingBufferDelegate <NSObject>
+
 @optional
 /** 当前buffer变动（增加or减少） 根据buffer中的updateInterval时间回调*/
-- (void)streamingBuffer:(nullable LFStreamingBuffer *)buffer bufferState:(LFLiveBufferState)state;
+- (void)streamingBuffer:(nullable LFStreamingBuffer *)buffer bufferState:(LFBufferState)state;
+
 @end
+
 
 @interface LFStreamingBuffer : NSObject
 
-
-/** The delegate of the buffer. buffer callback */
 @property (nullable, nonatomic, weak) id <LFStreamingBufferDelegate> delegate;
 
-/** current frame buffer */
+// current frame buffer
 @property (nonatomic, strong, readonly) NSMutableArray <LFFrame *> *_Nonnull list;
 
-/** buffer count max size default 1000 */
+// buffer count max size default 1000
 @property (nonatomic, assign) NSUInteger maxCount;
 
-/** count of drop frames in last time */
+// count of drop frames in last time
 @property (nonatomic, assign) NSInteger lastDropFrames;
 
-/** add frame to buffer */
+// add frame to buffer
 - (void)appendObject:(nullable LFFrame *)frame;
 
-/** pop the first frome buffer */
+// pop the first frome buffer
 - (nullable LFFrame *)popFirstObject;
 
-/** remove all objects from Buffer */
+// remove all objects from Buffer
 - (void)removeAllObject;
 
 @end

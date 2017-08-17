@@ -106,8 +106,8 @@
 		84D8B5E61D768B6E00752B56 /* LFStreamRTMPSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B61D768B6E00752B56 /* LFStreamRTMPSocket.h */; };
 		84D8B5E71D768B6E00752B56 /* LFStreamRTMPSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5B71D768B6E00752B56 /* LFStreamRTMPSocket.m */; };
 		84D8B5E81D768B6E00752B56 /* LFStreamSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */; };
-		84D8B5E91D768B6E00752B56 /* NSMutableArray+LFAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B91D768B6E00752B56 /* NSMutableArray+LFAdd.h */; };
-		84D8B5EA1D768B6E00752B56 /* NSMutableArray+LFAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5BA1D768B6E00752B56 /* NSMutableArray+LFAdd.m */; };
+		84D8B5E91D768B6E00752B56 /* NSMutableArray+LFAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B91D768B6E00752B56 /* NSMutableArray+LFAdditions.h */; };
+		84D8B5EA1D768B6E00752B56 /* NSMutableArray+LFAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5BA1D768B6E00752B56 /* NSMutableArray+LFAdditions.m */; };
 		AF55BC761F42FA96002640C5 /* LFLiveSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5A61D768B6E00752B56 /* LFLiveSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AF55BC791F42FADF002640C5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF55BC781F42FADF002640C5 /* AudioToolbox.framework */; };
 		AF55BC7B1F42FAE6002640C5 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF55BC7A1F42FAE6002640C5 /* VideoToolbox.framework */; };
@@ -217,8 +217,8 @@
 		84D8B5B61D768B6E00752B56 /* LFStreamRTMPSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStreamRTMPSocket.h; sourceTree = "<group>"; };
 		84D8B5B71D768B6E00752B56 /* LFStreamRTMPSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFStreamRTMPSocket.m; sourceTree = "<group>"; };
 		84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStreamSocket.h; sourceTree = "<group>"; };
-		84D8B5B91D768B6E00752B56 /* NSMutableArray+LFAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+LFAdd.h"; sourceTree = "<group>"; };
-		84D8B5BA1D768B6E00752B56 /* NSMutableArray+LFAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+LFAdd.m"; sourceTree = "<group>"; };
+		84D8B5B91D768B6E00752B56 /* NSMutableArray+LFAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+LFAdditions.h"; sourceTree = "<group>"; };
+		84D8B5BA1D768B6E00752B56 /* NSMutableArray+LFAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+LFAdditions.m"; sourceTree = "<group>"; };
 		AF55BC781F42FADF002640C5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		AF55BC7A1F42FAE6002640C5 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		AF55BC7C1F42FB00002640C5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -444,11 +444,11 @@
 			children = (
 				84D8B5B41D768B6E00752B56 /* LFStreamingBuffer.h */,
 				84D8B5B51D768B6E00752B56 /* LFStreamingBuffer.m */,
+				84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */,
 				84D8B5B61D768B6E00752B56 /* LFStreamRTMPSocket.h */,
 				84D8B5B71D768B6E00752B56 /* LFStreamRTMPSocket.m */,
-				84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */,
-				84D8B5B91D768B6E00752B56 /* NSMutableArray+LFAdd.h */,
-				84D8B5BA1D768B6E00752B56 /* NSMutableArray+LFAdd.m */,
+				84D8B5B91D768B6E00752B56 /* NSMutableArray+LFAdditions.h */,
+				84D8B5BA1D768B6E00752B56 /* NSMutableArray+LFAdditions.m */,
 			);
 			path = publish;
 			sourceTree = "<group>";
@@ -512,7 +512,7 @@
 				84D8B5D51D768B6E00752B56 /* LFGPUImageEmptyFilter.h in Headers */,
 				84D8B5C71D768B6E00752B56 /* LFAudioEncoding.h in Headers */,
 				843590B71DD1FEB600811FC7 /* GPUImageMovieComposition.h in Headers */,
-				84D8B5E91D768B6E00752B56 /* NSMutableArray+LFAdd.h in Headers */,
+				84D8B5E91D768B6E00752B56 /* NSMutableArray+LFAdditions.h in Headers */,
 				84D8B5CC1D768B6E00752B56 /* LFHardwareVideoEncoder.h in Headers */,
 				843591511DD1FEB600811FC7 /* dh.h in Headers */,
 				84D8B5BD1D768B6E00752B56 /* LFVideoCapture.h in Headers */,
@@ -628,7 +628,7 @@
 				84D8B5E31D768B6E00752B56 /* LFVideoFrame.m in Sources */,
 				8435905C1DD1FEB600811FC7 /* GPUImageFramebufferCache.m in Sources */,
 				84D8B5BC1D768B6E00752B56 /* LFAudioCapture.m in Sources */,
-				84D8B5EA1D768B6E00752B56 /* NSMutableArray+LFAdd.m in Sources */,
+				84D8B5EA1D768B6E00752B56 /* NSMutableArray+LFAdditions.m in Sources */,
 				8435914B1DD1FEB600811FC7 /* GPUImagePicture.m in Sources */,
 				843590321DD1FEB600811FC7 /* GPUImageCropFilter.m in Sources */,
 			);
