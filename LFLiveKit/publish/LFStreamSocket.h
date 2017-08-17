@@ -7,13 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+
 #import "LFStreamInfo.h"
 #import "LFBuffer.h"
 #import "LFLiveDebug.h"
 
 
-
 @protocol LFStreamSocket;
+
+
 @protocol LFStreamSocketDelegate <NSObject>
 
 /** callback buffer current status (回调当前缓冲区情况，可实现相关切换帧率 码率等策略)*/
@@ -27,12 +29,17 @@
 - (void)socketDebug:(nullable id <LFStreamSocket>)socket debugInfo:(nullable LFLiveDebug *)debugInfo;
 @end
 
+
 @protocol LFStreamSocket <NSObject>
+
 - (void)start;
 - (void)stop;
 - (void)sendFrame:(nullable LFFrame *)frame;
 - (void)setDelegate:(nullable id <LFStreamSocketDelegate>)delegate;
+
 @optional
 - (nullable instancetype)initWithStream:(nullable LFStreamInfo *)stream;
-- (nullable instancetype)initWithStream:(nullable LFStreamInfo *)stream reconnectInterval:(NSInteger)reconnectInterval reconnectCount:(NSInteger)reconnectCount;
+- (nullable instancetype)initWithStream:(nullable LFStreamInfo *)stream
+					  reconnectInterval:(NSInteger)reconnectInterval
+						 reconnectCount:(NSInteger)reconnectCount;
 @end

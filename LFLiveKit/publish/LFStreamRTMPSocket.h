@@ -10,10 +10,6 @@
 
 @interface LFStreamRTMPSocket : NSObject<LFStreamSocket>
 
-#pragma mark - Initializer
-///=============================================================================
-/// @name Initializer
-///=============================================================================
 - (nullable instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (nullable instancetype)new UNAVAILABLE_ATTRIBUTE;
 

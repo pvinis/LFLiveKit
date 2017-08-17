@@ -58,22 +58,19 @@ static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为60
     dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
     if (self.sortList.count < defaultSortBufferMaxCount) {
         [self.sortList addObject:frame];
-		NSLog(@"sort: added new");
-		NSLog(@"sort: %@", self.sortList);
     } else {
         // sort
         [self.sortList addObject:frame];
-		NSLog(@"sort: added new and sort");
 		[self.sortList sortUsingFunction:frameDataCompare context:nil];
-		NSLog(@"sort: %@", self.sortList);
-        // dropped frames
+
+		// dropped frames
         [self removeExpireFrame];
-        // added to buffer
+
+		// added to buffer
         LFFrame *firstFrame = [self.sortList popFirstObject];
 
 		if (firstFrame) {
 			[self.list addObject:firstFrame];
-			NSLog(@"list: %@", self.list);
 		}
     }
     dispatch_semaphore_signal(_lock);

@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+
 #import "LFStreamInfo.h"
 #import "LFVideoFrame.h"
 #import "LFAudioConfiguration.h"
@@ -16,27 +17,24 @@
 #import "LFLiveDebug.h"
 
 
-typedef NS_ENUM(NSInteger,LFLiveCaptureType) {
-    LFLiveCaptureAudio,         // capture only audio
-    LFLiveCaptureVideo,         // capture onlt video
-    LFLiveInputAudio,           // only audio (External input audio)
-    LFLiveInputVideo,           // only video (External input video)
+typedef NS_ENUM(NSInteger, LFCaptureType) {
+    LFCaptureAudio,  // capture only audio
+    LFCaptureVideo,  // capture only video
 };
 
 
-typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
-    LFLiveCaptureMaskAudio = (1 << LFLiveCaptureAudio),                                 // only inner capture audio (no video)
-    LFLiveCaptureMaskVideo = (1 << LFLiveCaptureVideo),                                 // only inner capture video (no audio)
-    LFLiveInputMaskAudio = (1 << LFLiveInputAudio),                                     // only outer input audio (no video)
-    LFLiveInputMaskVideo = (1 << LFLiveInputVideo),                                     // only outer input video (no audio)
-    LFLiveCaptureMaskAll = (LFLiveCaptureMaskAudio | LFLiveCaptureMaskVideo),           // inner capture audio and video
-    LFLiveInputMaskAll = (LFLiveInputMaskAudio | LFLiveInputMaskVideo),                 // outer input audio and video(method see pushVideo and pushAudio)
-    LFLiveCaptureMaskAudioInputVideo = (LFLiveCaptureMaskAudio | LFLiveInputMaskVideo), // inner capture audio and outer input video(method pushVideo and setRunning)
-    LFLiveCaptureMaskVideoInputAudio = (LFLiveCaptureMaskVideo | LFLiveInputMaskAudio), // inner capture video and outer input audio(method pushAudio and setRunning)
-    LFLiveCaptureDefaultMask = LFLiveCaptureMaskAll                                     // default is inner capture audio and video
+
+typedef NS_OPTIONS(NSInteger, LFCaptureTypeMask) {
+    LFCaptureMaskAudio   = 1 << LFCaptureAudio,                      // only inner capture audio (no video)
+    LFCaptureMaskVideo   = 1 << LFCaptureVideo,                      // only inner capture video (no audio)
+    LFCaptureMaskAll     = LFCaptureMaskAudio | LFCaptureMaskVideo,  // inner capture audio and video
+    LFCaptureMaskDefault = LFCaptureMaskAll,                         // default is inner capture audio and video
 };
+
 
 @class LFLiveSession;
+
+
 @protocol LFLiveSessionDelegate <NSObject>
 
 @optional
@@ -46,16 +44,12 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
 - (void)liveSession:(nullable LFLiveSession *)session debugInfo:(nullable LFLiveDebug *)debugInfo;
 // callback socket error
 - (void)liveSession:(nullable LFLiveSession *)session socketError:(LFLiveSocketError)socketError;
+
 @end
 
 
 @interface LFLiveSession : NSObject
 
-#pragma mark - Attribute
-//=============================================================================
-// @name Attribute
-//=============================================================================
-// The delegate of the capture. captureData callback
 @property (nullable, nonatomic, weak) id<LFLiveSessionDelegate> delegate;
 
 // The running control start capture or stop capture
@@ -93,7 +87,7 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
 @property (nonatomic, assign, readonly) LFLiveState state;
 
 /** The captureType control inner or outer audio and video .*/
-@property (nonatomic, assign, readonly) LFLiveCaptureTypeMask captureType;
+@property (nonatomic, assign, readonly) LFCaptureTypeMask captureType;
 
 /** The showDebugInfo control streamInfo and uploadInfo(1s) *.*/
 @property (nonatomic, assign) BOOL showDebugInfo;
@@ -113,10 +107,6 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
 /* The saveLocalVideoPath is save the local video  path */
 @property (nonatomic, strong, nullable) NSURL *saveLocalVideoPath;
 
-#pragma mark - Initializer
-///=============================================================================
-/// @name Initializer
-///=============================================================================
 - (nullable instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (nullable instancetype)new UNAVAILABLE_ATTRIBUTE;
 
@@ -124,13 +114,16 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
    The designated initializer. Multiple instances with the same configuration will make the
    capture unstable.
  */
-- (nullable instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFVideoConfiguration *)videoConfiguration;
+- (nullable instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration
+								 videoConfiguration:(nullable LFVideoConfiguration *)videoConfiguration;
 
 /**
  The designated initializer. Multiple instances with the same configuration will make the
  capture unstable.
  */
-- (nullable instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration videoConfiguration:(nullable LFVideoConfiguration *)videoConfiguration captureType:(LFLiveCaptureTypeMask)captureType NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithAudioConfiguration:(nullable LFAudioConfiguration *)audioConfiguration
+								 videoConfiguration:(nullable LFVideoConfiguration *)videoConfiguration
+										captureType:(LFCaptureTypeMask)captureType NS_DESIGNATED_INITIALIZER;
 
 /** The start stream .*/
 - (void)startLive:(nonnull LFStreamInfo *)streamInfo;
@@ -138,11 +131,13 @@ typedef NS_ENUM(NSInteger,LFLiveCaptureTypeMask) {
 /** The stop stream .*/
 - (void)stopLive;
 
-/** support outer input yuv or rgb video(set LFLiveCaptureTypeMask) .*/
+/*
+// support outer input yuv or rgb video(set LFLiveCaptureTypeMask) .
 - (void)pushVideo:(nullable CVPixelBufferRef)pixelBuffer;
 
-/** support outer input pcm audio(set LFLiveCaptureTypeMask) .*/
+// support outer input pcm audio(set LFLiveCaptureTypeMask) .
 - (void)pushAudio:(nullable NSData*)audioData;
+*/
 
 - (void)setVideoBitrate:(NSInteger)bitrate;
 

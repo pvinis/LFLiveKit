@@ -21,7 +21,6 @@
 
 @property (nonatomic, strong) GPUImageVideoCamera *videoCamera;
 @property (nonatomic, strong) GPUImageOutput<GPUImageInput> *filter;
-@property (nonatomic, strong) GPUImageCropFilter *cropfilter;
 @property (nonatomic, strong) GPUImageOutput<GPUImageInput> *output;
 @property (nonatomic, strong) GPUImageView *gpuImageView;
 @property (nonatomic, strong) LFVideoConfiguration *configuration;
@@ -237,23 +236,14 @@
     [self.filter removeAllTargets];
     [self.videoCamera removeAllTargets];
     [self.output removeAllTargets];
-    [self.cropfilter removeAllTargets];
 
 	self.output = [[LFGPUImageEmptyFilter alloc] init];
 	self.filter = [[LFGPUImageEmptyFilter alloc] init];
     
     /// 调节镜像
     [self reloadMirror];
-    
-    // 480*640 比例为4:3  强制转换为16:9
-    if([self.configuration.avSessionPreset isEqualToString:AVCaptureSessionPreset640x480]){
-        CGRect cropRect = self.configuration.landscape ? CGRectMake(0, 0.125, 1, 0.75) : CGRectMake(0.125, 0, 0.75, 1);
-        self.cropfilter = [[GPUImageCropFilter alloc] initWithCropRegion:cropRect];
-        [self.videoCamera addTarget:self.cropfilter];
-        [self.cropfilter addTarget:self.filter];
-    }else{
-        [self.videoCamera addTarget:self.filter];
-    }
+
+	[self.videoCamera addTarget:self.filter];
 
 	[self.filter addTarget:self.output];
 	[self.output addTarget:self.gpuImageView];

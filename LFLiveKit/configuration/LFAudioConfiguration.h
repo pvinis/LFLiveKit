@@ -10,9 +10,9 @@
 
 
 typedef NS_ENUM (NSUInteger, LFAudioBitrate) {
-    LFAudioBitrate32Kbps = 32000,
-    LFAudioBitrate64Kbps = 64000,
-    LFAudioBitrate96Kbps = 96000,
+    LFAudioBitrate32Kbps  = 32000,
+    LFAudioBitrate64Kbps  = 64000,
+    LFAudioBitrate96Kbps  = 96000,
     LFAudioBitrate128Kbps = 128000,
     LFAudioBitrateDefault = LFAudioBitrate96Kbps,
 };
@@ -40,7 +40,7 @@ typedef NS_ENUM (NSUInteger, LFAudioQuality) {
 };
 
 
-@interface LFAudioConfiguration : NSObject<NSCoding, NSCopying>
+@interface LFAudioConfiguration : NSObject <NSCoding, NSCopying>
 
 + (instancetype)defaultConfiguration;
 + (instancetype)defaultConfigurationForQuality:(LFAudioQuality)audioQuality;

@@ -21,4 +21,3 @@
 
 // Filters
 #import "GPUImageFilter.h"
-#import "GPUImageCropFilter.h"
