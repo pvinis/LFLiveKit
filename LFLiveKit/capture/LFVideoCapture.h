@@ -56,9 +56,10 @@
 /* The saveLocalVideo is save the local video */
 @property (nonatomic, assign) BOOL saveLocalVideo;
 
-/* The saveLocalVideoPath is save the local video  path */
-@property (nonatomic, strong, nullable) NSURL *saveLocalVideoPath;
+/* The saveLocalVideoPath is save the local video url */
+@property (nonatomic, strong, nullable) NSURL *saveLocalVideoUrl;
 
+@property (nonatomic, copy, nullable) void (^saveLocalVideoCompletionHandler)(NSURL *fileUrl);
 
 - (nullable instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (nullable instancetype)new UNAVAILABLE_ATTRIBUTE;

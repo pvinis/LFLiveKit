@@ -257,14 +257,24 @@
     [self.videoCaptureSource setSaveLocalVideo:saveLocalVideo];
 }
 
-- (NSURL *)saveLocalVideoPath
+- (NSURL *)saveLocalVideoUrl
 {
-    return self.videoCaptureSource.saveLocalVideoPath;
+    return self.videoCaptureSource.saveLocalVideoUrl;
 }
 
-- (void)setSaveLocalVideoPath:(NSURL*)saveLocalVideoPath
+- (void)setSaveLocalVideoUrl:(NSURL *)saveLocalVideoUrl
 {
-    [self.videoCaptureSource setSaveLocalVideoPath:saveLocalVideoPath];
+    [self.videoCaptureSource setSaveLocalVideoUrl:saveLocalVideoUrl];
+}
+
+- (void (^)(NSURL *fileUrl))saveLocalVideoCompletionHandler
+{
+	return self.videoCaptureSource.saveLocalVideoCompletionHandler;
+}
+
+- (void)setSaveLocalVideoCompletionHandler:(void (^)(NSURL *))saveLocalVideoCompletionHandler
+{
+	self.videoCaptureSource.saveLocalVideoCompletionHandler = saveLocalVideoCompletionHandler;
 }
 
 - (void)setStabilization:(BOOL)stabilization

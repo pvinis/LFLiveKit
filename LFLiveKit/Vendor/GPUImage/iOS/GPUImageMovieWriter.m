@@ -51,6 +51,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 
 @implementation GPUImageMovieWriter
 
+@synthesize movieURL = movieURL;
 @synthesize hasAudioTrack = _hasAudioTrack;
 @synthesize encodingLiveVideo = _encodingLiveVideo;
 @synthesize shouldPassthroughAudio = _shouldPassthroughAudio;
@@ -313,12 +314,12 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     });
 }
 
-- (void)finishRecording;
+- (void)finishRecording
 {
     [self finishRecordingWithCompletionHandler:NULL];
 }
 
-- (void)finishRecordingWithCompletionHandler:(void (^)(void))handler;
+- (void)finishRecordingWithCompletionHandler:(void (^)(void))handler
 {
     runSynchronouslyOnContextQueue(_movieWriterContext, ^{
         isRecording = NO;

@@ -80,7 +80,9 @@
     if (!_running) {
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         [self.videoCamera stopCameraCapture];
-        if(self.saveLocalVideo) [self.movieWriter finishRecording];
+        if(self.saveLocalVideo) [self.movieWriter finishRecordingWithCompletionHandler:^{
+			[self didFinishRecording];
+		}];
     } else {
         [UIApplication sharedApplication].idleTimerDisabled = YES;
         [self reloadFilter];
@@ -211,13 +213,22 @@
 }
 
 - (GPUImageMovieWriter*)movieWriter {
-    if(!_movieWriter){
-        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.saveLocalVideoPath size:self.configuration.videoSize];
+    if (!_movieWriter) {
+        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.saveLocalVideoUrl size:self.configuration.videoSize];
         _movieWriter.encodingLiveVideo = YES;
         _movieWriter.shouldPassthroughAudio = YES;
         self.videoCamera.audioEncodingTarget = self.movieWriter;
     }
     return _movieWriter;
+}
+
+- (void)didFinishRecording
+{
+	if (self.saveLocalVideoCompletionHandler) {
+		self.saveLocalVideoCompletionHandler(self.movieWriter.movieURL);
+	}
+
+	_movieWriter = nil;
 }
 
 #pragma mark -- Custom Method
