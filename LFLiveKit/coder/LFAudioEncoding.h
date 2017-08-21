@@ -15,7 +15,7 @@
 @protocol LFAudioEncoding;
 
 
-// encoder work after callback
+// get frame back after encoding
 @protocol LFAudioEncodingDelegate <NSObject>
 
 @required

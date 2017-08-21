@@ -1,20 +1,22 @@
 //
-//  LFStreamingBuffer.m
+//  LFBuffer.m
 //  LFLiveKit
 //
 //  Created by LaiFeng on 16/5/20.
 //  Copyright © 2016年 LaiFeng All rights reserved.
 //
 
-#import "LFStreamingBuffer.h"
-#import "NSMutableArray+LFAdd.h"
+#import "LFBuffer.h"
+
+#import "NSMutableArray+LFAdditions.h"
 
 static const NSUInteger defaultSortBufferMaxCount = 5;/// 排序10个内
 static const NSUInteger defaultUpdateInterval = 1;/// 更新频率为1s
 static const NSUInteger defaultCallBackInterval = 5;/// 5s计时一次
 static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为600
 
-@interface LFStreamingBuffer (){
+
+@interface LFBuffer () {
     dispatch_semaphore_t _lock;
 }
 
@@ -30,7 +32,8 @@ static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为60
 
 @end
 
-@implementation LFStreamingBuffer
+
+@implementation LFBuffer
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -45,10 +48,6 @@ static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为60
     return self;
 }
 
-- (void)dealloc {
-}
-
-#pragma mark -- Custom
 - (void)appendObject:(LFFrame *)frame {
     if (!frame) return;
     if (!_startTimer) {
@@ -60,22 +59,26 @@ static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为60
     if (self.sortList.count < defaultSortBufferMaxCount) {
         [self.sortList addObject:frame];
     } else {
-        /// 排序
+        // sort
         [self.sortList addObject:frame];
 		[self.sortList sortUsingFunction:frameDataCompare context:nil];
-        /// 丢帧
-        [self removeExpireFrame];
-        /// 添加至缓冲区
-        LFFrame *firstFrame = [self.sortList lfPopFirstObject];
 
-        if (firstFrame) [self.list addObject:firstFrame];
+		// dropped frames
+        [self removeExpireFrame];
+
+		// added to buffer
+        LFFrame *firstFrame = [self.sortList popFirstObject];
+
+		if (firstFrame) {
+			[self.list addObject:firstFrame];
+		}
     }
     dispatch_semaphore_signal(_lock);
 }
 
 - (LFFrame *)popFirstObject {
     dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
-    LFFrame *firstFrame = [self.list lfPopFirstObject];
+    LFFrame *firstFrame = [self.list popFirstObject];
     dispatch_semaphore_signal(_lock);
     return firstFrame;
 }
@@ -89,14 +92,14 @@ static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为60
 - (void)removeExpireFrame {
     if (self.list.count < self.maxCount) return;
 
-    NSArray *pFrames = [self expirePFrames];/// 第一个P到第一个I之间的p帧
+    NSArray *pFrames = [self expirePFrames]; // the first P is the first I between Ps
     self.lastDropFrames += [pFrames count];
     if (pFrames && pFrames.count > 0) {
         [self.list removeObjectsInArray:pFrames];
         return;
     }
     
-    NSArray *iFrames = [self expireIFrames];///  删除一个I帧（但一个I帧可能对应多个nal）
+    NSArray *iFrames = [self expireIFrames]; // delete an I (but it may correspond to multiple NAL）
     self.lastDropFrames += [iFrames count];
     if (iFrames && iFrames.count > 0) {
         [self.list removeObjectsInArray:iFrames];
@@ -136,7 +139,7 @@ static const NSUInteger defaultSendBufferMaxCount = 600;/// 最大缓冲区为60
     return iframes;
 }
 
-NSInteger frameDataCompare(id obj1, id obj2, void *context){
+NSInteger frameDataCompare(id obj1, id obj2, void *context) {
     LFFrame *frame1 = (LFFrame *)obj1;
     LFFrame *frame2 = (LFFrame *)obj2;
 
@@ -147,7 +150,7 @@ NSInteger frameDataCompare(id obj1, id obj2, void *context){
     return NSOrderedAscending;
 }
 
-- (LFLiveBufferState)currentBufferState {
+- (LFBufferState)currentBufferState {
     NSInteger currentCount = 0;
     NSInteger increaseCount = 0;
     NSInteger decreaseCount = 0;
@@ -162,14 +165,14 @@ NSInteger frameDataCompare(id obj1, id obj2, void *context){
     }
 
     if (increaseCount >= self.callBackInterval) {
-        return LFLiveBufferStateFillingUp;
+        return LFBufferStateFillingUp;
     }
 
     if (decreaseCount >= self.callBackInterval) {
-        return LFLiveBufferStateEmptying;
+        return LFBufferStateEmptying;
     }
     
-    return LFLiveBufferStateStable;
+    return LFBufferStateStable;
 }
 
 #pragma mark -- Setter Getter
@@ -204,12 +207,12 @@ NSInteger frameDataCompare(id obj1, id obj2, void *context){
     dispatch_semaphore_signal(_lock);
     
     if (self.currentInterval >= self.callBackInterval) {
-        LFLiveBufferState state = [self currentBufferState];
-        if (state == LFLiveBufferStateFillingUp) {
+        LFBufferState state = [self currentBufferState];
+        if (state == LFBufferStateFillingUp) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(streamingBuffer:bufferState:)]) {
                 [self.delegate streamingBuffer:self bufferState:state];
             }
-        } else if (state == LFLiveBufferStateEmptying) {
+        } else if (state == LFBufferStateEmptying) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(streamingBuffer:bufferState:)]) {
                 [self.delegate streamingBuffer:self bufferState:state];
             }

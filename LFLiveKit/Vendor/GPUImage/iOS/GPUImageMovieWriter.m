@@ -51,6 +51,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 
 @implementation GPUImageMovieWriter
 
+@synthesize movieURL = movieURL;
 @synthesize hasAudioTrack = _hasAudioTrack;
 @synthesize encodingLiveVideo = _encodingLiveVideo;
 @synthesize shouldPassthroughAudio = _shouldPassthroughAudio;
@@ -288,7 +289,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 	[self startRecording];
 }
 
-- (void)cancelRecording;
+- (void)cancelRecording
 {
     if (assetWriter.status == AVAssetWriterStatusCompleted)
     {
@@ -313,12 +314,12 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     });
 }
 
-- (void)finishRecording;
+- (void)finishRecording
 {
     [self finishRecordingWithCompletionHandler:NULL];
 }
 
-- (void)finishRecordingWithCompletionHandler:(void (^)(void))handler;
+- (void)finishRecordingWithCompletionHandler:(void (^)(void))handler
 {
     runSynchronouslyOnContextQueue(_movieWriterContext, ^{
         isRecording = NO;
@@ -339,27 +340,9 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
             audioEncodingIsFinished = YES;
             [assetWriterAudioInput markAsFinished];
         }
-#if (!defined(__IPHONE_6_0) || (__IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_6_0))
-        // Not iOS 6 SDK
         [assetWriter finishWriting];
         if (handler)
             runAsynchronouslyOnContextQueue(_movieWriterContext,handler);
-#else
-        // iOS 6 SDK
-        if ([assetWriter respondsToSelector:@selector(finishWritingWithCompletionHandler:)]) {
-            // Running iOS 6
-            [assetWriter finishWritingWithCompletionHandler:(handler ?: ^{ })];
-        }
-        else {
-            // Not running iOS 6
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [assetWriter finishWriting];
-#pragma clang diagnostic pop
-            if (handler)
-                runAsynchronouslyOnContextQueue(_movieWriterContext, handler);
-        }
-#endif
     });
 }
 
@@ -380,10 +363,12 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
         if (CMTIME_IS_INVALID(startTime))
         {
             runSynchronouslyOnContextQueue(_movieWriterContext, ^{
-                if ((audioInputReadyCallback == NULL) && (assetWriter.status != AVAssetWriterStatusWriting))
-                {
+				if (assetWriter.status == AVAssetWriterStatusFailed) {
+					NSLog(@"Error with assetWriter: %@", assetWriter.error);
+				} else if ((audioInputReadyCallback == NULL) && (assetWriter.status != AVAssetWriterStatusWriting)) {
                     [assetWriter startWriting];
-                }
+				}
+
                 [assetWriter startSessionAtSourceTime:currentSampleTime];
                 startTime = currentSampleTime;
             });

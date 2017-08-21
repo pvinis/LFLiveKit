@@ -21,7 +21,6 @@
 
 @property (nonatomic, strong) GPUImageVideoCamera *videoCamera;
 @property (nonatomic, strong) GPUImageOutput<GPUImageInput> *filter;
-@property (nonatomic, strong) GPUImageCropFilter *cropfilter;
 @property (nonatomic, strong) GPUImageOutput<GPUImageInput> *output;
 @property (nonatomic, strong) GPUImageView *gpuImageView;
 @property (nonatomic, strong) LFVideoConfiguration *configuration;
@@ -30,7 +29,9 @@
 
 @end
 
+
 @implementation LFVideoCapture
+
 @synthesize torch = _torch;
 @synthesize zoomScale = _zoomScale;
 
@@ -61,8 +62,8 @@
 
 #pragma mark -- Setter Getter
 
-- (GPUImageVideoCamera *)videoCamera{
-    if(!_videoCamera){
+- (GPUImageVideoCamera *)videoCamera {
+    if (!_videoCamera) {
         _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:_configuration.avSessionPreset cameraPosition:AVCaptureDevicePositionBack];
         _videoCamera.outputImageOrientation = _configuration.outputImageOrientation;
         _videoCamera.horizontallyMirrorFrontFacingCamera = NO;
@@ -79,22 +80,41 @@
     if (!_running) {
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         [self.videoCamera stopCameraCapture];
-        if(self.saveLocalVideo) [self.movieWriter finishRecording];
+		self.recording = _running;
     } else {
         [UIApplication sharedApplication].idleTimerDisabled = YES;
         [self reloadFilter];
         [self.videoCamera startCameraCapture];
-        if(self.saveLocalVideo) [self.movieWriter startRecording];
     }
 }
 
-- (void)setPreView:(UIView *)preView {
-    if (self.gpuImageView.superview) [self.gpuImageView removeFromSuperview];
-    [preView insertSubview:self.gpuImageView atIndex:0];
-    self.gpuImageView.frame = CGRectMake(0, 0, preView.frame.size.width, preView.frame.size.height);
+- (void)setRecording:(BOOL)recording
+{
+	if (_recording == recording) return;
+	_recording = recording;
+
+	self.running = _recording;
+	if (_recording) {
+		if (self.saveLocalVideo) {
+			[self.movieWriter startRecording];
+		}
+	} else {
+
+		if (self.saveLocalVideo) {
+			[self.movieWriter finishRecordingWithCompletionHandler:^{
+				[self didFinishRecording];
+			}];
+		}
+	}
 }
 
-- (UIView *)preView {
+- (void)setPreviewView:(UIView *)previewView {
+    if (self.gpuImageView.superview) [self.gpuImageView removeFromSuperview];
+    [previewView insertSubview:self.gpuImageView atIndex:0];
+    self.gpuImageView.frame = CGRectMake(0, 0, previewView.frame.size.width, previewView.frame.size.height);
+}
+
+- (UIView *)previewView {
     return self.gpuImageView.superview;
 }
 
@@ -193,7 +213,7 @@
 }
 
 - (GPUImageView *)gpuImageView{
-    if(!_gpuImageView){
+    if (!_gpuImageView){
         _gpuImageView = [[GPUImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
         [_gpuImageView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
@@ -201,7 +221,7 @@
     return _gpuImageView;
 }
 
--(UIImage *)currentImage{
+- (UIImage *)currentImage {
     if(_filter){
         [_filter useNextFrameForImageCapture];
         return _filter.imageFromCurrentFramebuffer;
@@ -209,14 +229,23 @@
     return nil;
 }
 
-- (GPUImageMovieWriter*)movieWriter{
-    if(!_movieWriter){
-        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.saveLocalVideoPath size:self.configuration.videoSize];
+- (GPUImageMovieWriter*)movieWriter {
+    if (!_movieWriter) {
+        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.saveLocalVideoUrl size:self.configuration.videoSize];
         _movieWriter.encodingLiveVideo = YES;
         _movieWriter.shouldPassthroughAudio = YES;
         self.videoCamera.audioEncodingTarget = self.movieWriter;
     }
     return _movieWriter;
+}
+
+- (void)didFinishRecording
+{
+	if (self.saveLocalVideoCompletionHandler) {
+		self.saveLocalVideoCompletionHandler(self.movieWriter.movieURL);
+	}
+
+	_movieWriter = nil;
 }
 
 #pragma mark -- Custom Method
@@ -231,27 +260,18 @@
     }
 }
 
-- (void)reloadFilter{
+- (void)reloadFilter {
     [self.filter removeAllTargets];
     [self.videoCamera removeAllTargets];
     [self.output removeAllTargets];
-    [self.cropfilter removeAllTargets];
 
 	self.output = [[LFGPUImageEmptyFilter alloc] init];
 	self.filter = [[LFGPUImageEmptyFilter alloc] init];
     
     /// 调节镜像
     [self reloadMirror];
-    
-    // 480*640 比例为4:3  强制转换为16:9
-    if([self.configuration.avSessionPreset isEqualToString:AVCaptureSessionPreset640x480]){
-        CGRect cropRect = self.configuration.landscape ? CGRectMake(0, 0.125, 1, 0.75) : CGRectMake(0.125, 0, 0.75, 1);
-        self.cropfilter = [[GPUImageCropFilter alloc] initWithCropRegion:cropRect];
-        [self.videoCamera addTarget:self.cropfilter];
-        [self.cropfilter addTarget:self.filter];
-    }else{
-        [self.videoCamera addTarget:self.filter];
-    }
+
+	[self.videoCamera addTarget:self.filter];
 
 	[self.filter addTarget:self.output];
 	[self.output addTarget:self.gpuImageView];
@@ -280,7 +300,7 @@
 #pragma mark Notification
 
 - (void)willEnterBackground:(NSNotification *)notification {
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
+	UIApplication.sharedApplication.idleTimerDisabled = NO;
     [self.videoCamera pauseCameraCapture];
     runSynchronouslyOnVideoProcessingQueue(^{
         glFinish();
@@ -289,7 +309,7 @@
 
 - (void)willEnterForeground:(NSNotification *)notification {
     [self.videoCamera resumeCameraCapture];
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    UIApplication.sharedApplication.idleTimerDisabled = YES;
 }
 
 - (void)statusBarChanged:(NSNotification *)notification {

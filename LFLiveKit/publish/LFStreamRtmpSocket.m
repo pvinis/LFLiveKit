@@ -49,35 +49,36 @@ SAVC(fileSize);
 SAVC(avc1);
 SAVC(mp4a);
 
-@interface LFStreamRTMPSocket ()<LFStreamingBufferDelegate>
-{
+@interface LFStreamRTMPSocket () <LFBufferDelegate> {
     PILI_RTMP *_rtmp;
 }
+
 @property (nonatomic, weak) id<LFStreamSocketDelegate> delegate;
 @property (nonatomic, strong) LFStreamInfo *stream;
-@property (nonatomic, strong) LFStreamingBuffer *buffer;
+@property (nonatomic, strong) LFBuffer *buffer;
 @property (nonatomic, strong) LFLiveDebug *debugInfo;
 @property (nonatomic, strong) dispatch_queue_t rtmpSendQueue;
-//错误信息
+
 @property (nonatomic, assign) RTMPError error;
 @property (nonatomic, assign) NSInteger retryTimes4netWorkBreaken;
 @property (nonatomic, assign) NSInteger reconnectInterval;
 @property (nonatomic, assign) NSInteger reconnectCount;
 
-@property (atomic, assign) BOOL isSending;
-@property (nonatomic, assign) BOOL isConnected;
 @property (nonatomic, assign) BOOL isConnecting;
+@property (nonatomic, assign) BOOL isConnected;
+@property (atomic, assign) BOOL isSending;
 @property (nonatomic, assign) BOOL isReconnecting;
 
-@property (nonatomic, assign) BOOL sendVideoHead;
 @property (nonatomic, assign) BOOL sendAudioHead;
+@property (nonatomic, assign) BOOL sendVideoHead;
 
 @end
+
 
 @implementation LFStreamRTMPSocket
 
 #pragma mark -- LFStreamSocket
-- (nullable instancetype)initWithStream:(nullable LFStreamInfo *)stream{
+- (nullable instancetype)initWithStream:(nullable LFStreamInfo *)stream {
     return [self initWithStream:stream reconnectInterval:0 reconnectCount:0];
 }
 
@@ -91,12 +92,12 @@ SAVC(mp4a);
         if (reconnectCount > 0) _reconnectCount = reconnectCount;
         else _reconnectCount = RetryTimesBreaken;
         
-        [self addObserver:self forKeyPath:@"isSending" options:NSKeyValueObservingOptionNew context:nil];//这里改成observer主要考虑一直到发送出错情况下，可以继续发送
+        [self addObserver:self forKeyPath:@"isSending" options:NSKeyValueObservingOptionNew context:nil]; //这里改成observer主要考虑一直到发送出错情况下，可以继续发送
     }
     return self;
 }
 
-- (void)dealloc{
+- (void)dealloc {
     [self removeObserver:self forKeyPath:@"isSending"];
 }
 
@@ -543,9 +544,9 @@ void RTMPErrorCallback(RTMPError *error, void *userData) {
 void ConnectionTimeCallback(PILI_CONNECTION_TIME *conn_time, void *userData) {
 }
 
-#pragma mark -- LFStreamingBufferDelegate
-- (void)streamingBuffer:(nullable LFStreamingBuffer *)buffer bufferState:(LFLiveBufferState)state{
-    if(self.delegate && [self.delegate respondsToSelector:@selector(socketBufferStatus:status:)]){
+#pragma mark -- LFBufferDelegate
+- (void)streamingBuffer:(nullable LFBuffer *)buffer bufferState:(LFBufferState)state {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(socketBufferStatus:status:)]) {
         [self.delegate socketBufferStatus:self status:state];
     }
 }
@@ -561,9 +562,9 @@ void ConnectionTimeCallback(PILI_CONNECTION_TIME *conn_time, void *userData) {
 
 #pragma mark -- Getter Setter
 
-- (LFStreamingBuffer *)buffer {
+- (LFBuffer *)buffer {
     if (!_buffer) {
-        _buffer = [[LFStreamingBuffer alloc] init];
+        _buffer = [[LFBuffer alloc] init];
         _buffer.delegate = self;
 
     }

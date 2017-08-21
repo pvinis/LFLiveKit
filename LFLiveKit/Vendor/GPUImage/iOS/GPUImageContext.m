@@ -291,12 +291,8 @@ static void *openGLESContextQueueKey;
 {
     if (_coreVideoTextureCache == NULL)
     {
-#if defined(__IPHONE_6_0)
         CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, [self context], NULL, &_coreVideoTextureCache);
-#else
-        CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, (__bridge void *)[self context], NULL, &_coreVideoTextureCache);
-#endif
-        
+
         if (err)
         {
             NSAssert(NO, @"Error at CVOpenGLESTextureCacheCreate %d", err);
