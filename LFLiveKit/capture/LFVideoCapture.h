@@ -28,6 +28,8 @@
 // The running control start capture or stop capture
 @property (nonatomic, assign) BOOL running;
 
+@property (nonatomic, assign) BOOL recording;
+
 /** The previewView will show OpenGL ES view*/
 @property (null_resettable, nonatomic, strong) UIView *previewView;
 

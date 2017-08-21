@@ -55,6 +55,8 @@ typedef NS_OPTIONS(NSInteger, LFCaptureTypeMask) {
 // The running control start capture or stop capture
 @property (nonatomic, assign) BOOL running;
 
+@property (nonatomic, assign) BOOL recording;
+
 // The previewView will show OpenGL ES view
 @property (nonatomic, strong, null_resettable) UIView *previewView;
 

@@ -223,13 +223,26 @@
 - (void)setRunning:(BOOL)running
 {
     if (_running == running) return;
-
     _running = running;
-    self.videoCaptureSource.running = _running;
+
+	self.videoCaptureSource.running = _running;
     self.audioCaptureSource.running = _running;
+	if (!_running) {
+		self.recording = _running;
+	}
 }
 
-- (void)setPreviewView:(UIView *)previewView {
+- (void)setRecording:(BOOL)recording
+{
+	if (_recording == recording) return;
+	_recording = recording;
+
+	self.running = _recording;
+	self.videoCaptureSource.recording = _recording;
+}
+
+- (void)setPreviewView:(UIView *)previewView
+{
     [self.videoCaptureSource setPreviewView:previewView];
 }
 
