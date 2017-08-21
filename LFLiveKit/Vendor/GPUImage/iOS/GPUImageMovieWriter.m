@@ -288,7 +288,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 	[self startRecording];
 }
 
-- (void)cancelRecording;
+- (void)cancelRecording
 {
     if (assetWriter.status == AVAssetWriterStatusCompleted)
     {
@@ -362,10 +362,12 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
         if (CMTIME_IS_INVALID(startTime))
         {
             runSynchronouslyOnContextQueue(_movieWriterContext, ^{
-                if ((audioInputReadyCallback == NULL) && (assetWriter.status != AVAssetWriterStatusWriting))
-                {
+				if (assetWriter.status == AVAssetWriterStatusFailed) {
+					NSLog(@"Error with assetWriter: %@", assetWriter.error);
+				} else if ((audioInputReadyCallback == NULL) && (assetWriter.status != AVAssetWriterStatusWriting)) {
                     [assetWriter startWriting];
-                }
+				}
+
                 [assetWriter startSessionAtSourceTime:currentSampleTime];
                 startTime = currentSampleTime;
             });
