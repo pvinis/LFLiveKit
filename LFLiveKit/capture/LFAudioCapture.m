@@ -178,7 +178,8 @@ NSString *const LFAudioComponentFailedToCreateNotification = @"LFAudioComponentF
     }
 }
 
-- (void)handleInterruption:(NSNotification *)notification {
+- (void)handleInterruption:(NSNotification *)notification
+{
     NSInteger reason = 0;
     NSString *reasonStr = @"";
     if ([notification.name isEqualToString:AVAudioSessionInterruptionNotification]) {
