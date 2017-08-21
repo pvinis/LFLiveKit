@@ -124,7 +124,8 @@
 }
 
 #pragma mark -- PrivateMethod
-- (void)pushSendBuffer:(LFFrame*)frame{
+- (void)pushSendBuffer:(LFFrame*)frame
+{
     if(self.relativeTimestamps == 0){
         self.relativeTimestamps = frame.timestamp;
     }
@@ -198,7 +199,8 @@
     }
 }
 
-- (void)socketBufferStatus:(nullable id<LFStreamSocket>)socket status:(LFBufferState)status {
+- (void)socketBufferStatus:(nullable id<LFStreamSocket>)socket status:(LFBufferState)status
+{
     if (self.captureType & LFCaptureMaskVideo && self.adaptiveBitrate) {
         NSUInteger videoBitrate = [self.videoEncoder videoBitrate];
         if (status == LFBufferStateEmptying) {
@@ -218,7 +220,8 @@
 }
 
 #pragma mark -- Getter Setter
-- (void)setRunning:(BOOL)running {
+- (void)setRunning:(BOOL)running
+{
     if (_running == running) return;
 
     _running = running;
@@ -234,27 +237,33 @@
     return self.videoCaptureSource.previewView;
 }
 
-- (void)setCaptureDevicePosition:(AVCaptureDevicePosition)captureDevicePosition {
+- (void)setCaptureDevicePosition:(AVCaptureDevicePosition)captureDevicePosition
+{
     [self.videoCaptureSource setCaptureDevicePosition:captureDevicePosition];
 }
 
-- (AVCaptureDevicePosition)captureDevicePosition {
+- (AVCaptureDevicePosition)captureDevicePosition
+{
     return self.videoCaptureSource.captureDevicePosition;
 }
 
-- (BOOL)saveLocalVideo {
+- (BOOL)saveLocalVideo
+{
     return self.videoCaptureSource.saveLocalVideo;
 }
 
-- (void)setSaveLocalVideo:(BOOL)saveLocalVideo{
+- (void)setSaveLocalVideo:(BOOL)saveLocalVideo
+{
     [self.videoCaptureSource setSaveLocalVideo:saveLocalVideo];
 }
 
-- (NSURL*)saveLocalVideoPath{
+- (NSURL *)saveLocalVideoPath
+{
     return self.videoCaptureSource.saveLocalVideoPath;
 }
 
-- (void)setSaveLocalVideoPath:(NSURL*)saveLocalVideoPath{
+- (void)setSaveLocalVideoPath:(NSURL*)saveLocalVideoPath
+{
     [self.videoCaptureSource setSaveLocalVideoPath:saveLocalVideoPath];
 }
 
@@ -279,41 +288,50 @@
 	[self.videoCaptureSource setZoomScale:zoomScale ramping:YES];
 }
 
-- (CGFloat)zoomScale {
+- (CGFloat)zoomScale
+{
     return self.videoCaptureSource.zoomScale;
 }
 
-- (void)setTorch:(BOOL)torch {
+- (void)setTorch:(BOOL)torch
+{
     [self.videoCaptureSource setTorch:torch];
 }
 
-- (BOOL)torch {
+- (BOOL)torch
+{
     return self.videoCaptureSource.torch;
 }
 
-- (void)setMirror:(BOOL)mirror {
+- (void)setMirror:(BOOL)mirror
+{
     [self.videoCaptureSource setMirror:mirror];
 }
 
-- (BOOL)mirror {
+- (BOOL)mirror
+{
     return self.videoCaptureSource.mirror;
 }
 
-- (void)setMuted:(BOOL)muted {
+- (void)setMuted:(BOOL)muted
+{
     [self.audioCaptureSource setMuted:muted];
 }
 
-- (BOOL)muted {
+- (BOOL)muted
+{
     return self.audioCaptureSource.muted;
 }
 
-- (nullable UIImage *)currentImage{
+- (nullable UIImage *)currentImage
+{
     return self.videoCaptureSource.currentImage;
 }
 
-- (LFAudioCapture *)audioCaptureSource {
+- (LFAudioCapture *)audioCaptureSource
+{
     if (!_audioCaptureSource) {
-        if(self.captureType & LFCaptureMaskAudio){
+        if (self.captureType & LFCaptureMaskAudio) {
             _audioCaptureSource = [[LFAudioCapture alloc] initWithAudioConfiguration:_audioConfiguration];
             _audioCaptureSource.delegate = self;
         }
@@ -321,7 +339,8 @@
     return _audioCaptureSource;
 }
 
-- (LFVideoCapture *)videoCaptureSource {
+- (LFVideoCapture *)videoCaptureSource
+{
     if (!_videoCaptureSource) {
         if(self.captureType & LFCaptureMaskVideo){
             _videoCaptureSource = [[LFVideoCapture alloc] initWithVideoConfiguration:_videoConfiguration];
@@ -331,7 +350,8 @@
     return _videoCaptureSource;
 }
 
-- (id<LFAudioEncoding>)audioEncoder {
+- (id<LFAudioEncoding>)audioEncoder
+{
     if (!_audioEncoder) {
         _audioEncoder = [[LFHardwareAudioEncoder alloc] initWithAudioConfiguration:_audioConfiguration];
         [_audioEncoder setDelegate:self];
@@ -339,7 +359,8 @@
     return _audioEncoder;
 }
 
-- (id<LFVideoEncoding>)videoEncoder {
+- (id<LFVideoEncoding>)videoEncoder
+{
     if (!_videoEncoder) {
 		_videoEncoder = [[LFHardwareVideoEncoder alloc] initWithVideoStreamConfiguration:_videoConfiguration];
         [_videoEncoder setDelegate:self];
@@ -347,7 +368,8 @@
     return _videoEncoder;
 }
 
-- (id<LFStreamSocket>)socket {
+- (id<LFStreamSocket>)socket
+{
     if (!_socket) {
         _socket = [[LFStreamRTMPSocket alloc] initWithStream:self.streamInfo reconnectInterval:self.reconnectInterval reconnectCount:self.reconnectCount];
         [_socket setDelegate:self];
@@ -355,21 +377,24 @@
     return _socket;
 }
 
-- (LFStreamInfo *)streamInfo {
+- (LFStreamInfo *)streamInfo
+{
     if (!_streamInfo) {
         _streamInfo = [[LFStreamInfo alloc] init];
     }
     return _streamInfo;
 }
 
-- (dispatch_semaphore_t)lock {
+- (dispatch_semaphore_t)lock
+{
     if(!_lock){
         _lock = dispatch_semaphore_create(1);
     }
     return _lock;
 }
 
-- (uint64_t)uploadTimestamp:(uint64_t)captureTimestamp{
+- (uint64_t)uploadTimestamp:(uint64_t)captureTimestamp
+{
     dispatch_semaphore_wait(self.lock, DISPATCH_TIME_FOREVER);
     uint64_t currentts = 0;
     currentts = captureTimestamp - self.relativeTimestamps;
@@ -377,7 +402,8 @@
     return currentts;
 }
 
-- (BOOL)AVAlignment {
+- (BOOL)AVAlignment
+{
     if (self.captureType & LFCaptureMaskAudio &&
 		self.captureType & LFCaptureMaskVideo) {
 		if (self.hasCaptureAudio && self.hasKeyFrameVideo) {
