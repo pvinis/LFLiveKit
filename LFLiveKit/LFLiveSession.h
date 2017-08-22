@@ -50,6 +50,10 @@ typedef NS_OPTIONS(NSInteger, LFCaptureTypeMask) {
 
 @interface LFLiveSession : NSObject
 
+@property (nonatomic, readonly) LFAudioConfiguration * _Nonnull audioConfiguration;
+
+@property (nonatomic, readonly) LFVideoConfiguration * _Nonnull videoConfiguration;
+
 @property (nullable, nonatomic, weak) id<LFLiveSessionDelegate> delegate;
 
 // The running control start capture or stop capture

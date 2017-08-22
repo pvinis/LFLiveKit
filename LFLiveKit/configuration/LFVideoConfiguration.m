@@ -324,11 +324,10 @@
     return hash;
 }
 
-- (BOOL)isEqual:(id)other {
+- (BOOL)isEqual:(id)other
+{
     if (other == self) {
         return YES;
-    } else if (![super isEqual:other]) {
-        return NO;
     } else {
         LFVideoConfiguration *object = other;
         return CGSizeEqualToSize(object.videoSize, self.videoSize) &&
