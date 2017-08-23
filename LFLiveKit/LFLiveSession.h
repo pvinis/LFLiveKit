@@ -147,6 +147,8 @@ typedef NS_OPTIONS(NSInteger, LFCaptureTypeMask) {
 - (void)pushAudio:(nullable NSData*)audioData;
 */
 
+- (NSInteger)currentVideoBitrate;
+
 - (void)setVideoBitrate:(NSInteger)bitrate;
 
 @end

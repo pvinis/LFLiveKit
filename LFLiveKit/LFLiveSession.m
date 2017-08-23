@@ -117,6 +117,11 @@
     self.socket = nil;
 }
 
+- (NSInteger)currentVideoBitrate
+{
+	return self.videoEncoder.videoBitrate;
+}
+
 - (void)setVideoBitrate:(NSInteger)bitrate
 {
     self.videoEncoder.videoBitrate = bitrate;
