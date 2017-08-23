@@ -105,7 +105,7 @@ typedef NS_OPTIONS(NSInteger, LFCaptureTypeMask) {
 @property (nonatomic, assign) NSUInteger reconnectCount;
 
 /* The currentImage is videoCapture shot */
-@property (nonatomic, strong,readonly ,nullable) UIImage *currentImage;
+@property (nonatomic, strong, readonly, nullable) UIImage *currentImage;
 
 /* The saveLocalVideo is save the local video */
 @property (nonatomic, assign) BOOL saveLocalVideo;
@@ -113,7 +113,7 @@ typedef NS_OPTIONS(NSInteger, LFCaptureTypeMask) {
 /* The saveLocalVideoPath is save the local video url */
 @property (nonatomic, strong, nullable) NSURL *saveLocalVideoUrl;
 
-@property (nonatomic, copy, nullable) void (^saveLocalVideoCompletionHandler)(NSURL *fileUrl);
+@property (nonatomic, copy, nullable) void (^saveLocalVideoCompletionHandler)(NSURL * _Nonnull fileUrl);
 
 - (nullable instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (nullable instancetype)new UNAVAILABLE_ATTRIBUTE;
