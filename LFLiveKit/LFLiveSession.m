@@ -232,6 +232,8 @@
 
 	self.videoCaptureSource.running = _running;
     self.audioCaptureSource.running = _running;
+
+    // when stop running => stop recording too
 	if (!_running) {
 		self.recording = _running;
 	}
@@ -242,7 +244,11 @@
 	if (_recording == recording) return;
 	_recording = recording;
 
-	self.running = _recording;
+    // if not running, when start recording => start running too
+    if (!_running) {
+        self.running = _recording;
+    }
+
 	self.videoCaptureSource.recording = _recording;
 }
 
