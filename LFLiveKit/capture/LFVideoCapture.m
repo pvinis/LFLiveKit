@@ -80,6 +80,8 @@
     if (!_running) {
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         [self.videoCamera stopCameraCapture];
+
+        // if not running, when start recording => start running too
 		self.recording = _running;
     } else {
         [UIApplication sharedApplication].idleTimerDisabled = YES;
@@ -90,16 +92,19 @@
 
 - (void)setRecording:(BOOL)recording
 {
-	if (_recording == recording) return;
+    if (_recording == recording) return;
 	_recording = recording;
 
-	self.running = _recording;
+    // if not running, when start recording => start running too
+    if (!_running) {
+        self.running = _recording;
+    }
+
 	if (_recording) {
 		if (self.saveLocalVideo) {
 			[self.movieWriter startRecording];
 		}
 	} else {
-
 		if (self.saveLocalVideo) {
 			[self.movieWriter finishRecordingWithCompletionHandler:^{
 				[self didFinishRecording];
