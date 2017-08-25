@@ -11,23 +11,23 @@
 #import "LFAudioConfiguration.h"
 #import "LFVideoConfiguration.h"
 
-typedef NS_ENUM (NSUInteger, LFLiveState){
+typedef NS_ENUM(NSUInteger, LFLiveState) {
     // prepared
-    LFLiveReady = 0,
+    LFLiveStateReady = 0,
     // connecting
-    LFLivePending = 1,
+    LFLiveStatePending = 1,
     // connected
-    LFLiveStart = 2,
+    LFLiveStateStart = 2,
     // has been disconnected
-    LFLiveStop = 3,
+    LFLiveStateStop = 3,
     // connection error
-    LFLiveError = 4,
+    LFLiveStateError = 4,
     // is reconnecting
-    LFLiveReconnecting = 5,
+    LFLiveStateReconnecting = 5,
 };
 
-typedef NS_ENUM (NSUInteger, LFLiveSocketError) {
-//    LFLiveSocketErrorPreviewView = 201,              /// 预览失败
+typedef NS_ENUM(NSUInteger, LFLiveSocketError) {
+//    LFLiveSocketErrorPreviewView = 201,          /// 预览失败
 //    LFLiveSocketErrorGetStreamInfo = 202,        /// 获取流媒体信息失败
 //    LFLiveSocketErrorConnectSocket = 203,        /// 连接socket失败
 //    LFLiveSocketErrorVerification = 204,         /// 验证服务器失败

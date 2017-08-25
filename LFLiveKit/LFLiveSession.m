@@ -166,7 +166,7 @@
 
 #pragma mark -- LFStreamTcpSocketDelegate
 - (void)socketStatus:(nullable id<LFStreamSocket>)socket status:(LFLiveState)status {
-    if (status == LFLiveStart) {
+    if (status == LFLiveStateStart) {
         if (!self.uploading) {
             self.AVAlignment = NO;
             self.hasCaptureAudio = NO;
@@ -174,7 +174,7 @@
             self.relativeTimestamps = 0;
             self.uploading = YES;
         }
-    } else if(status == LFLiveStop || status == LFLiveError){
+    } else if(status == LFLiveStateStop || status == LFLiveStateError) {
         self.uploading = NO;
     }
     dispatch_async(dispatch_get_main_queue(), ^{

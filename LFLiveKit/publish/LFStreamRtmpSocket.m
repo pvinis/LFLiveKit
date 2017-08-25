@@ -117,7 +117,7 @@ SAVC(mp4a);
     
     _isConnecting = YES;
     if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
-        [self.delegate socketStatus:self status:LFLivePending];
+        [self.delegate socketStatus:self status:LFLiveStatePending];
     }
     
     if (_rtmp != NULL) {
@@ -136,7 +136,7 @@ SAVC(mp4a);
 
 - (void)_stop {
     if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
-        [self.delegate socketStatus:self status:LFLiveStop];
+        [self.delegate socketStatus:self status:LFLiveStateStop];
     }
     if (_rtmp != NULL) {
         PILI_RTMP_Close(_rtmp, &_error);
@@ -280,7 +280,7 @@ SAVC(mp4a);
     }
 
     if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
-        [self.delegate socketStatus:self status:LFLiveStart];
+        [self.delegate socketStatus:self status:LFLiveStateStart];
     }
 
     [self sendMetaData];
@@ -497,7 +497,7 @@ Failed:
            
         } else if (self.retryTimes4netWorkBreaken >= self.reconnectCount) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
-                [self.delegate socketStatus:self status:LFLiveError];
+                [self.delegate socketStatus:self status:LFLiveStateError];
             }
             if (self.delegate && [self.delegate respondsToSelector:@selector(socketDidError:error:)]) {
                 [self.delegate socketDidError:self error:LFLiveSocketErrorReconnectTimeout];
@@ -523,7 +523,7 @@ Failed:
     _sendVideoHead = NO;
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
-        [self.delegate socketStatus:self status:LFLiveReconnecting];
+        [self.delegate socketStatus:self status:LFLiveStateReconnecting];
     }
     
     if (_rtmp != NULL) {
