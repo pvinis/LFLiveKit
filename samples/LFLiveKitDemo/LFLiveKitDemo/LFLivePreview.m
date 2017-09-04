@@ -9,7 +9,7 @@
 #import "LFLivePreview.h"
 #import "UIControl+YYAdd.h"
 #import "UIView+YYAdd.h"
-#import "LFLiveKit.h"
+#import <LFLiveKit/LFLiveKit.h>
 
 inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
     if (elapsed_milli <= 0) {
@@ -117,20 +117,20 @@ inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
 - (void)liveSession:(nullable LFLiveSession *)session liveStateDidChange:(LFLiveState)state {
     NSLog(@"liveStateDidChange: %ld", state);
     switch (state) {
-    case LFLiveReady:
-        _stateLabel.text = @"未连接";
+    case LFLiveStateReady:
+        _stateLabel.text = @"ready";
         break;
-    case LFLivePending:
-        _stateLabel.text = @"连接中";
+    case LFLiveStatePending:
+        _stateLabel.text = @"pending";
         break;
-    case LFLiveStart:
-        _stateLabel.text = @"已连接";
+    case LFLiveStateStart:
+        _stateLabel.text = @"start";
         break;
-    case LFLiveError:
-        _stateLabel.text = @"连接错误";
+    case LFLiveStateError:
+        _stateLabel.text = @"error";
         break;
-    case LFLiveStop:
-        _stateLabel.text = @"未连接";
+    case LFLiveStateStop:
+        _stateLabel.text = @"stop";
         break;
     default:
         break;
@@ -139,34 +139,52 @@ inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
 
 /** live debug info callback */
 - (void)liveSession:(nullable LFLiveSession *)session debugInfo:(nullable LFLiveDebug *)debugInfo {
-    NSLog(@"debugInfo uploadSpeed: %@", formatedSpeed(debugInfo.currentBandwidth, debugInfo.elapsedMilli));
+	NSLog(@"debugInfo uploadSpeed: %@", formatedSpeed(debugInfo.currentBandwidth, debugInfo.elapsedMilli));
 }
 
 /** callback socket errorcode */
-- (void)liveSession:(nullable LFLiveSession *)session errorCode:(LFLiveSocketErrorCode)errorCode {
-    NSLog(@"errorCode: %ld", errorCode);
+- (void)liveSession:(nullable LFLiveSession *)session socketError:(LFLiveSocketError)socketError {
+	NSLog(@"socketError: %ld", socketError);
 }
 
 #pragma mark -- Getter Setter
 - (LFLiveSession *)session {
-    if (!_session) {
-        /**      发现大家有不会用横屏的请注意啦，横屏需要在ViewController  supportedInterfaceOrientations修改方向  默认竖屏  ****/
-        /**      发现大家有不会用横屏的请注意啦，横屏需要在ViewController  supportedInterfaceOrientations修改方向  默认竖屏  ****/
-        /**      发现大家有不会用横屏的请注意啦，横屏需要在ViewController  supportedInterfaceOrientations修改方向  默认竖屏  ****/
+	if (_session) return _session;
 
+	/*
+	LFAudioConfiguration *audioConfig = [LFAudioConfiguration defaultConfiguration];
 
-        /***   默认分辨率368 ＊ 640  音频：44.1 iphone6以上48  双声道  方向竖屏 ***/
-        LFLiveVideoConfiguration *videoConfiguration = [LFLiveVideoConfiguration new];
-        videoConfiguration.videoSize = CGSizeMake(640, 360);
-        videoConfiguration.videoBitRate = 800*1024;
-        videoConfiguration.videoMaxBitRate = 1000*1024;
-        videoConfiguration.videoMinBitRate = 500*1024;
-        videoConfiguration.videoFrameRate = 24;
-        videoConfiguration.videoMaxKeyframeInterval = 48;
-        videoConfiguration.outputImageOrientation = UIInterfaceOrientationLandscapeLeft;
-        videoConfiguration.autorotate = NO;
-        videoConfiguration.sessionPreset = LFCaptureSessionPreset720x1280;
-        _session = [[LFLiveSession alloc] initWithAudioConfiguration:[LFLiveAudioConfiguration defaultConfiguration] videoConfiguration:videoConfiguration captureType:LFLiveCaptureDefaultMask];
+	LFVideoConfiguration *videoConfig = [LFVideoConfiguration new];
+	videoConfig.videoSize = CGSizeMake(640, 360);
+	videoConfig.videoBitrate    =  800 * 1024;
+	videoConfig.videoMaxBitrate = 1000 * 1024;
+	videoConfig.videoMinBitrate =  500 * 1024;
+	videoConfig.videoFrameRate = 24;
+	videoConfig.videoMaxKeyframeInterval = 48;
+	videoConfig.outputImageOrientation = UIInterfaceOrientationLandscapeRight;
+	videoConfig.autorotate = NO;
+	videoConfig.sessionPreset = LFCaptureSessionPreset720x1280;
+	*/
+
+	LFAudioConfiguration *audioConfig = [LFAudioConfiguration new];
+	audioConfig.numberOfChannels = 2;
+	audioConfig.audioBitrate = LFAudioBitrate96Kbps;
+	audioConfig.audioSampleRate = LFAudioSampleRate44100Hz;
+
+	LFVideoConfiguration *videoConfig = [LFVideoConfiguration new];
+	videoConfig.sessionPreset = LFCaptureSessionPreset720x1280;
+	videoConfig.videoFrameRate = 25;
+	videoConfig.videoMaxKeyframeInterval = videoConfig.videoFrameRate * 2;
+	videoConfig.videoBitrate    = 1000 * 1024;
+	videoConfig.videoMinBitrate =  500 * 1024;
+	videoConfig.videoMaxBitrate = 3000 * 1024;
+	videoConfig.videoSize = CGSizeMake(1280, 720);
+	videoConfig.outputImageOrientation = UIInterfaceOrientationLandscapeRight;
+	videoConfig.autorotate = NO;
+
+	_session = [[LFLiveSession alloc] initWithAudioConfiguration:audioConfig
+																						videoConfiguration:videoConfig
+																									 captureType:LFCaptureMaskDefault];
 
         /**    自己定制单声道  */
         /*
@@ -252,8 +270,8 @@ inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
         */
 
         _session.delegate = self;
-        _session.showDebugInfo = NO;
-        _session.preView = self;
+        _session.showDebugInfo = YES;
+        _session.previewView = self;
         
         /*本地存储*/
 //        _session.saveLocalVideo = YES;
@@ -268,9 +286,8 @@ inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
         imageView.frame = CGRectMake(100, 100, 29, 29);
         imageView.image = [UIImage imageNamed:@"ios-29x29"];
         _session.warterMarkView = imageView;*/
-        
-    }
-    return _session;
+
+	return _session;
 }
 
 - (UIView *)containerView {
@@ -286,7 +303,7 @@ inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
 - (UILabel *)stateLabel {
     if (!_stateLabel) {
         _stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 80, 40)];
-        _stateLabel.text = @"未连接";
+        _stateLabel.text = @"state";
         _stateLabel.textColor = [UIColor whiteColor];
         _stateLabel.font = [UIFont boldSystemFontOfSize:14.f];
     }
@@ -332,10 +349,10 @@ inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
         [_beautyButton setImage:[UIImage imageNamed:@"camra_beauty"] forState:UIControlStateNormal];
         [_beautyButton setImage:[UIImage imageNamed:@"camra_beauty_close"] forState:UIControlStateSelected];
         _beautyButton.exclusiveTouch = YES;
-        __weak typeof(self) _self = self;
+//        __weak typeof(self) _self = self;
         [_beautyButton addBlockForControlEvents:UIControlEventTouchUpInside block:^(id sender) {
-            _self.session.beautyFace = !_self.session.beautyFace;
-            _self.beautyButton.selected = !_self.session.beautyFace;
+//            _self.session.beautyFace = !_self.session.beautyFace;
+//            _self.beautyButton.selected = !_self.session.beautyFace;
         }];
     }
     return _beautyButton;
@@ -350,19 +367,19 @@ inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
         _startLiveButton.layer.cornerRadius = _startLiveButton.height/2;
         [_startLiveButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [_startLiveButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
-        [_startLiveButton setTitle:@"开始直播" forState:UIControlStateNormal];
+        [_startLiveButton setTitle:@"start" forState:UIControlStateNormal];
         [_startLiveButton setBackgroundColor:[UIColor colorWithRed:50 green:32 blue:245 alpha:1]];
         _startLiveButton.exclusiveTouch = YES;
         __weak typeof(self) _self = self;
         [_startLiveButton addBlockForControlEvents:UIControlEventTouchUpInside block:^(id sender) {
             _self.startLiveButton.selected = !_self.startLiveButton.selected;
             if (_self.startLiveButton.selected) {
-                [_self.startLiveButton setTitle:@"结束直播" forState:UIControlStateNormal];
-                LFLiveStreamInfo *stream = [LFLiveStreamInfo new];
-                stream.url = @"rtmp://live.hkstv.hk.lxdns.com:1935/live/stream153";
+                [_self.startLiveButton setTitle:@"stop" forState:UIControlStateNormal];
+                LFStreamInfo *stream = [LFStreamInfo new];
+                stream.url = @"rtmp://stream.mycujoo.tv:1935/live/6e4061f27e7c40efa10e0355405aaefe";
                 [_self.session startLive:stream];
             } else {
-                [_self.startLiveButton setTitle:@"开始直播" forState:UIControlStateNormal];
+                [_self.startLiveButton setTitle:@"start" forState:UIControlStateNormal];
                 [_self.session stopLive];
             }
         }];
