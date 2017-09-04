@@ -42,8 +42,8 @@
     if (self = [super init]) {
         _configuration = configuration;
 
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChanged:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
         
 		[self setZoomScale:1.0 ramping:NO];
@@ -108,21 +108,26 @@
 		}
 	} else {
 		if (self.saveLocalVideo) {
+			self.videoCamera.audioEncodingTarget = nil;
+			GPUImageMovieWriter *targetToRemove = self.movieWriter;
 			[self.movieWriter finishRecordingWithCompletionHandler:^{
 				[self didFinishRecording];
+				[NSNotificationCenter.defaultCenter postNotificationName:LFApplicationDidFinishRecordingNotification
+																													object:nil];
 			}];
+			[self.output removeTarget:targetToRemove];
 		}
 	}
 }
 
 - (void)setPreviewView:(UIView *)previewView {
-    if (self.gpuImageView.superview) [self.gpuImageView removeFromSuperview];
-    [previewView insertSubview:self.gpuImageView atIndex:0];
-    self.gpuImageView.frame = CGRectMake(0, 0, previewView.frame.size.width, previewView.frame.size.height);
+	if (self.gpuImageView.superview) [self.gpuImageView removeFromSuperview];
+	[previewView insertSubview:self.gpuImageView atIndex:0];
+	self.gpuImageView.frame = CGRectMake(0, 0, previewView.frame.size.width, previewView.frame.size.height);
 }
 
 - (UIView *)previewView {
-    return self.gpuImageView.superview;
+	return self.gpuImageView.superview;
 }
 
 - (void)setCaptureDevicePosition:(AVCaptureDevicePosition)captureDevicePosition {
@@ -236,14 +241,16 @@
     return nil;
 }
 
-- (GPUImageMovieWriter*)movieWriter {
-    if (!_movieWriter) {
-        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.saveLocalVideoUrl size:self.configuration.videoSize];
-        _movieWriter.encodingLiveVideo = YES;
-        _movieWriter.shouldPassthroughAudio = YES;
-        self.videoCamera.audioEncodingTarget = self.movieWriter;
-    }
-    return _movieWriter;
+- (GPUImageMovieWriter *)movieWriter
+{
+	if (!_movieWriter) {
+		_movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.saveLocalVideoUrl size:self.configuration.videoSize];
+		_movieWriter.encodingLiveVideo = YES;
+		_movieWriter.shouldPassthroughAudio = YES;
+		self.videoCamera.audioEncodingTarget = self.movieWriter;
+		[self.output addTarget:self.movieWriter];
+	}
+	return _movieWriter;
 }
 
 - (void)didFinishRecording
@@ -282,7 +289,7 @@
 
 	[self.filter addTarget:self.output];
 	[self.output addTarget:self.gpuImageView];
-	if(self.saveLocalVideo) [self.output addTarget:self.movieWriter];
+	if (self.saveLocalVideo) self.movieWriter;
 
 	[self.filter forceProcessingAtSize:self.configuration.videoSize];
 	[self.output forceProcessingAtSize:self.configuration.videoSize];
@@ -304,20 +311,29 @@
 
 #pragma mark Notification
 
-- (void)willEnterBackground:(NSNotification *)notification {
+- (void)didEnterBackground:(NSNotification *)notification
+{
+	if (!self.running) return;
+
 	UIApplication.sharedApplication.idleTimerDisabled = NO;
-    [self.videoCamera pauseCameraCapture];
-    runSynchronouslyOnVideoProcessingQueue(^{
-        glFinish();
-    });
+	[self.videoCamera pauseCameraCapture];
+	runSynchronouslyOnVideoProcessingQueue(^{
+		glFinish();
+	});
 }
 
-- (void)willEnterForeground:(NSNotification *)notification {
-    [self.videoCamera resumeCameraCapture];
-    UIApplication.sharedApplication.idleTimerDisabled = YES;
+- (void)willEnterForeground:(NSNotification *)notification
+{
+	if (!self.running) return;
+
+	[self.videoCamera resumeCameraCapture];
+	UIApplication.sharedApplication.idleTimerDisabled = YES;
+
+	[NSNotificationCenter.defaultCenter postNotificationName:LFApplicationWillEnterForegroundNotification object:nil];
 }
 
-- (void)statusBarChanged:(NSNotification *)notification {
+- (void)statusBarChanged:(NSNotification *)notification
+{
     NSLog(@"UIApplicationWillChangeStatusBarOrientationNotification. UserInfo: %@", notification.userInfo);
     UIInterfaceOrientation statusBar = [[UIApplication sharedApplication] statusBarOrientation];
 

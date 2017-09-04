@@ -348,134 +348,129 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 
 - (void)processAudioBuffer:(CMSampleBufferRef)audioBuffer;
 {
-    if (!isRecording || _paused)
-    {
-        return;
-    }
-    
-//    if (_hasAudioTrack && CMTIME_IS_VALID(startTime))
-    if (_hasAudioTrack)
-    {
-        CFRetain(audioBuffer);
+	if (!isRecording || _paused)
+	{
+		return;
+	}
 
-        CMTime currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(audioBuffer);
-        
-        if (CMTIME_IS_INVALID(startTime))
-        {
-            runSynchronouslyOnContextQueue(_movieWriterContext, ^{
+	if (_hasAudioTrack)
+	{
+		CFRetain(audioBuffer);
+
+		CMTime currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(audioBuffer);
+
+		if (CMTIME_IS_INVALID(startTime))
+		{
+			runSynchronouslyOnContextQueue(_movieWriterContext, ^{
 				if (assetWriter.status == AVAssetWriterStatusFailed) {
 					NSLog(@"Error with assetWriter: %@", assetWriter.error);
 				} else if ((audioInputReadyCallback == NULL) && (assetWriter.status != AVAssetWriterStatusWriting)) {
-                    [assetWriter startWriting];
+					[assetWriter startWriting];
 				}
 
-                [assetWriter startSessionAtSourceTime:currentSampleTime];
-                startTime = currentSampleTime;
-            });
-        }
+				[assetWriter startSessionAtSourceTime:currentSampleTime];
+				startTime = currentSampleTime;
+			});
+		}
 
-        if (!assetWriterAudioInput.readyForMoreMediaData && _encodingLiveVideo)
-        {
-            NSLog(@"1: Had to drop an audio frame: %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, currentSampleTime)));
-            if (_shouldInvalidateAudioSampleWhenDone)
-            {
-                CMSampleBufferInvalidate(audioBuffer);
-            }
-            CFRelease(audioBuffer);
-            return;
-        }
-        
-        if (discont) {
-            discont = NO;
-            
-            CMTime current;
-            if (offsetTime.value > 0) {
-                current = CMTimeSubtract(currentSampleTime, offsetTime);
-            } else {
-                current = currentSampleTime;
-            }
-            
-            CMTime offset = CMTimeSubtract(current, previousAudioTime);
-            
-            if (offsetTime.value == 0) {
-                offsetTime = offset;
-            } else {
-                offsetTime = CMTimeAdd(offsetTime, offset);
-            }
-        }
-        
-        if (offsetTime.value > 0) {
-            CFRelease(audioBuffer);
-            audioBuffer = [self adjustTime:audioBuffer by:offsetTime];
-            CFRetain(audioBuffer);
-        }
-        
-        // record most recent time so we know the length of the pause
-        currentSampleTime = CMSampleBufferGetPresentationTimeStamp(audioBuffer);
+		if (!assetWriterAudioInput.readyForMoreMediaData && _encodingLiveVideo)
+		{
+			NSLog(@"1: Had to drop an audio frame: %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, currentSampleTime)));
+			if (_shouldInvalidateAudioSampleWhenDone)
+			{
+				CMSampleBufferInvalidate(audioBuffer);
+			}
+			CFRelease(audioBuffer);
+			return;
+		}
 
-        previousAudioTime = currentSampleTime;
-        
-        //if the consumer wants to do something with the audio samples before writing, let him.
-        if (self.audioProcessingCallback) {
-            //need to introspect into the opaque CMBlockBuffer structure to find its raw sample buffers.
-            CMBlockBufferRef buffer = CMSampleBufferGetDataBuffer(audioBuffer);
-            CMItemCount numSamplesInBuffer = CMSampleBufferGetNumSamples(audioBuffer);
-            AudioBufferList audioBufferList;
-            
-            CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(audioBuffer,
-                                                                    NULL,
-                                                                    &audioBufferList,
-                                                                    sizeof(audioBufferList),
-                                                                    NULL,
-                                                                    NULL,
-                                                                    kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment,
-                                                                    &buffer
-                                                                    );
-            //passing a live pointer to the audio buffers, try to process them in-place or we might have syncing issues.
-            for (int bufferCount=0; bufferCount < audioBufferList.mNumberBuffers; bufferCount++) {
-                SInt16 *samples = (SInt16 *)audioBufferList.mBuffers[bufferCount].mData;
-                self.audioProcessingCallback(&samples, numSamplesInBuffer);
-            }
-        }
-        
-//        NSLog(@"Recorded audio sample time: %lld, %d, %lld", currentSampleTime.value, currentSampleTime.timescale, currentSampleTime.epoch);
-        void(^write)() = ^() {
-            while( ! assetWriterAudioInput.readyForMoreMediaData && ! _encodingLiveVideo && ! audioEncodingIsFinished ) {
-                NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.5];
-                //NSLog(@"audio waiting...");
-                [[NSRunLoop currentRunLoop] runUntilDate:maxDate];
-            }
-            if (!assetWriterAudioInput.readyForMoreMediaData)
-            {
-                NSLog(@"2: Had to drop an audio frame %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, currentSampleTime)));
-            }
-            else if(assetWriter.status == AVAssetWriterStatusWriting)
-            {
-                if (![assetWriterAudioInput appendSampleBuffer:audioBuffer])
-                    NSLog(@"Problem appending audio buffer at time: %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, currentSampleTime)));
-            }
-            else
-            {
-                //NSLog(@"Wrote an audio frame %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, currentSampleTime)));
-            }
+		if (discont) {
+			discont = NO;
 
-            if (_shouldInvalidateAudioSampleWhenDone)
-            {
-                CMSampleBufferInvalidate(audioBuffer);
-            }
-            CFRelease(audioBuffer);
-        };
-//        runAsynchronouslyOnContextQueue(_movieWriterContext, write);
-        if( _encodingLiveVideo )
+			CMTime current;
+			if (offsetTime.value > 0) {
+				current = CMTimeSubtract(currentSampleTime, offsetTime);
+			} else {
+				current = currentSampleTime;
+			}
 
-        {
-            runAsynchronouslyOnContextQueue(_movieWriterContext, write);
-        }
-        else
-        {
-            write();
-        }
-    }
+			CMTime offset = CMTimeSubtract(current, previousAudioTime);
+
+			if (offsetTime.value == 0) {
+				offsetTime = offset;
+			} else {
+				offsetTime = CMTimeAdd(offsetTime, offset);
+			}
+		}
+
+		if (offsetTime.value > 0) {
+			CFRelease(audioBuffer);
+			audioBuffer = [self adjustTime:audioBuffer by:offsetTime];
+			CFRetain(audioBuffer);
+		}
+
+		// record most recent time so we know the length of the pause
+		currentSampleTime = CMSampleBufferGetPresentationTimeStamp(audioBuffer);
+
+		previousAudioTime = currentSampleTime;
+
+		//if the consumer wants to do something with the audio samples before writing, let him.
+		if (self.audioProcessingCallback) {
+			//need to introspect into the opaque CMBlockBuffer structure to find its raw sample buffers.
+			CMBlockBufferRef buffer = CMSampleBufferGetDataBuffer(audioBuffer);
+			CMItemCount numSamplesInBuffer = CMSampleBufferGetNumSamples(audioBuffer);
+			AudioBufferList audioBufferList;
+
+			CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(audioBuffer,
+																															NULL,
+																															&audioBufferList,
+																															sizeof(audioBufferList),
+																															NULL,
+																															NULL,
+																															kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment,
+																															&buffer
+																															);
+			//passing a live pointer to the audio buffers, try to process them in-place or we might have syncing issues.
+			for (int bufferCount=0; bufferCount < audioBufferList.mNumberBuffers; bufferCount++) {
+				SInt16 *samples = (SInt16 *)audioBufferList.mBuffers[bufferCount].mData;
+				self.audioProcessingCallback(&samples, numSamplesInBuffer);
+			}
+		}
+
+		//        NSLog(@"Recorded audio sample time: %lld, %d, %lld", currentSampleTime.value, currentSampleTime.timescale, currentSampleTime.epoch);
+		void(^write)() = ^() {
+			while( ! assetWriterAudioInput.readyForMoreMediaData && ! _encodingLiveVideo && ! audioEncodingIsFinished ) {
+				NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.5];
+				//NSLog(@"audio waiting...");
+				[[NSRunLoop currentRunLoop] runUntilDate:maxDate];
+			}
+			if (!assetWriterAudioInput.readyForMoreMediaData)
+			{
+				NSLog(@"2: Had to drop an audio frame %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, currentSampleTime)));
+			}
+			else if(assetWriter.status == AVAssetWriterStatusWriting)
+			{
+				if (![assetWriterAudioInput appendSampleBuffer:audioBuffer])
+					NSLog(@"Problem appending audio buffer at time: %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, currentSampleTime)));
+			}
+			else
+			{
+				//NSLog(@"Wrote an audio frame %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, currentSampleTime)));
+			}
+
+			if (_shouldInvalidateAudioSampleWhenDone)
+			{
+				CMSampleBufferInvalidate(audioBuffer);
+			}
+			CFRelease(audioBuffer);
+		};
+//		runAsynchronouslyOnContextQueue(_movieWriterContext, write);
+		if (_encodingLiveVideo) {
+			runAsynchronouslyOnContextQueue(_movieWriterContext, write);
+		} else {
+			write();
+		}
+	}
 }
 
 - (void)enableSynchronizationCallbacks
@@ -777,8 +772,10 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
                 //            NSLog(@"video waiting...");
                 [[NSRunLoop currentRunLoop] runUntilDate:maxDate];
             }
-            if (!assetWriterVideoInput.readyForMoreMediaData)
-            {
+					if (assetWriter.status == AVAssetWriterStatusFailed) {
+						NSLog(@"Error with assetWriter: %@", assetWriter.error);
+					} else if (!assetWriterVideoInput.readyForMoreMediaData)
+					{
                 NSLog(@"2: Had to drop a video frame: %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, frameTime)));
             }
             else if(self.assetWriter.status == AVAssetWriterStatusWriting)

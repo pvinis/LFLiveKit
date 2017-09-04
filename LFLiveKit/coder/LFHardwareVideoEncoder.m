@@ -36,8 +36,8 @@
     if (self = [super init]) {
         _configuration = configuration;
         [self resetCompressionSession];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 
 #ifdef DEBUG
         _writeToFile = NO;
@@ -119,26 +119,31 @@
     }
 }
 
-- (void)stopEncoder {
-    VTCompressionSessionCompleteFrames(compressionSession, kCMTimeIndefinite);
+- (void)stopEncoder
+{
+	VTCompressionSessionCompleteFrames(compressionSession, kCMTimeIndefinite);
 }
 
-- (void)setDelegate:(id<LFVideoEncodingDelegate>)delegate {
-    _h264Delegate = delegate;
+- (void)setDelegate:(id<LFVideoEncodingDelegate>)delegate
+{
+	_h264Delegate = delegate;
 }
 
 #pragma mark -- Notification
-- (void)willEnterBackground:(NSNotification*)notification{
-    _isBackground = YES;
+- (void)didEnterBackground:(NSNotification*)notification
+{
+	_isBackground = YES;
 }
 
-- (void)willEnterForeground:(NSNotification*)notification{
-    [self resetCompressionSession];
-    _isBackground = NO;
+- (void)willEnterForeground:(NSNotification*)notification
+{
+	[self resetCompressionSession];
+	_isBackground = NO;
 }
 
 #pragma mark -- VideoCallBack
-static void VideoCompressonOutputCallback(void *VTref, void *VTFrameRef, OSStatus status, VTEncodeInfoFlags infoFlags, CMSampleBufferRef sampleBuffer){
+static void VideoCompressonOutputCallback(void *VTref, void *VTFrameRef, OSStatus status, VTEncodeInfoFlags infoFlags, CMSampleBufferRef sampleBuffer)
+{
     if (!sampleBuffer) return;
     CFArrayRef array = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, true);
     if (!array) return;
