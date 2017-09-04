@@ -7,6 +7,8 @@
 //
 
 #import "LFVideoCapture.h"
+
+#import "LFLiveConstants.h"
 #import "LFGPUImageEmptyFilter.h"
 
 #if __has_include(<GPUImage/GPUImage.h>)
@@ -92,13 +94,13 @@
 
 - (void)setRecording:(BOOL)recording
 {
-    if (_recording == recording) return;
+	if (_recording == recording) return;
 	_recording = recording;
 
-    // if not running, when start recording => start running too
-    if (!_running) {
-        self.running = _recording;
-    }
+	// if not running, when start recording => start running too
+	if (!_running) {
+		self.running = _recording;
+	}
 
 	if (_recording) {
 		if (self.saveLocalVideo) {
@@ -217,8 +219,8 @@
     return _zoomScale;
 }
 
-- (GPUImageView *)gpuImageView{
-    if (!_gpuImageView){
+- (GPUImageView *)gpuImageView {
+    if (!_gpuImageView) {
         _gpuImageView = [[GPUImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
         [_gpuImageView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
@@ -266,15 +268,15 @@
 }
 
 - (void)reloadFilter {
-    [self.filter removeAllTargets];
-    [self.videoCamera removeAllTargets];
-    [self.output removeAllTargets];
+	[self.filter removeAllTargets];
+	[self.videoCamera removeAllTargets];
+	[self.output removeAllTargets];
 
 	self.output = [[LFGPUImageEmptyFilter alloc] init];
 	self.filter = [[LFGPUImageEmptyFilter alloc] init];
-    
-    /// 调节镜像
-    [self reloadMirror];
+
+	/// 调节镜像
+	[self reloadMirror];
 
 	[self.videoCamera addTarget:self.filter];
 
@@ -282,24 +284,22 @@
 	[self.output addTarget:self.gpuImageView];
 	if(self.saveLocalVideo) [self.output addTarget:self.movieWriter];
 
-    [self.filter forceProcessingAtSize:self.configuration.videoSize];
-    [self.output forceProcessingAtSize:self.configuration.videoSize];
+	[self.filter forceProcessingAtSize:self.configuration.videoSize];
+	[self.output forceProcessingAtSize:self.configuration.videoSize];
 
-    
-    // 输出数据
-    __weak typeof(self) _self = self;
-    [self.output setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {
-        [_self processVideo:output];
-    }];
-    
+	// 输出数据
+	__weak typeof(self) _self = self;
+	[self.output setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {
+		[_self processVideo:output];
+	}];
 }
 
-- (void)reloadMirror{
-    if(self.mirror && self.captureDevicePosition == AVCaptureDevicePositionFront){
-        self.videoCamera.horizontallyMirrorFrontFacingCamera = YES;
-    }else{
-        self.videoCamera.horizontallyMirrorFrontFacingCamera = NO;
-    }
+- (void)reloadMirror {
+	if (self.mirror && self.captureDevicePosition == AVCaptureDevicePositionFront) {
+		self.videoCamera.horizontallyMirrorFrontFacingCamera = YES;
+	} else {
+		self.videoCamera.horizontallyMirrorFrontFacingCamera = NO;
+	}
 }
 
 #pragma mark Notification

@@ -106,6 +106,8 @@
 		84D8B5E81D768B6E00752B56 /* LFStreamSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */; };
 		84D8B5E91D768B6E00752B56 /* NSMutableArray+LFAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5B91D768B6E00752B56 /* NSMutableArray+LFAdditions.h */; };
 		84D8B5EA1D768B6E00752B56 /* NSMutableArray+LFAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D8B5BA1D768B6E00752B56 /* NSMutableArray+LFAdditions.m */; };
+		AF205C1F1F596E3A0074D076 /* LFLiveConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = AF205C1D1F596E3A0074D076 /* LFLiveConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AF205C201F596E3A0074D076 /* LFLiveConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = AF205C1E1F596E3A0074D076 /* LFLiveConstants.m */; };
 		AF55BC761F42FA96002640C5 /* LFLiveSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D8B5A61D768B6E00752B56 /* LFLiveSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AF55BC791F42FADF002640C5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF55BC781F42FADF002640C5 /* AudioToolbox.framework */; };
 		AF55BC7B1F42FAE6002640C5 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF55BC7A1F42FAE6002640C5 /* VideoToolbox.framework */; };
@@ -215,6 +217,8 @@
 		84D8B5B81D768B6E00752B56 /* LFStreamSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStreamSocket.h; sourceTree = "<group>"; };
 		84D8B5B91D768B6E00752B56 /* NSMutableArray+LFAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+LFAdditions.h"; sourceTree = "<group>"; };
 		84D8B5BA1D768B6E00752B56 /* NSMutableArray+LFAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+LFAdditions.m"; sourceTree = "<group>"; };
+		AF205C1D1F596E3A0074D076 /* LFLiveConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFLiveConstants.h; sourceTree = "<group>"; };
+		AF205C1E1F596E3A0074D076 /* LFLiveConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFLiveConstants.m; sourceTree = "<group>"; };
 		AF55BC781F42FADF002640C5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		AF55BC7A1F42FAE6002640C5 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		AF55BC7C1F42FB00002640C5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -359,6 +363,8 @@
 			children = (
 				84D8B5A51D768B6E00752B56 /* LFLiveKit.h */,
 				8495F66E1DB8F14600542124 /* Info.plist */,
+				AF205C1D1F596E3A0074D076 /* LFLiveConstants.h */,
+				AF205C1E1F596E3A0074D076 /* LFLiveConstants.m */,
 				84D8B5A61D768B6E00752B56 /* LFLiveSession.h */,
 				84D8B5A71D768B6E00752B56 /* LFLiveSession.m */,
 				84D8B5841D768B6E00752B56 /* capture */,
@@ -464,6 +470,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF205C1F1F596E3A0074D076 /* LFLiveConstants.h in Headers */,
 				84D8B5DE1D768B6E00752B56 /* LFLiveDebug.h in Headers */,
 				843591501DD1FEB600811FC7 /* bytes.h in Headers */,
 				84D8B5CF1D768B6E00752B56 /* LFAudioConfiguration.h in Headers */,
@@ -579,6 +586,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				843591581DD1FEB600811FC7 /* log.c in Sources */,
+				AF205C201F596E3A0074D076 /* LFLiveConstants.m in Sources */,
 				84D8B5DD1D768B6E00752B56 /* LFFrame.m in Sources */,
 				8435910E1DD1FEB600811FC7 /* GPUImageStillCamera.m in Sources */,
 				84D8B5DF1D768B6E00752B56 /* LFLiveDebug.m in Sources */,

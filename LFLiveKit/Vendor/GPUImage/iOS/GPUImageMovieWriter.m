@@ -268,7 +268,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     }
 }
 
-- (void)startRecording;
+- (void)startRecording
 {
     alreadyFinishedRecording = NO;
     startTime = kCMTimeInvalid;
@@ -282,7 +282,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 	//    [assetWriter startSessionAtSourceTime:kCMTimeZero];
 }
 
-- (void)startRecordingInOrientation:(CGAffineTransform)orientationTransform;
+- (void)startRecordingInOrientation:(CGAffineTransform)orientationTransform
 {
 	assetWriterVideoInput.transform = orientationTransform;
 
@@ -340,9 +340,9 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
             audioEncodingIsFinished = YES;
             [assetWriterAudioInput markAsFinished];
         }
-        [assetWriter finishWriting];
+        [assetWriter finishWritingWithCompletionHandler:^{}];
         if (handler)
-            runAsynchronouslyOnContextQueue(_movieWriterContext,handler);
+            runAsynchronouslyOnContextQueue(_movieWriterContext, handler);
     });
 }
 
@@ -478,7 +478,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     }
 }
 
-- (void)enableSynchronizationCallbacks;
+- (void)enableSynchronizationCallbacks
 {
     if (videoInputReadyCallback != NULL)
     {
@@ -967,17 +967,17 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 }
 
 - (AVAssetWriter*)assetWriter {
-    return assetWriter;
+	return assetWriter;
 }
 
 - (void)setPaused:(BOOL)newValue {
-    if (_paused != newValue) {
-        _paused = newValue;
-        
-        if (_paused) {
-            discont = YES;
-        }
-    }
+	if (_paused == newValue) return;
+
+	_paused = newValue;
+
+	if (_paused) {
+		discont = YES;
+	}
 }
 
 - (CMSampleBufferRef)adjustTime:(CMSampleBufferRef) sample by:(CMTime) offset {

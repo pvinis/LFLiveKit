@@ -23,7 +23,6 @@ typedef NS_ENUM(NSInteger, LFCaptureType) {
 };
 
 
-
 typedef NS_OPTIONS(NSInteger, LFCaptureTypeMask) {
     LFCaptureMaskAudio   = 1 << LFCaptureAudio,                      // only inner capture audio (no video)
     LFCaptureMaskVideo   = 1 << LFCaptureVideo,                      // only inner capture video (no audio)

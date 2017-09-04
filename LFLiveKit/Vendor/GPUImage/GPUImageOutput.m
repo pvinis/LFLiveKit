@@ -204,7 +204,7 @@ void reportAvailableMemoryForGPUImage(NSString *tag)
 	return [NSArray arrayWithArray:targets];
 }
 
-- (void)addTarget:(id<GPUImageInput>)newTarget;
+- (void)addTarget:(id<GPUImageInput>)newTarget
 {
     NSInteger nextAvailableTextureIndex = [newTarget nextAvailableTextureIndex];
     [self addTarget:newTarget atTextureLocation:nextAvailableTextureIndex];
@@ -215,7 +215,7 @@ void reportAvailableMemoryForGPUImage(NSString *tag)
     }
 }
 
-- (void)addTarget:(id<GPUImageInput>)newTarget atTextureLocation:(NSInteger)textureLocation;
+- (void)addTarget:(id<GPUImageInput>)newTarget atTextureLocation:(NSInteger)textureLocation
 {
     if([targets containsObject:newTarget])
     {
@@ -228,13 +228,13 @@ void reportAvailableMemoryForGPUImage(NSString *tag)
         [targets addObject:newTarget];
         [targetTextureIndices addObject:[NSNumber numberWithInteger:textureLocation]];
         
-        allTargetsWantMonochromeData = allTargetsWantMonochromeData && [newTarget wantsMonochromeInput];
+			allTargetsWantMonochromeData = allTargetsWantMonochromeData && [newTarget wantsMonochromeInput];
     });
 }
 
-- (void)removeTarget:(id<GPUImageInput>)targetToRemove;
+- (void)removeTarget:(id<GPUImageInput>)targetToRemove
 {
-    if(![targets containsObject:targetToRemove])
+    if (![targets containsObject:targetToRemove])
     {
         return;
     }

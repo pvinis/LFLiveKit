@@ -20,7 +20,7 @@ extern NSString *const kGPUImageColorSwizzlingFragmentShaderString;
 	AVAssetWriter *assetWriter;
 	AVAssetWriterInput *assetWriterAudioInput;
 	AVAssetWriterInput *assetWriterVideoInput;
-    AVAssetWriterInputPixelBufferAdaptor *assetWriterPixelBufferInput;
+	AVAssetWriterInputPixelBufferAdaptor *assetWriterPixelBufferInput;
     
     GPUImageContext *_movieWriterContext;
     CVPixelBufferRef renderTarget;

@@ -227,13 +227,13 @@
 #pragma mark -- Getter Setter
 - (void)setRunning:(BOOL)running
 {
-    if (_running == running) return;
-    _running = running;
+	if (_running == running) return;
+	_running = running;
 
 	self.videoCaptureSource.running = _running;
-    self.audioCaptureSource.running = _running;
+	self.audioCaptureSource.running = _running;
 
-    // when stop running => stop recording too
+	// when stop running => stop recording too
 	if (!_running) {
 		self.recording = _running;
 	}
