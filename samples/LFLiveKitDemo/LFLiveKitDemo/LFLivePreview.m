@@ -269,6 +269,7 @@ inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
            _session = [[LFLiveSession alloc] initWithAudioConfiguration:audioConfiguration videoConfiguration:videoConfiguration];
         */
 
+	_session.adaptiveBitrate = YES;
         _session.delegate = self;
         _session.showDebugInfo = YES;
         _session.previewView = self;
@@ -378,9 +379,19 @@ inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
                 LFStreamInfo *stream = [LFStreamInfo new];
                 stream.url = @"rtmp://stream.mycujoo.tv:1935/live/6e4061f27e7c40efa10e0355405aaefe";
                 [_self.session startLive:stream];
+							_self.session.saveLocalVideo = YES;
+							NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+							[NSFileManager.defaultManager removeItemAtPath:[path stringByAppendingString:@"/bla.mp4"] error:NULL];
+							_self.session.saveLocalVideoUrl = [NSURL fileURLWithPath:[path stringByAppendingString:@"/bla.mp4"]];
+							_self.session.recording = YES;
             } else {
+							NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
                 [_self.startLiveButton setTitle:@"start" forState:UIControlStateNormal];
                 [_self.session stopLive];
+							[[NSFileManager.defaultManager contentsOfDirectoryAtPath:path
+																																error:NULL] enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+								NSLog(@"blabla %@", obj);
+							}];
             }
         }];
     }
