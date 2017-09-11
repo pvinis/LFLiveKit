@@ -30,6 +30,8 @@
 
 @property (nonatomic, assign) BOOL recording;
 
+- (void)resetMovieWriter;
+
 /** The previewView will show OpenGL ES view*/
 @property (null_resettable, nonatomic, strong) UIView *previewView;
 

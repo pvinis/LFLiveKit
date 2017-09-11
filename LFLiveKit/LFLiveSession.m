@@ -252,6 +252,11 @@
 	self.videoCaptureSource.recording = _recording;
 }
 
+- (void)resetMovieWriter
+{
+	[self.videoCaptureSource resetMovieWriter];
+}
+
 - (void)setPreviewView:(UIView *)previewView
 {
     [self.videoCaptureSource setPreviewView:previewView];

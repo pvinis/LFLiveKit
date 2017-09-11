@@ -60,6 +60,8 @@ typedef NS_OPTIONS(NSInteger, LFCaptureTypeMask) {
 
 @property (nonatomic, assign) BOOL recording;
 
+- (void)resetMovieWriter;
+
 // The previewView will show OpenGL ES view
 @property (nonatomic, strong, null_resettable) UIView *previewView;
 

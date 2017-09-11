@@ -120,6 +120,11 @@
 	}
 }
 
+- (void)resetMovieWriter
+{
+	self.movieWriter = nil;
+}
+
 - (void)setPreviewView:(UIView *)previewView {
 	if (self.gpuImageView.superview) [self.gpuImageView removeFromSuperview];
 	[previewView insertSubview:self.gpuImageView atIndex:0];
