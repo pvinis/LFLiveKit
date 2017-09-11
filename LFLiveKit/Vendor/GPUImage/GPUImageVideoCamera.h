@@ -49,6 +49,7 @@ void setColorConversion709( GLfloat conversionMatrix[9] );
 /// The AVCaptureSession used to capture from the camera
 @property(readonly, retain, nonatomic) AVCaptureSession *captureSession;
 
+
 /// This enables the capture session preset to be changed on the fly
 @property (readwrite, nonatomic, copy) NSString *captureSessionPreset;
 
