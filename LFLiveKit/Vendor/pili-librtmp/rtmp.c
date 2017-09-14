@@ -760,7 +760,7 @@ static int PILI_add_addr_info(PILI_RTMP *r, struct addrinfo *hints, struct addri
     }else{
         memset(remoteip,0, strlen(remoteip));
 
-        if(((struct addrinfo *)*ai)->ai_family == AF_INET6){
+        if(((struct addrinfo *)*ai)->ai_family == AF_INET6) {
             struct sockaddr_in6 * addrIn6;
             addrIn6 = (struct sockaddr_in6 *)((struct addrinfo *)*ai)->ai_addr;
             char ipbuf[48];
@@ -773,9 +773,7 @@ static int PILI_add_addr_info(PILI_RTMP *r, struct addrinfo *hints, struct addri
             char ipbuf[16];
             const char * remote_ip = inet_ntop(AF_INET,&addr->sin_addr, ipbuf, sizeof(ipbuf));
             strncat(remoteip, remote_ip, strlen(remote_ip));
-            
         }
-
     }
 
     if (hostname != host->av_val) {
@@ -943,7 +941,6 @@ int PILI_RTMP_Connect0(PILI_RTMP *r, struct addrinfo *ai, unsigned short port, R
         int on = 1;
         setsockopt(r->m_sb.sb_socket, IPPROTO_TCP, TCP_NODELAY, (char *)&on, sizeof(on));
     }
-
     return TRUE;
 }
 

@@ -127,14 +127,16 @@ SAVC(mp4a);
     [self RTMP264_Connect:(char *)[_stream.url cStringUsingEncoding:NSASCIIStringEncoding]];
 }
 
-- (void)stop {
+- (void)stop
+{
     dispatch_async(self.rtmpSendQueue, ^{
         [self _stop];
         [NSObject cancelPreviousPerformRequestsWithTarget:self];
     });
 }
 
-- (void)_stop {
+- (void)_stop
+{
     if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
         [self.delegate socketStatus:self status:LFLiveStateStop];
     }
