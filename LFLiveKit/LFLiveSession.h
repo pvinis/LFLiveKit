@@ -140,6 +140,8 @@ typedef NS_OPTIONS(NSInteger, LFCaptureTypeMask) {
 /** The stop stream .*/
 - (void)stopLive;
 
+- (void)restartLive;
+
 /*
 // support outer input yuv or rgb video(set LFLiveCaptureTypeMask) .
 - (void)pushVideo:(nullable CVPixelBufferRef)pixelBuffer;

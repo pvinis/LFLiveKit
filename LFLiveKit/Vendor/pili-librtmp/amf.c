@@ -700,12 +700,12 @@ void PILI_AMFProp_Dump(PILI_AMFObjectProperty *prop) {
     PILI_AVal name;
 
     if (prop->p_type == PILI_AMF_INVALID) {
-        PILI_RTMP_Log(PILI_RTMP_LOGDEBUG, "Property: INVALID");
+//        PILI_RTMP_Log(PILI_RTMP_LOGDEBUG, "Property: INVALID");
         return;
     }
 
     if (prop->p_type == PILI_AMF_NULL) {
-        PILI_RTMP_Log(PILI_RTMP_LOGDEBUG, "Property: NULL");
+//        PILI_RTMP_Log(PILI_RTMP_LOGDEBUG, "Property: NULL");
         return;
     }
 
@@ -721,7 +721,7 @@ void PILI_AMFProp_Dump(PILI_AMFObjectProperty *prop) {
     snprintf(strRes, 255, "Name: %18.*s, ", name.av_len, name.av_val);
 
     if (prop->p_type == PILI_AMF_OBJECT) {
-        PILI_RTMP_Log(PILI_RTMP_LOGDEBUG, "Property: <%sOBJECT>", strRes);
+//        PILI_RTMP_Log(PILI_RTMP_LOGDEBUG, "Property: <%sOBJECT>", strRes);
         PILI_AMF_Dump(&prop->p_vu.p_object);
         return;
     }
@@ -746,7 +746,7 @@ void PILI_AMFProp_Dump(PILI_AMFObjectProperty *prop) {
             snprintf(str, 255, "INVALID TYPE 0x%02x", (unsigned char)prop->p_type);
     }
 
-    PILI_RTMP_Log(PILI_RTMP_LOGDEBUG, "Property: <%s%s>", strRes, str);
+//    PILI_RTMP_Log(PILI_RTMP_LOGDEBUG, "Property: <%s%s>", strRes, str);
 }
 
 void PILI_AMFProp_Reset(PILI_AMFObjectProperty *prop) {

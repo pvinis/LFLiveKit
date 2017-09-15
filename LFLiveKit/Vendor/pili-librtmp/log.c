@@ -49,6 +49,7 @@ static void PILI_rtmp_log_default(int level, const char *format, va_list vl) {
 
     vsnprintf(str, MAX_PRINT_LEN - 1, format, vl);
 
+	printf("LOG %s\n", str);
     /* Filter out 'no-name' */
     if (PILI_RTMP_debuglevel < PILI_RTMP_LOGALL && strstr(str, "no-name") != NULL)
         return;

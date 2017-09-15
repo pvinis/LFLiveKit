@@ -102,19 +102,27 @@
     _audioCaptureSource.running = NO;
 }
 
-#pragma mark -- CustomMethod
-- (void)startLive:(LFStreamInfo *)streamInfo {
+- (void)startLive:(LFStreamInfo *)streamInfo
+{
     if (!streamInfo) return;
     _streamInfo = streamInfo;
+
     _streamInfo.videoConfiguration = _videoConfiguration;
     _streamInfo.audioConfiguration = _audioConfiguration;
     [self.socket start];
 }
 
-- (void)stopLive {
+- (void)stopLive
+{
     self.uploading = NO;
     [self.socket stop];
     self.socket = nil;
+}
+
+- (void)restartLive
+{
+	[self.socket stop];
+	[self.socket start];
 }
 
 - (NSInteger)currentVideoBitrate
@@ -177,6 +185,12 @@
     } else if(status == LFLiveStateStop || status == LFLiveStateError) {
         self.uploading = NO;
     }
+
+	if (status == LFLiveStateError) {
+		[self.socket stop];
+		[self.socket start];
+	}
+
     dispatch_async(dispatch_get_main_queue(), ^{
         self.state = status;
         if (self.delegate && [self.delegate respondsToSelector:@selector(liveSession:liveStateDidChange:)]) {

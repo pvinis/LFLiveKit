@@ -453,6 +453,9 @@ Failed:
 - (NSInteger)RtmpPacketSend:(PILI_RTMPPacket *)packet {
     if (_rtmp && PILI_RTMP_IsConnected(_rtmp)) {
         int success = PILI_RTMP_SendPacket(_rtmp, packet, 0, &_error);
+			if (!success) {
+				printf("asdf");
+			}
         return success;
     }
     return -1;
@@ -487,31 +490,44 @@ Failed:
 }
 
 // 断线重连
-- (void)reconnect {
-    dispatch_async(self.rtmpSendQueue, ^{
-        if (self.retryTimes4netWorkBreaken++ < self.reconnectCount && !self.isReconnecting) {
-            self.isConnected = NO;
-            self.isConnecting = NO;
-            self.isReconnecting = YES;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                 [self performSelector:@selector(_reconnect) withObject:nil afterDelay:self.reconnectInterval];
-            });
-           
-        } else if (self.retryTimes4netWorkBreaken >= self.reconnectCount) {
-            if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
-                [self.delegate socketStatus:self status:LFLiveStateError];
-            }
-            if (self.delegate && [self.delegate respondsToSelector:@selector(socketDidError:error:)]) {
-                [self.delegate socketDidError:self error:LFLiveSocketErrorReconnectTimeout];
-            }
-        }
-    });
+- (void)reconnect
+{
+	dispatch_async(self.rtmpSendQueue, ^{
+		if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
+			[self.delegate socketStatus:self status:LFLiveStateReconnecting];
+		}
+/*
+		if (self.retryTimes4netWorkBreaken++ < self.reconnectCount && !self.isReconnecting) {
+			self.isConnected = NO;
+			self.isConnecting = NO;
+			self.isReconnecting = YES;
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self performSelector:@selector(_reconnect) withObject:nil afterDelay:self.reconnectInterval];
+			});
+
+		} else if (self.retryTimes4netWorkBreaken >= self.reconnectCount) {
+			if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
+				[self.delegate socketStatus:self status:LFLiveStateError];
+			}
+			if (self.delegate && [self.delegate respondsToSelector:@selector(socketDidError:error:)]) {
+				[self.delegate socketDidError:self error:LFLiveSocketErrorReconnectTimeout];
+			}
+		}
+ */
+	});
 }
 
-- (void)_reconnect{
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    
-    _isReconnecting = NO;
+- (void)_reconnect
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+
+	[self stop];
+	[self start];
+
+	return;
+
+
+    _isReconnecting = NO;/////
     if(_isConnected) return;
     
     _isReconnecting = NO;

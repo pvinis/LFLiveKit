@@ -270,7 +270,9 @@ double
 }
 
 int PILI_RTMP_IsConnected(PILI_RTMP *r) {
-    return r->m_sb.sb_socket != -1;
+	int ret = r->m_sb.sb_socket != -1;
+//	printf("bla ret ==== %d\n", ret);
+	return ret;
 }
 
 int PILI_RTMP_Socket(PILI_RTMP *r) {
@@ -779,6 +781,9 @@ static int PILI_add_addr_info(PILI_RTMP *r, struct addrinfo *hints, struct addri
     if (hostname != host->av_val) {
         free(hostname);
     }
+	if (!ret) {
+		printf("3");
+	}
     return ret;
 }
 
@@ -1081,6 +1086,9 @@ int PILI_RTMP_Connect(PILI_RTMP *r, PILI_RTMPPacket *cp, RTMPError *error) {
         r->m_connCallback(&conn_time, r->m_userData);
     }
     freeaddrinfo(ai);
+	if (!ret) {
+		printf("damn");
+	}
     return ret;
 }
 
@@ -2994,7 +3002,7 @@ int PILI_RTMP_ReadPacket(PILI_RTMP *r, PILI_RTMPPacket *packet) {
     int nSize, hSize, nToRead, nChunk;
     int didAlloc = FALSE;
 
-    PILI_RTMP_Log(PILI_RTMP_LOGDEBUG2, "%s: fd=%d", __FUNCTION__, r->m_sb.sb_socket);
+//    PILI_RTMP_Log(PILI_RTMP_LOGDEBUG2, "%s: fd=%d", __FUNCTION__, r->m_sb.sb_socket);
 
     if (PILI_ReadN(r, (char *)hbuf, 1) == 0) {
         PILI_RTMP_Log(PILI_RTMP_LOGERROR, "%s, failed to read PILI_RTMP packet header", __FUNCTION__);
@@ -3271,8 +3279,8 @@ int PILI_RTMP_SendChunk(PILI_RTMP *r, PILI_RTMPChunk *chunk, RTMPError *error) {
     int wrote;
     char hbuf[RTMP_MAX_HEADER_SIZE];
 
-    PILI_RTMP_Log(PILI_RTMP_LOGDEBUG2, "%s: fd=%d, size=%d", __FUNCTION__, r->m_sb.sb_socket,
-             chunk->c_chunkSize);
+//    PILI_RTMP_Log(PILI_RTMP_LOGDEBUG2, "%s: fd=%d, size=%d", __FUNCTION__, r->m_sb.sb_socket,
+//             chunk->c_chunkSize);
     PILI_RTMP_LogHexString(PILI_RTMP_LOGDEBUG2, (uint8_t *)chunk->c_header, chunk->c_headerSize);
     if (chunk->c_chunkSize) {
         char *ptr = chunk->c_chunk - chunk->c_headerSize;
@@ -3389,8 +3397,8 @@ int PILI_RTMP_SendPacket(PILI_RTMP *r, PILI_RTMPPacket *packet, int queue, RTMPE
     buffer = packet->m_body;
     nChunkSize = r->m_outChunkSize;
 
-    PILI_RTMP_Log(PILI_RTMP_LOGDEBUG2, "%s: fd=%d, size=%d", __FUNCTION__, r->m_sb.sb_socket,
-             nSize);
+//    PILI_RTMP_Log(PILI_RTMP_LOGDEBUG2, "%s: fd=%d, size=%d", __FUNCTION__, r->m_sb.sb_socket,
+//             nSize);
     /* send all chunks in one HTTP request */
     if (r->Link.protocol & RTMP_FEATURE_HTTP) {
         int chunks = (nSize + nChunkSize - 1) / nChunkSize;
@@ -3643,6 +3651,10 @@ int PILI_RTMPSockBuf_Fill(PILI_RTMPSockBuf *sb, int timeout) {
         break;
     }
 
+	printf("=ALALALA -%s-\n", sb->sb_buf);
+	if (nBytes < 1) {
+		printf("DAMMMMMMN");
+	}
     return nBytes;
 }
 
