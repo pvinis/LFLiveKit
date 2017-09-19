@@ -210,7 +210,8 @@
 		AVCaptureDevice *device = (AVCaptureDevice *)self.videoCamera.inputCamera;
 		if ([device lockForConfiguration:nil]) {
 			if (ramping) {
-				[device rampToVideoZoomFactor:zoomScale withRate:2.0];
+				CGFloat next = MIN(device.activeFormat.videoMaxZoomFactor, 2.0);
+				[device rampToVideoZoomFactor:zoomScale withRate:next];
 			} else {
 				device.videoZoomFactor = zoomScale;
 			}
