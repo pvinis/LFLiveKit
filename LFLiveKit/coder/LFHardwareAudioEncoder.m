@@ -181,7 +181,7 @@
     UInt32 propSize = sizeof(outputBitrate);
     
     
-    if(result == noErr) {
+    if (result == noErr) {
         result = AudioConverterSetProperty(m_converter, kAudioConverterEncodeBitRate, propSize, &outputBitrate);
     }
     

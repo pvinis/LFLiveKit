@@ -52,7 +52,8 @@
     return self;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     [UIApplication sharedApplication].idleTimerDisabled = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_videoCamera stopCameraCapture];
@@ -79,14 +80,18 @@
     if (_running == running) return;
     _running = running;
     
-    if (!_running) {
-        [UIApplication sharedApplication].idleTimerDisabled = NO;
+	if (!_running) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[UIApplication sharedApplication].idleTimerDisabled = NO;
+		});
         [self.videoCamera stopCameraCapture];
 
         // if not running, when start recording => start running too
 		self.recording = _running;
     } else {
-        [UIApplication sharedApplication].idleTimerDisabled = YES;
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[UIApplication sharedApplication].idleTimerDisabled = YES;
+		});
         [self reloadFilter];
         [self.videoCamera startCameraCapture];
     }
@@ -230,17 +235,29 @@
     return _zoomScale;
 }
 
-- (GPUImageView *)gpuImageView {
+- (GPUImageView *)gpuImageView
+{
     if (!_gpuImageView) {
-        _gpuImageView = [[GPUImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        [_gpuImageView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
-        [_gpuImageView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+		__block GPUImageView *view;
+		if ([NSThread isMainThread]) {
+			view = [[GPUImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+			[view setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
+			[view setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+		} else {
+			dispatch_sync(dispatch_get_main_queue(), ^{
+				view = [[GPUImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+				[view setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
+				[view setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+			});
+		}
+		_gpuImageView = view;
     }
     return _gpuImageView;
 }
 
-- (UIImage *)currentImage {
-    if(_filter){
+- (UIImage *)currentImage
+{
+    if (_filter) {
         [_filter useNextFrameForImageCapture];
         return _filter.imageFromCurrentFramebuffer;
     }
@@ -343,7 +360,7 @@
     NSLog(@"UIApplicationWillChangeStatusBarOrientationNotification. UserInfo: %@", notification.userInfo);
     UIInterfaceOrientation statusBar = [[UIApplication sharedApplication] statusBarOrientation];
 
-    if(self.configuration.autorotate){
+    if (self.configuration.autorotate) {
         if (self.configuration.landscape) {
             if (statusBar == UIInterfaceOrientationLandscapeLeft) {
                 self.videoCamera.outputImageOrientation = UIInterfaceOrientationLandscapeRight;
