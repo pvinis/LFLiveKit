@@ -8,7 +8,7 @@
 
 #import "LFStreamSocket.h"
 
-@interface LFStreamRTMPSocket : NSObject<LFStreamSocket>
+@interface LFStreamRTMPSocket : NSObject <LFStreamSocket>
 
 - (nullable instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (nullable instancetype)new UNAVAILABLE_ATTRIBUTE;

@@ -11,6 +11,8 @@
 
 @interface LFLiveDebug : NSObject
 
+@property (nonatomic, assign) NSInteger reconnectionAttempts;
+
 @property (nonatomic, copy) NSString *streamId;
 @property (nonatomic, copy) NSString *uploadUrl;
 @property (nonatomic, assign) CGSize videoSize;                         // upload resolution

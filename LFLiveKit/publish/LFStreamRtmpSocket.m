@@ -17,8 +17,8 @@
 #import "LFAudioFrame.h"
 
 
-static const NSInteger RetryTimesBreaken = 5;  ///  重连1分钟  3秒一次 一共20次
-static const NSInteger RetryTimesMargin = 3;
+static const NSInteger ReconnectionTimesToAttempt = 1;
+static const NSInteger ReconnectionIntervalSeconds = 3;
 
 
 #define RTMP_RECEIVE_TIMEOUT 2
@@ -60,7 +60,7 @@ SAVC(mp4a);
 @property (nonatomic, strong) dispatch_queue_t rtmpSendQueue;
 
 @property (nonatomic, assign) RTMPError error;
-@property (nonatomic, assign) NSInteger retryTimes4netWorkBreaken;
+@property (nonatomic, assign) NSInteger reconnectionAttempts;
 @property (nonatomic, assign) NSInteger reconnectInterval;
 @property (nonatomic, assign) NSInteger reconnectCount;
 
@@ -87,10 +87,10 @@ SAVC(mp4a);
     if (self = [super init]) {
         _stream = stream;
         if (reconnectInterval > 0) _reconnectInterval = reconnectInterval;
-        else _reconnectInterval = RetryTimesMargin;
+		else _reconnectInterval = ReconnectionIntervalSeconds;
         
         if (reconnectCount > 0) _reconnectCount = reconnectCount;
-        else _reconnectCount = RetryTimesBreaken;
+        else _reconnectCount = ReconnectionTimesToAttempt;
         
         [self addObserver:self forKeyPath:@"isSending" options:NSKeyValueObservingOptionNew context:nil]; //这里改成observer主要考虑一直到发送出错情况下，可以继续发送
     }
@@ -247,7 +247,7 @@ SAVC(mp4a);
     _sendVideoHead = NO;
     self.debugInfo = nil;
     [self.buffer removeAllObject];
-    self.retryTimes4netWorkBreaken = 0;
+    self.reconnectionAttempts = 0;
 }
 
 - (NSInteger)RTMP264_Connect:(char *)push_url {
@@ -281,6 +281,7 @@ SAVC(mp4a);
         goto Failed;
     }
 
+	self.reconnectionAttempts = 0;
     if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
         [self.delegate socketStatus:self status:LFLiveStateStart];
     }
@@ -400,7 +401,8 @@ Failed:
     free(body);
 }
 
-- (void)sendVideo:(LFVideoFrame *)frame {
+- (void)sendVideo:(LFVideoFrame *)frame
+{
 
     NSInteger i = 0;
     NSInteger rtmpLength = frame.data.length + 9;
@@ -426,7 +428,8 @@ Failed:
     free(body);
 }
 
-- (NSInteger)sendPacket:(unsigned int)nPacketType data:(unsigned char *)data size:(NSInteger)size nTimestamp:(uint64_t)nTimestamp {
+- (NSInteger)sendPacket:(unsigned int)nPacketType data:(unsigned char *)data size:(NSInteger)size nTimestamp:(uint64_t)nTimestamp
+{
     NSInteger rtmpLength = size;
     PILI_RTMPPacket rtmp_pack;
     PILI_RTMPPacket_Reset(&rtmp_pack);
@@ -450,7 +453,8 @@ Failed:
     return nRet;
 }
 
-- (NSInteger)RtmpPacketSend:(PILI_RTMPPacket *)packet {
+- (NSInteger)RtmpPacketSend:(PILI_RTMPPacket *)packet
+{
     if (_rtmp && PILI_RTMP_IsConnected(_rtmp)) {
         int success = PILI_RTMP_SendPacket(_rtmp, packet, 0, &_error);
         return success;
@@ -458,7 +462,8 @@ Failed:
     return -1;
 }
 
-- (void)sendAudioHeader:(LFAudioFrame *)audioFrame {
+- (void)sendAudioHeader:(LFAudioFrame *)audioFrame
+{
 
     NSInteger rtmpLength = audioFrame.audioInfo.length + 2;     /*spec data长度,一般是2*/
     unsigned char *body = (unsigned char *)malloc(rtmpLength);
@@ -472,8 +477,8 @@ Failed:
     free(body);
 }
 
-- (void)sendAudio:(LFFrame *)frame {
-
+- (void)sendAudio:(LFFrame *)frame
+{
     NSInteger rtmpLength = frame.data.length + 2;    /*spec data长度,一般是2*/
     unsigned char *body = (unsigned char *)malloc(rtmpLength);
     memset(body, 0, rtmpLength);
@@ -487,28 +492,34 @@ Failed:
 }
 
 // 断线重连
-- (void)reconnect {
+- (void)reconnect
+{
+	if (_rtmp == NULL) {
+		return;
+	}
     dispatch_async(self.rtmpSendQueue, ^{
-        if (self.retryTimes4netWorkBreaken++ < self.reconnectCount && !self.isReconnecting) {
+        if (!self.isReconnecting) {
+			self.reconnectionAttempts++;
             self.isConnected = NO;
             self.isConnecting = NO;
             self.isReconnecting = YES;
             dispatch_async(dispatch_get_main_queue(), ^{
                  [self performSelector:@selector(_reconnect) withObject:nil afterDelay:self.reconnectInterval];
             });
-           
-        } else if (self.retryTimes4netWorkBreaken >= self.reconnectCount) {
-            if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
-                [self.delegate socketStatus:self status:LFLiveStateError];
-            }
-            if (self.delegate && [self.delegate respondsToSelector:@selector(socketDidError:error:)]) {
-                [self.delegate socketDidError:self error:LFLiveSocketErrorReconnectTimeout];
-            }
-        }
+
+			if (self.reconnectionAttempts > 0) {
+				if (self.delegate && [self.delegate respondsToSelector:@selector(socketDebug:debugInfo:)]) {
+					LFLiveDebug *d = [LFLiveDebug new];
+					d.reconnectionAttempts = self.reconnectionAttempts;
+					[self.delegate socketDebug:self debugInfo:d];
+				}
+			}
+		}
     });
 }
 
-- (void)_reconnect{
+- (void)_reconnect
+{
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     
     _isReconnecting = NO;
@@ -536,25 +547,29 @@ Failed:
 }
 
 #pragma mark -- CallBack
-void RTMPErrorCallback(RTMPError *error, void *userData) {
+void RTMPErrorCallback(RTMPError *error, void *userData)
+{
     LFStreamRTMPSocket *socket = (__bridge LFStreamRTMPSocket *)userData;
     if (error->code < 0) {
         [socket reconnect];
     }
 }
 
-void ConnectionTimeCallback(PILI_CONNECTION_TIME *conn_time, void *userData) {
+void ConnectionTimeCallback(PILI_CONNECTION_TIME *conn_time, void *userData)
+{
 }
 
 #pragma mark -- LFBufferDelegate
-- (void)streamingBuffer:(nullable LFBuffer *)buffer bufferState:(LFBufferState)state {
+- (void)streamingBuffer:(nullable LFBuffer *)buffer bufferState:(LFBufferState)state
+{
     if (self.delegate && [self.delegate respondsToSelector:@selector(socketBufferStatus:status:)]) {
         [self.delegate socketBufferStatus:self status:state];
     }
 }
 
 #pragma mark -- Observer
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
     if([keyPath isEqualToString:@"isSending"]){
         if(!self.isSending){
             [self sendFrame];
@@ -564,7 +579,8 @@ void ConnectionTimeCallback(PILI_CONNECTION_TIME *conn_time, void *userData) {
 
 #pragma mark -- Getter Setter
 
-- (LFBuffer *)buffer {
+- (LFBuffer *)buffer
+{
     if (!_buffer) {
         _buffer = [[LFBuffer alloc] init];
         _buffer.delegate = self;
@@ -573,14 +589,16 @@ void ConnectionTimeCallback(PILI_CONNECTION_TIME *conn_time, void *userData) {
     return _buffer;
 }
 
-- (LFLiveDebug *)debugInfo {
+- (LFLiveDebug *)debugInfo
+{
     if (!_debugInfo) {
         _debugInfo = [[LFLiveDebug alloc] init];
     }
     return _debugInfo;
 }
 
-- (dispatch_queue_t)rtmpSendQueue{
+- (dispatch_queue_t)rtmpSendQueue
+{
     if(!_rtmpSendQueue){
         _rtmpSendQueue = dispatch_queue_create("com.youku.LaiFeng.RtmpSendQueue", NULL);
     }
