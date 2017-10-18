@@ -241,12 +241,12 @@
 		__block GPUImageView *view;
 		if ([NSThread isMainThread]) {
 			view = [[GPUImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-			[view setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
+			[view setFillMode:kGPUImageFillModePreserveAspectRatio];
 			[view setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 		} else {
 			dispatch_sync(dispatch_get_main_queue(), ^{
 				view = [[GPUImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-				[view setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
+				[view setFillMode:kGPUImageFillModePreserveAspectRatio];
 				[view setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 			});
 		}
