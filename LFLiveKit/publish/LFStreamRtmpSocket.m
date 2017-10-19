@@ -494,9 +494,6 @@ Failed:
 // 断线重连
 - (void)reconnect
 {
-	if (_rtmp == NULL) {
-		return;
-	}
     dispatch_async(self.rtmpSendQueue, ^{
         if (!self.isReconnecting) {
 			self.reconnectionAttempts++;
