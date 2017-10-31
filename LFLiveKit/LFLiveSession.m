@@ -332,6 +332,16 @@
     return self.videoCaptureSource.zoomScale;
 }
 
+- (void)focusAtPoint:(CGPoint)point
+{
+	[self.videoCaptureSource focusAtPoint:point];
+}
+
+- (void)autofocus
+{
+	[self.videoCaptureSource autofocus];
+}
+
 - (void)setTorch:(BOOL)torch
 {
     [self.videoCaptureSource setTorch:torch];
