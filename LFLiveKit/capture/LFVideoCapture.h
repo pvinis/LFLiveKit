@@ -51,6 +51,9 @@
 - (void)setZoomScale:(CGFloat)zoomScale
 			 ramping:(BOOL)ramping;
 
+- (void)focusAtPoint:(CGPoint)point;
+- (void)autofocus;
+
 /** The videoFrameRate control videoCapture output data count */
 @property (nonatomic, assign) NSInteger videoFrameRate;
 

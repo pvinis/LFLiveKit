@@ -75,6 +75,9 @@ typedef NS_OPTIONS(NSInteger, LFCaptureTypeMask) {
 - (void)setZoomScale:(CGFloat)zoomScale
 			 ramping:(BOOL)ramping;
 
+- (void)focusAtPoint:(CGPoint)point;
+- (void)autofocus;
+
 /** The torch control capture flash is on or off */
 @property (nonatomic, assign) BOOL torch;
 

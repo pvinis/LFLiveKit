@@ -104,9 +104,9 @@ void setColorConversion709( GLfloat conversionMatrix[9] )
     if (!_inputCamera) {
         return nil;
     }
-/*
- // on by default
-	NSError *error;
+
+//  on by default
+	NSError *error = nil;
 	[_inputCamera lockForConfiguration:&error];
 	if (error == nil) {
 		if ([_inputCamera isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
@@ -118,14 +118,13 @@ void setColorConversion709( GLfloat conversionMatrix[9] )
 		}
 		[_inputCamera unlockForConfiguration];
 	}
-*/
+
 	// Create the capture session
 	_captureSession = [[AVCaptureSession alloc] init];
 
 	[_captureSession beginConfiguration];
 
 	// Add the video input
-	NSError *error = nil;
 	videoInput = [[AVCaptureDeviceInput alloc] initWithDevice:_inputCamera error:&error];
 	if ([_captureSession canAddInput:videoInput]) 
 	{

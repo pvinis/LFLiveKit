@@ -136,7 +136,8 @@
 	self.gpuImageView.frame = CGRectMake(0, 0, previewView.frame.size.width, previewView.frame.size.height);
 }
 
-- (UIView *)previewView {
+- (UIView *)previewView
+{
 	return self.gpuImageView.superview;
 }
 
@@ -231,8 +232,51 @@
 	[self setZoomScale:zoomScale ramping:YES];
 }
 
-- (CGFloat)zoomScale {
+- (CGFloat)zoomScale
+{
     return _zoomScale;
+}
+
+- (void)focusAtPoint:(CGPoint)point
+{
+	AVCaptureDevice *camera = self.videoCamera.inputCamera;
+
+	NSError *err = nil;
+	if ([camera lockForConfiguration:&err]) {
+		if ([camera isFocusPointOfInterestSupported]) {
+			[camera setFocusPointOfInterest:point];
+		}
+		if ([camera isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
+			camera.focusMode = AVCaptureFocusModeAutoFocus;
+		}
+
+		if ([camera isExposurePointOfInterestSupported]) {
+			[camera setExposurePointOfInterest:point];
+		}
+		if ([camera isExposureModeSupported:AVCaptureExposureModeAutoExpose]) {
+			camera.exposureMode = AVCaptureExposureModeAutoExpose;
+		}
+
+		[camera unlockForConfiguration];
+	}
+}
+
+- (void)autofocus
+{
+	AVCaptureDevice *camera = self.videoCamera.inputCamera;
+
+	NSError *err = nil;
+	if ([camera lockForConfiguration:&err]) {
+		if ([camera isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
+			camera.focusMode = AVCaptureFocusModeContinuousAutoFocus;
+		}
+
+		if ([camera isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
+			camera.exposureMode = AVCaptureExposureModeContinuousAutoExposure;
+		}
+
+		[camera unlockForConfiguration];
+	}
 }
 
 - (GPUImageView *)gpuImageView
