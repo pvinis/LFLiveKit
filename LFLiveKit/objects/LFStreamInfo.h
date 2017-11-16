@@ -12,18 +12,19 @@
 #import "LFVideoConfiguration.h"
 
 typedef NS_ENUM(NSUInteger, LFLiveState) {
-    // prepared
-    LFLiveStateReady = 0,
-    // connecting
-    LFLiveStatePending = 1,
-    // connected
-    LFLiveStateStart = 2,
-    // has been disconnected
-    LFLiveStateStop = 3,
-    // connection error
-    LFLiveStateError = 4,
-    // is reconnecting
-    LFLiveStateReconnecting = 5,
+	// prepared
+	LFLiveStateReady = 0,
+	// connecting
+	LFLiveStatePending = 1,
+	// connected
+	LFLiveStateStart = 2,
+	// has been disconnected
+	LFLiveStateStop = 3,
+	// connection error
+	LFLiveStateError = 4,
+	// is reconnecting
+	LFLiveStateReconnecting = 5,
+	LFLiveStateReconnectingTimedOut = 6,
 };
 
 typedef NS_ENUM(NSUInteger, LFLiveSocketError) {

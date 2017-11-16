@@ -102,16 +102,18 @@
     _audioCaptureSource.running = NO;
 }
 
-#pragma mark -- CustomMethod
-- (void)startLive:(LFStreamInfo *)streamInfo {
+- (void)startLive:(LFStreamInfo *)streamInfo
+{
     if (!streamInfo) return;
     _streamInfo = streamInfo;
+
     _streamInfo.videoConfiguration = _videoConfiguration;
     _streamInfo.audioConfiguration = _audioConfiguration;
     [self.socket start];
 }
 
-- (void)stopLive {
+- (void)stopLive
+{
     self.uploading = NO;
     [self.socket stop];
     self.socket = nil;
