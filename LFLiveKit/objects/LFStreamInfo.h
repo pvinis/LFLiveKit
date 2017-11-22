@@ -24,7 +24,6 @@ typedef NS_ENUM(NSUInteger, LFLiveState) {
 	LFLiveStateError = 4,
 	// is reconnecting
 	LFLiveStateReconnecting = 5,
-	LFLiveStateReconnectingTimedOut = 6,
 };
 
 typedef NS_ENUM(NSUInteger, LFLiveSocketError) {

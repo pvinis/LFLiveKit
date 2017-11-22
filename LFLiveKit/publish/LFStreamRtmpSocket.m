@@ -494,7 +494,8 @@ Failed:
 // 断线重连
 - (void)reconnect
 {
-    dispatch_async(self.rtmpSendQueue, ^{
+	/*
+	 dispatch_async(self.rtmpSendQueue, ^{
         if (!self.isReconnecting) {
 			self.reconnectionAttempts++;
             self.isConnected = NO;
@@ -513,12 +514,22 @@ Failed:
 			}
 		}
     });
+*/
+
+	dispatch_async(self.rtmpSendQueue, ^{
+		if (self.delegate && [self.delegate respondsToSelector:@selector(socketStatus:status:)]) {
+			[self.delegate socketStatus:self status:LFLiveStateReconnecting];
+		}
+	});
 }
 
 - (void)_reconnect
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    
+//	[self stop];
+//	[self start];
+//	return;
+
     _isReconnecting = NO;
     if(_isConnected) return;
     

@@ -119,6 +119,12 @@
     self.socket = nil;
 }
 
+- (void)restartLive
+{
+	[self.socket stop];
+	[self.socket start];
+}
+
 - (NSInteger)currentVideoBitrate
 {
 	return self.videoEncoder.videoBitrate;
@@ -179,6 +185,11 @@
     } else if(status == LFLiveStateStop || status == LFLiveStateError) {
         self.uploading = NO;
     }
+
+	if (status == LFLiveStateError) {
+		[self restartLive];
+	}
+
     dispatch_async(dispatch_get_main_queue(), ^{
         self.state = status;
         if (self.delegate && [self.delegate respondsToSelector:@selector(liveSession:liveStateDidChange:)]) {
